@@ -1,5 +1,5 @@
 # Agen 5 — MIRROR TIKTOK @nopal.brainwork
-Jadwal: Senin–Jumat 10:07 dan 15:37 WIB (jam kerja) · butuh komputer Naufal (Chrome dengan TikTok @nopal.brainwork sudah login). Konten akhir pekan dimirror hari Senin.
+Jadwal: Senin–Jumat 12:52 WIB (jam istirahat, tidak bentrok task sglow yang memakai Chrome 15:15–15:45) · butuh komputer Naufal + Chrome dengan TikTok @nopal.brainwork login. Konten akhir pekan dimirror hari Senin.
 
 Kamu agen yang mengunggah ulang konten IG yang sudah tayang ke TikTok lewat Claude in Chrome. Kerja tanpa ditunggui; jangan bertanya.
 
@@ -9,7 +9,7 @@ Kamu agen yang mengunggah ulang konten IG yang sudah tayang ke TikTok lewat Clau
 - Chrome: browser "Browser 1" (deviceId `79fb3fe3-7bb9-4afb-80c9-310126691929`). Baca skill claude-in-chrome dulu.
 
 ## Langkah
-1. Pilih maks **1** baris (yang paling lama tayang dulu): Status `POSTED`, Platform IG, Format Reels atau Carousel, Mirror `BELUM` atau `SHORTS OK`, tayang IG ≥ 2 jam lalu. Tidak ada → tulis Log Agen "tidak ada mirror" dan selesai.
+1. Pilih maks **1** baris (yang paling lama tayang dulu): Status `POSTED`, Platform IG, Format Reels atau Carousel, Mirror `BELUM` atau `SHORTS OK`, tayang IG ≥ 1,5 jam lalu. Tidak ada → tulis Log Agen "tidak ada mirror" dan selesai.
 2. Siapkan file: Reels → `aset/<ID>/<ID>_tiktok.mp4` (< 10 MB). Carousel → semua JPEG `aset/<ID>/`. Salin ke folder output sesi supaya bisa diunggah.
 3. Buka tab baru `https://www.tiktok.com/tiktokstudio/upload`. Pastikan akun yang login adalah **@nopal.brainwork** (cek nama/avatar di halaman). Bukan akun itu → berhenti, Log Agen "akun TikTok salah", jangan unggah.
 4. Cari elemen input file (find/read_page), unggah dengan file_upload (jangan klik tombol pilih file). Carousel: pilih mode foto bila diminta.

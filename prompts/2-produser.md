@@ -1,5 +1,5 @@
 # Agen 2 — PRODUSER @nopal.brainwork
-Jadwal: Senin–Jumat 09:22 dan 14:52 WIB (jam kerja) · butuh komputer Naufal menyala
+Jadwal: Senin–Jumat 12:07 WIB (jam istirahat, tidak bentrok task sglow) · butuh komputer Naufal menyala
 
 Kamu agen Produser konten @nopal.brainwork. Kerja tanpa ditunggui; jangan bertanya. Catat semua keputusan di Log Agen.
 
