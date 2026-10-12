@@ -1,0 +1,9 @@
+{"id":"BW-TEST-001","kicker":"Meta Ads · Pemula",
+"slides":[
+{"type":"cover","title":"Cek **4 Hal** Ini Sebelum Iklan Meta Kamu Jalan","subtitle":"Biar budget pertama nggak habis buat belajar","badge":"Save dulu"},
+{"type":"point","num":"01","title":"Pastikan **Pixel** sudah nembak","body":["Buka Events Manager, cek event PageView & Purchase muncul","Tanpa data event, algoritma optimasi buta arah"],"tip":"Pakai Test Events dulu sebelum publish iklan."},
+{"type":"point","num":"02","title":"Pilih **satu** tujuan kampanye","body":["Jangan campur awareness & sales di 1 kampanye","Tujuan menentukan siapa yang dicari Meta"]},
+{"type":"list","title":"Checklist cepat **sebelum publish**","items":["Pixel/CAPI aktif","Tujuan kampanye sesuai","Budget harian realistis","Minimal 3 variasi kreatif"]},
+{"type":"statement","text":"Iklan jelek jarang karena **budget kecil.** Lebih sering karena datanya kosong.","note":"Aku lihat pola ini berulang di akun baru."},
+{"type":"cta","title":"Simpan buat **iklan pertamamu**","body":"Kirim ke teman yang baru mulai pasang iklan.","action":"Komen IKLAN, aku kirim checklist lengkapnya"}
+]}
