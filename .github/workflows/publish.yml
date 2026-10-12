@@ -1,0 +1,37 @@
+name: Publish Threads & Shorts
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+concurrency: publish
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests google-api-python-client google-auth
+      - name: Cek antrian
+        id: q
+        run: |
+          if grep -l '"status": *"approved"' queue/*.json 2>/dev/null | head -1; then echo "ada=1" >> $GITHUB_OUTPUT; fi
+      - name: Publish
+        if: steps.q.outputs.ada == '1'
+        env:
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python publish.py
+      - name: Simpan hasil
+        if: steps.q.outputs.ada == '1'
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add queue
+          git diff --cached --quiet || (git commit -m "publish: update status antrian" && git pull --rebase && git push)

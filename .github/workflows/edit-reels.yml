@@ -1,0 +1,40 @@
+name: Edit Reels otomatis
+on:
+  push:
+    paths: ["edits/**.json"]
+  workflow_dispatch:
+concurrency: edit-reels
+permissions:
+  contents: write
+jobs:
+  edit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install faster-whisper pillow gdown
+      - run: bash setup/fonts.sh
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-small
+      - name: Unduh rekaman dari Drive
+        run: python fetch_media.py || echo "ada file gagal diunduh" >> edit_gagal.txt
+      - name: Render spec yang belum punya video
+        run: |
+          for f in edits/*.json; do
+            id=$(basename "$f" .json)
+            if [ ! -f "aset/$id/$id.mp4" ]; then
+              echo "== $id"; python edit_reel.py "$f" || echo "GAGAL $id" >> edit_gagal.txt
+            fi
+          done
+      - name: Simpan hasil
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add aset
+          [ -f edit_gagal.txt ] && git add edit_gagal.txt || true
+          git diff --cached --quiet || (git commit -m "edit: render reels" && git pull --rebase && git push)

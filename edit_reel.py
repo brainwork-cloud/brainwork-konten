@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+"""
+Editor Reels otomatis @nopal.brainwork  (dijalankan GitHub Actions / mesin dengan internet)
+
+Pemakaian:
+  python3 edit_reel.py edits/<ID>.json            -> aset/<ID>/<ID>.mp4 + <ID>_cover.jpg
+  python3 edit_reel.py edits/<ID>.json --words w.json   (lewati transkripsi; untuk uji)
+
+Spec edit (ditulis agen Produser):
+{
+  "id": "BW-261014-01",
+  "mode": "faceless",                  # faceless | talking_head
+  "audio": "rekaman/BW-261014-01/vo.m4a",          # faceless: file voice over
+  "broll": ["rekaman/BW-261014-01/layar1.mp4"],    # faceless: rekaman layar, urut
+  "camera": "rekaman/BW-261014-01/kamera.mp4",     # talking_head: video + suara
+  "hook": "Matiin 1 setting ini",       # teks besar 3 detik pertama (<= 6 kata)
+  "highlight_words": ["pixel", "gratis"],          # kata yang diberi warna emas di subtitle
+  "cut_silence": true,                  # buang jeda > 0.6 dtk
+  "outro": "Follow @nopal.brainwork buat tips iklan & AI"
+}
+Hasil: MP4 H.264 1080x1920 30fps + AAC, subtitle tertanam, siap IG Reels / TikTok / Shorts.
+"""
+import sys, os, json, subprocess, tempfile, shutil, re
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+FONTS = os.path.join(HERE, "fonts")
+W, H, FPS = 1080, 1920, 30
+GOLD_ASS = "&H0007C1F5&"   # BGR untuk #F5C107
+WHITE_ASS = "&H00FFFFFF&"
+
+
+def run(cmd):
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode != 0:
+        sys.exit("FFMPEG GAGAL:\n" + " ".join(cmd) + "\n" + r.stderr[-3000:])
+    return r.stdout
+
+
+def duration(path):
+    out = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path])
+    return float(out.strip())
+
+
+# ---------- 1. Transkripsi ----------
+def transcribe(audio):
+    from faster_whisper import WhisperModel
+    model = WhisperModel(os.environ.get("WHISPER_MODEL", "small"), device="cpu", compute_type="int8")
+    segs, _ = model.transcribe(audio, language="id", word_timestamps=True, vad_filter=True)
+    words = []
+    for s in segs:
+        for w in s.words or []:
+            words.append({"w": w.word.strip(), "s": round(w.start, 3), "e": round(w.end, 3)})
+    return words
+
+
+# ---------- 2. Potong jeda ----------
+def keep_segments(words, total, gap=0.6, pad=0.15):
+    if not words:
+        return [(0, total)]
+    segs, start = [], max(0, words[0]["s"] - pad)
+    for a, b in zip(words, words[1:]):
+        if b["s"] - a["e"] > gap:
+            segs.append((start, min(total, a["e"] + pad)))
+            start = max(0, b["s"] - pad)
+    segs.append((start, min(total, words[-1]["e"] + pad)))
+    return segs
+
+
+def remap(t, segs):
+    acc = 0
+    for s, e in segs:
+        if t < s:
+            return acc
+        if t <= e:
+            return acc + (t - s)
+        acc += e - s
+    return acc
+
+
+# ---------- 3. Subtitle ASS ----------
+def ass_time(t):
+    h, r = divmod(max(t, 0), 3600)
+    m, s = divmod(r, 60)
+    return f"{int(h)}:{int(m):02d}:{s:05.2f}"
+
+
+def build_ass(words, hook, highlights, total, path):
+    hl = {h.lower() for h in highlights or []}
+    head = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: {W}
+PlayResY: {H}
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Poppins Black,92,&H00FFFFFF,&H00FFFFFF,&H00140814,&H96000000,-1,0,0,0,100,100,0,0,1,7,3,2,80,80,560,1
+Style: Hook,Poppins Black,104,&H00FFFFFF,&H00FFFFFF,&H0080184A,&H96000000,-1,0,0,0,100,100,0,0,3,26,0,8,70,70,260,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    lines = []
+    if hook:
+        lines.append(f"Dialogue: 1,{ass_time(0)},{ass_time(min(3.0, total))},Hook,,0,0,0,,{{\\fad(120,200)}}{hook.upper()}")
+    # potong per 3 kata, maksimal 1,6 detik
+    chunk = []
+    for w in words + [None]:
+        if w is not None:
+            chunk.append(w)
+        if chunk and (w is None or len(chunk) == 3 or chunk[-1]["e"] - chunk[0]["s"] > 1.6
+                      or re.search(r"[.,?!]$", chunk[-1]["w"])):
+            st, en = chunk[0]["s"], chunk[-1]["e"]
+            for i, cw in enumerate(chunk):
+                # karaoke: kata yang sedang diucapkan berwarna emas
+                parts = []
+                for j, x in enumerate(chunk):
+                    txt = re.sub(r"[{}\\]", "", x["w"]).upper()
+                    gold = j == i or x["w"].lower().strip(".,?!") in hl
+                    parts.append(("{\\c" + GOLD_ASS + "}" if gold else "{\\c" + WHITE_ASS + "}") + txt)
+                s2 = cw["s"] if i else st
+                e2 = chunk[i + 1]["s"] if i + 1 < len(chunk) else en
+                lines.append(f"Dialogue: 0,{ass_time(s2)},{ass_time(max(e2, s2 + 0.05))},Cap,,0,0,0,,{' '.join(parts)}")
+            chunk = []
+    open(path, "w", encoding="utf-8").write(head + "\n".join(lines) + "\n")
+
+
+# ---------- 4. Outro ----------
+def outro_png(text, path):
+    img = Image.new("RGB", (W, H), (10, 8, 20))
+    d = ImageDraw.Draw(img)
+    for gx in range(0, W, 90):
+        d.line([(gx, 0), (gx, H)], fill=(40, 22, 74))
+    for gy in range(0, H, 90):
+        d.line([(0, gy), (W, gy)], fill=(40, 22, 74))
+    f1 = ImageFont.truetype(os.path.join(FONTS, "Poppins-Black.ttf"), 92)
+    f2 = ImageFont.truetype(os.path.join(FONTS, "Poppins-SemiBold.ttf"), 52)
+    d.text((W / 2, H / 2 - 120), "@nopal.brainwork", font=f1, fill=(245, 193, 7), anchor="mm")
+    # bungkus teks
+    words, lines, cur = (text or "").split(), [], ""
+    for w in words:
+        t = (cur + " " + w).strip()
+        if d.textlength(t, font=f2) > W - 200:
+            lines.append(cur); cur = w
+        else:
+            cur = t
+    if cur:
+        lines.append(cur)
+    y = H / 2 + 10
+    for ln in lines:
+        d.text((W / 2, y), ln, font=f2, fill=(255, 255, 255), anchor="mm"); y += 72
+    img.save(path)
+
+
+def main():
+    spec_path = sys.argv[1]
+    spec = json.load(open(spec_path, encoding="utf-8"))
+    words_override = sys.argv[sys.argv.index("--words") + 1] if "--words" in sys.argv else None
+    root = os.path.dirname(os.path.dirname(os.path.abspath(spec_path)))  # repo root
+    P = lambda p: p if os.path.isabs(p) else os.path.join(root, p)
+    out_dir = os.path.join(root, "aset", spec["id"]); os.makedirs(out_dir, exist_ok=True)
+    tmp = tempfile.mkdtemp()
+
+    mode = spec.get("mode", "faceless")
+    src_audio = P(spec["audio"] if mode == "faceless" else spec["camera"])
+    wav = os.path.join(tmp, "a.wav")
+    run(["ffmpeg", "-y", "-i", src_audio, "-vn", "-ac", "1", "-ar", "16000", wav])
+    total = duration(wav)
+
+    words = json.load(open(words_override)) if words_override else transcribe(wav)
+    json.dump(words, open(os.path.join(out_dir, f"{spec['id']}_words.json"), "w"), ensure_ascii=False)
+
+    segs = keep_segments(words, total) if spec.get("cut_silence", True) else [(0, total)]
+    new_words = [{"w": w["w"], "s": remap(w["s"], segs), "e": remap(w["e"], segs)} for w in words]
+    main_len = sum(e - s for s, e in segs)
+
+    # filter potong audio
+    sel = "+".join(f"between(t,{s:.3f},{e:.3f})" for s, e in segs)
+
+    # visual dasar
+    base = os.path.join(tmp, "base.mp4")
+    if mode == "faceless":
+        clips = [P(b) for b in spec["broll"]]
+        lst = os.path.join(tmp, "list.txt")
+        norm = []
+        for i, c in enumerate(clips):
+            n = os.path.join(tmp, f"n{i}.mp4")
+            # layar di tengah, latar = versi blur gelap dari rekaman itu sendiri
+            run(["ffmpeg", "-y", "-i", c, "-an", "-filter_complex",
+                 f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},boxblur=30:2,eq=brightness=-0.35[bg];"
+                 f"[0:v]scale={W - 60}:-2:force_original_aspect_ratio=decrease[fg];"
+                 f"[bg][fg]overlay=(W-w)/2:(H-h)/2-80,fps={FPS},setsar=1,format=yuv420p",
+                 "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", n])
+            norm.append(n)
+        open(lst, "w").write("".join(f"file '{n}'\n" for n in norm))
+        cat = os.path.join(tmp, "cat.mp4")
+        run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", cat])
+        # ulang/potong supaya sama panjang dengan audio yang sudah dipotong
+        run(["ffmpeg", "-y", "-stream_loop", "-1", "-i", cat, "-t", f"{main_len:.3f}", "-c:v", "libx264",
+             "-preset", "veryfast", "-crf", "20", "-an", base])
+        run(["ffmpeg", "-y", "-i", base, "-i", wav, "-filter_complex",
+             f"[1:a]aselect='{sel}',asetpts=N/SR/TB,loudnorm=I=-14:TP=-1.5,aresample=48000[a]",
+             "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest",
+             os.path.join(tmp, "main.mp4")])
+    else:
+        run(["ffmpeg", "-y", "-i", src_audio, "-filter_complex",
+             f"[0:v]select='{sel}',setpts=N/FRAME_RATE/TB,scale={W}:{H}:force_original_aspect_ratio=increase,"
+             f"crop={W}:{H},fps={FPS},format=yuv420p[v];[0:a]aselect='{sel}',asetpts=N/SR/TB,loudnorm=I=-14:TP=-1.5,aresample=48000[a]",
+             "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
+             "-c:a", "aac", "-b:a", "160k", os.path.join(tmp, "main.mp4")])
+
+    # subtitle + hook
+    ass = os.path.join(tmp, "cap.ass")
+    build_ass(new_words, spec.get("hook"), spec.get("highlight_words"), main_len, ass)
+    subbed = os.path.join(tmp, "sub.mp4")
+    run(["ffmpeg", "-y", "-i", os.path.join(tmp, "main.mp4"), "-vf", f"subtitles={ass}:fontsdir={FONTS}",
+         "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "copy", subbed])
+
+    final = os.path.join(out_dir, f"{spec['id']}.mp4")
+    if spec.get("outro"):
+        png = os.path.join(tmp, "outro.png"); outro_png(spec["outro"], png)
+        ov = os.path.join(tmp, "outro.mp4")
+        run(["ffmpeg", "-y", "-loop", "1", "-i", png, "-f", "lavfi", "-i", "anullsrc=r=48000:cl=mono",
+             "-t", "1.8", "-vf", f"fps={FPS},format=yuv420p", "-c:v", "libx264", "-preset", "veryfast",
+             "-c:a", "aac", "-ar", "48000", "-shortest", ov])
+        run(["ffmpeg", "-y", "-i", subbed, "-i", ov, "-filter_complex",
+             "[0:v]setsar=1[v0];[1:v]setsar=1[v1];[0:a]aresample=48000[a0];[1:a]aresample=48000[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]", "-map", "[v]", "-map", "[a]",
+             "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "aac", "-b:a", "160k",
+             "-movflags", "+faststart", final])
+    else:
+        run(["ffmpeg", "-y", "-i", subbed, "-c", "copy", "-movflags", "+faststart", final])
+
+    # versi kecil (< 9,5 MB) untuk upload TikTok lewat Chrome (batas upload 10 MB per file)
+    dur = duration(final)
+    vbit = int(min(3500, max(600, (9.5 * 8000 / dur) - 140)))  # kbps
+    tiktok = os.path.join(out_dir, f"{spec['id']}_tiktok.mp4")
+    run(["ffmpeg", "-y", "-i", final, "-vf", "scale=720:1280", "-c:v", "libx264", "-preset", "slow",
+         "-b:v", f"{vbit}k", "-maxrate", f"{vbit}k", "-bufsize", f"{vbit * 2}k", "-c:a", "aac", "-b:a", "128k",
+         "-movflags", "+faststart", tiktok])
+
+    cover = os.path.join(out_dir, f"{spec['id']}_cover.jpg")
+    run(["ffmpeg", "-y", "-ss", "0.8", "-i", final, "-frames:v", "1", "-q:v", "3", cover])
+    size_mb = os.path.getsize(final) / 1e6
+    shutil.rmtree(tmp, ignore_errors=True)
+    print(json.dumps({"video": final, "cover": cover, "duration": round(duration(final), 2),
+                      "size_mb": round(size_mb, 1), "words": len(words)}))
+
+
+if __name__ == "__main__":
+    main()
