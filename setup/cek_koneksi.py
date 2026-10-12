@@ -8,8 +8,11 @@ if os.environ.get("THREADS_ACCESS_TOKEN"):
         "fields": "id,username", "access_token": os.environ["THREADS_ACCESS_TOKEN"]}, timeout=30)
     if r.ok:
         d = r.json()
-        same = d.get("id") == os.environ.get("THREADS_USER_ID")
-        print(f"THREADS: OK @{d.get('username')} (id cocok dengan THREADS_USER_ID: {same})")
+        uid = os.environ.get("THREADS_USER_ID")
+        same = (not uid) or d.get("id") == uid
+        print(f"THREADS: OK @{d.get('username')} | id {d.get('id')} | cocok dengan THREADS_USER_ID: {same if uid else 'secret kosong, dipakai otomatis'}")
+        if d.get("username") != "nopal.brainwork":
+            print("THREADS: PERINGATAN token ini bukan milik @nopal.brainwork")
         ok &= same and d.get("username") == "nopal.brainwork"
     else:
         print("THREADS: GAGAL", r.status_code, r.text[:300]); ok = False

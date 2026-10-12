@@ -28,7 +28,8 @@ TH = "https://graph.threads.net/v1.0"
 
 
 def threads_post(item):
-    tok, uid = os.environ["THREADS_ACCESS_TOKEN"], os.environ["THREADS_USER_ID"]
+    tok = os.environ["THREADS_ACCESS_TOKEN"]
+    uid = os.environ.get("THREADS_USER_ID") or requests.get(f"{TH}/me", params={"fields": "id", "access_token": tok}, timeout=30).json()["id"]
     reply_to, ids = None, []
     for i, text in enumerate(item["posts"]):
         if len(text) > 500:
