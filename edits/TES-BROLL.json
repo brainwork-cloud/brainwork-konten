@@ -1,4 +1,0 @@
-{"id":"TES-BROLL","mode":"activity","hook":"Tes b-roll 5","outro":"Follow @nopal.brainwork",
- "make_broll":[{"name":"b1","type":"web","url":"https://www.facebook.com/ads/library/","seconds":5},
-               {"name":"b2","type":"motion","scenes":[{"type":"mock","kicker":"Ilustrasi","path":["Profil","Menu","Pengaturan"],"screen":"Kualitas media","rows":[{"label":"Upload at highest quality","on":true,"hl":true}],"dur":3}]}],
- "clips":[{"file":"rekaman/TES-BROLL/b1.mp4","dur":4,"text":"Rekaman web publik"},{"file":"rekaman/TES-BROLL/b2.mp4","dur":3,"text":"Mockup layar"}]}
