@@ -21,21 +21,24 @@ Kerjakan baris Antrian berstatus `DRAFT`, `REVISI` (baca Catatan Review), dan `P
 4. Isi Sheet: Hook, Naskah/Isi (teks per slide), Caption, Aset = `https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_01.jpg` … sesuai jumlah slide (satu per baris), Caption TikTok, Mirror `BELUM`, Status `SIAP REVIEW`. Lalu dengan tool update_formulas isi kolom U dan V (SHA = `git log -1 --format=%H -- aset/<ID>` di repo setelah pull):
    U `=HYPERLINK("https://cdn.jsdelivr.net/gh/brainwork-cloud/brainwork-konten@<SHA>/aset/<ID>/","Lihat semua slide")`, V `=IMAGE("https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_01.jpg")`.
 
-## B. Talking Head / Reels Aktivitas (status DRAFT/REVISI)
-Naufal HANYA merekam kamera (wajah bicara, atau aktivitas sehari-hari). Ia TIDAK merekam layar dan TIDAK membuat voice over. Semua visual layar/aplikasi kamu yang sediakan lewat B-roll otomatis (lihat `make_broll.py`).
+## B. Talking Head / Reels Faceless / Reels Aktivitas (status DRAFT/REVISI)
+Naufal hanya merekam kamera (wajah bicara atau aktivitas) dan/atau voice over. Ia TIDAK merekam layar. Semua visual layar/aplikasi kamu yang sediakan lewat B-roll otomatis (lihat `make_broll.py`).
 1. Talking Head: kalimat pembuka persis + 4–6 poin bicara + penutup, 40–60 dtk. Rencanakan 2–4 sisipan B-roll: tulis di Naskah baris "[B-ROLL setelah kata '<kata>'] <isi>". Jenis B-roll:
    - `web`: rekaman scroll halaman PUBLIK tanpa login (contoh Meta Ad Library, situs resmi tool, halaman bantuan resmi). Cek URL bisa dibuka tanpa login.
    - `motion`: animasi mockup layar aplikasi generik (scene `mock` di `render_motion.py`, tanpa logo/tampilan resmi; isi baris menu persis sumber resmi) atau scene teks/angka (`stat`, `points`).
    Tugas Naufal persis: "Rekam talking head (HP vertikal, cahaya dari depan, suara jelas, boleh di kantor/rumah) lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/ dengan nama kamera.mp4. Jangan sampai layar kerja, dokumen, atau data kantor terlihat di belakang."
+1b. Reels Faceless: naskah VO 30–45 dtk (hook 3 dtk pertama) + daftar B-roll berurutan yang menutup seluruh durasi (3–6 klip, jenis `web`/`motion` seperti di atas, tiap 4–8 dtk).
+   Tugas Naufal persis: "Rekam voice over (baca naskah di kolom Naskah, HP dekat mulut, ruangan tenang) lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/ dengan nama vo.m4a."
 2. Reels Aktivitas: 4–6 klip aktivitas tanpa bicara (contoh: buka laptop, nulis ide di catatan, rapat santai tampak belakang, ngopi sambil review), tiap klip 2–4 dtk, plus teks singkat di layar per klip (≤ 7 kata) yang membentuk cerita/tips + hook ≤ 6 kata. Musik dibuat otomatis.
    Tugas Naufal persis: "Rekam klip aktivitas (HP vertikal, 5–8 dtk per klip) lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/ dengan nama a1.mp4, a2.mp4, … sesuai daftar: a1 = …, a2 = …. Jangan rekam layar kerja, dokumen, data/brand kantor, atau wajah rekan tanpa izin."
 3. Isi Sheet: Naskah, Caption, Caption TikTok, Judul + Deskripsi Shorts, Tugas Naufal, Mirror `BELUM`, Status `PERLU REKAM`. Buat subfolder `<ID>` di Drive bila belum ada.
 
 ## C. Rekaman masuk (status PERLU REKAM)
 1. Cari subfolder `<ID>` di dalam folder induk `1h71GoD2jx4KzmgtYdaGMHSTVAPfYCylp` (Google Drive search_files / list). Kosong/tidak ada → lewati.
-2. Ada file → catat ID file Drive masing-masing (kamera.mp4, atau a1.mp4, a2.mp4 …). Tiap file maks 500 MB. File belum lengkap → lewati.
+2. Ada file → catat ID file Drive masing-masing (kamera.mp4, vo.m4a, atau a1.mp4, a2.mp4 …). Tiap file maks 500 MB. File belum lengkap → lewati.
 3. Tulis `edits/<ID>.json` (lihat docstring `edit_reel.py` dan `make_broll.py`) DAN `"sources": {"rekaman/<ID>/<nama>": "<ID_FILE_DRIVE>", ...}`:
    - Talking Head: `mode` "talking_head", `camera`, hook ≤ 6 kata, highlight_words 1–3, cut_silence true, outro, `make_broll` (nama b1, b2…; web/motion sesuai rencana Naskah) dan `cutaways` (`after_word` = kata pemicu dari naskah, `dur` 3–5, `clip` `rekaman/<ID>/b1.mp4`). Total sisipan ≤ 40% durasi.
+   - Reels Faceless: `mode` "faceless", `audio` `rekaman/<ID>/vo.m4a`, `make_broll` (b1, b2…), `broll` = [`rekaman/<ID>/b1.mp4`, …] berurutan, hook, highlight_words, cut_silence true, outro.
    - Reels Aktivitas: `mode` "activity", `clips` [{file, dur 2–4, start, text}], hook, outro.
    Push lewat git_sync.sh.
 4. Actions "Edit Reels otomatis" mengunduh, mentranskrip, dan merender (±5–15 menit). Tulis "sedang dirender" di Catatan Review, biarkan status PERLU REKAM.
@@ -46,6 +49,9 @@ Naufal HANYA merekam kamera (wajah bicara, atau aktivitas sehari-hari). Ia TIDAK
 2. QA: di sandbox-mu `python3 render_motion.py <spec> /tmp/qa --frames 2.5,<tengah tiap scene>` lalu lihat PNG dengan Read. Teks keluar area/menumpuk → perbaiki spec.
 3. Push lewat git_sync.sh. Actions "Render Reels Motion" membuat `aset/<ID>/<ID>.mp4`, `_tiktok.mp4`, `_cover.jpg` (±2 menit). Putaran ini juga boleh: tunggu 3 menit, pull, cek file ada; kalau ada `motion_gagal.txt` menyebut ID → perbaiki spec sekali.
 4. Isi Sheet: Naskah (ringkasan isi tiap scene + sumber), Caption (sebut sumber datanya), Caption TikTok, Judul + Deskripsi Shorts, Aset (baris 1 `.mp4`, baris 2 `_tiktok.mp4`, URL raw.githubusercontent), kolom U/V seperti Reels di bagian C, Mirror `BELUM`, Status `SIAP REVIEW`. Belum selesai render → Catatan Review "sedang dirender", status tetap DRAFT, selesaikan di run berikutnya.
+
+## F. Pilar NEWS (Topik diawali "NEWS")
+Kerjakan baris NEWS saat Tgl Tayang ≤ 3 hari lagi (kalau lebih jauh, lewati dulu supaya beritanya segar). Pilih 1 berita paling relevan untuk audiens (UMKM, marketer, kreator) dari 7 hari terakhir: update platform Meta/IG/Threads/TikTok/Google/YouTube, rilis tool AI, atau data riset industri. Buka sendiri sumber resmi/media kredibel (minimal 1 sumber resmi kalau ada), tulis URL di Catatan Review dan sebut sumber di caption. Bedakan "sudah rilis untuk semua" vs "masih tes/bertahap"; jangan klaim tersedia di Indonesia tanpa bukti. Tanpa politik, gosip, rumor, atau berita duka. Lalu produksi sesuai formatnya (D Threads, E Reels Motion, A Carousel) dan isi Topik dengan judul berita final.
 
 ## D. Threads (status DRAFT/REVISI)
 Single: 1 post ≤ 280 karakter. Utas: 4 post (hook → setup → insight → payoff bertanya), tiap ≤ 280 karakter, pisahkan dengan baris `---`. Tanpa hashtag, tanpa em dash. Mirror `TIDAK PERLU`, Status `SIAP REVIEW`.

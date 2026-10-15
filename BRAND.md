@@ -10,9 +10,10 @@ Versi 1 · 12 Okt 2026 · pemilik: Naufal · admin: Nazwa
 ## 2. Pilar konten & porsi per minggu
 | Pilar | Porsi | Format utama | Contoh |
 |---|---|---|---|
-| EVERGREEN | 50% | Carousel, Reels faceless (screen rec + VO) | Setting IG/Meta Ads, tools AI, website berguna, checklist |
-| ARSIP (kemas ulang hit lama) | 25% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
-| IDENTITAS | 25% | Talking head, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja (tanpa data perusahaan) |
+| EVERGREEN | 40% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist |
+| NEWS | 20% | Threads, Reels Motion, Carousel | Update platform (Meta, IG, Threads, TikTok, Google, YouTube), rilis/fitur tool AI, data riset industri terbaru, tren digital marketing Indonesia. WAJIB dari sumber resmi/media kredibel yang dibuka sendiri, berita ≤ 7 hari saat tayang, sebut sumber di caption, bedakan "sudah rilis" vs "masih tes". Tanpa politik, gosip, atau rumor. |
+| ARSIP (kemas ulang hit lama) | 20% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
+| IDENTITAS | 20% | Talking head, Reels Aktivitas, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja, keseharian kerja (tanpa data perusahaan) |
 | THREADS | 3–5 post/minggu | Single post ATAU utas 4 post | Kasus + angka + cliffhanger |
 
 ## 3. Suara & gaya (wajib)
