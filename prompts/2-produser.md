@@ -21,14 +21,23 @@ Kerjakan baris Antrian berstatus `DRAFT`, `REVISI` (baca Catatan Review), dan `P
 4. Isi Sheet: Hook, Naskah/Isi (teks per slide), Caption, Aset = `https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_01.jpg` … sesuai jumlah slide (satu per baris), Caption TikTok, Mirror `BELUM`, Status `SIAP REVIEW`. Lalu dengan tool update_formulas isi kolom U dan V (SHA = `git log -1 --format=%H -- aset/<ID>` di repo setelah pull):
    U `=HYPERLINK("https://cdn.jsdelivr.net/gh/brainwork-cloud/brainwork-konten@<SHA>/aset/<ID>/","Lihat semua slide")`, V `=IMAGE("https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_01.jpg")`.
 
-## B. Reels Faceless / Talking Head (status DRAFT/REVISI)
-1. Faceless: naskah VO 30–45 dtk (hook 3 dtk pertama) + shot list "[urutan] rekam layar: ...". Talking head: kalimat pembuka persis + 4–6 poin bicara + penutup.
-2. Isi Sheet: Naskah, Caption, Caption TikTok, Judul + Deskripsi Shorts, Tugas Naufal (persis: "Rekam lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/: vo.m4a + layar1.mp4, layar2.mp4…" atau "kamera.mp4" untuk talking head), Mirror `BELUM`, Status `PERLU REKAM`.
+## B. Talking Head / Reels Aktivitas (status DRAFT/REVISI)
+Naufal HANYA merekam kamera (wajah bicara, atau aktivitas sehari-hari). Ia TIDAK merekam layar dan TIDAK membuat voice over. Semua visual layar/aplikasi kamu yang sediakan lewat B-roll otomatis (lihat `make_broll.py`).
+1. Talking Head: kalimat pembuka persis + 4–6 poin bicara + penutup, 40–60 dtk. Rencanakan 2–4 sisipan B-roll: tulis di Naskah baris "[B-ROLL setelah kata '<kata>'] <isi>". Jenis B-roll:
+   - `web`: rekaman scroll halaman PUBLIK tanpa login (contoh Meta Ad Library, situs resmi tool, halaman bantuan resmi). Cek URL bisa dibuka tanpa login.
+   - `motion`: animasi mockup layar aplikasi generik (scene `mock` di `render_motion.py`, tanpa logo/tampilan resmi; isi baris menu persis sumber resmi) atau scene teks/angka (`stat`, `points`).
+   Tugas Naufal persis: "Rekam talking head (HP vertikal, cahaya dari depan, suara jelas, boleh di kantor/rumah) lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/ dengan nama kamera.mp4. Jangan sampai layar kerja, dokumen, atau data kantor terlihat di belakang."
+2. Reels Aktivitas: 4–6 klip aktivitas tanpa bicara (contoh: buka laptop, nulis ide di catatan, rapat santai tampak belakang, ngopi sambil review), tiap klip 2–4 dtk, plus teks singkat di layar per klip (≤ 7 kata) yang membentuk cerita/tips + hook ≤ 6 kata. Musik dibuat otomatis.
+   Tugas Naufal persis: "Rekam klip aktivitas (HP vertikal, 5–8 dtk per klip) lalu upload ke Google Drive folder Brainwork Rekaman/<ID>/ dengan nama a1.mp4, a2.mp4, … sesuai daftar: a1 = …, a2 = …. Jangan rekam layar kerja, dokumen, data/brand kantor, atau wajah rekan tanpa izin."
+3. Isi Sheet: Naskah, Caption, Caption TikTok, Judul + Deskripsi Shorts, Tugas Naufal, Mirror `BELUM`, Status `PERLU REKAM`. Buat subfolder `<ID>` di Drive bila belum ada.
 
 ## C. Rekaman masuk (status PERLU REKAM)
 1. Cari subfolder `<ID>` di dalam folder induk `1h71GoD2jx4KzmgtYdaGMHSTVAPfYCylp` (Google Drive search_files / list). Kosong/tidak ada → lewati.
-2. Ada file → catat ID file Drive masing-masing (vo.m4a, layar1.mp4…, atau kamera.mp4). Tiap file maks 500 MB.
-3. Tulis `edits/<ID>.json` (lihat docstring `edit_reel.py`: mode, audio/broll atau camera dengan path `rekaman/<ID>/<nama>`, hook ≤ 6 kata, highlight_words 1–3 kata kunci, cut_silence true, outro) DAN `"sources": {"rekaman/<ID>/<nama>": "<ID_FILE_DRIVE>", ...}`. Push lewat git_sync.sh.
+2. Ada file → catat ID file Drive masing-masing (kamera.mp4, atau a1.mp4, a2.mp4 …). Tiap file maks 500 MB. File belum lengkap → lewati.
+3. Tulis `edits/<ID>.json` (lihat docstring `edit_reel.py` dan `make_broll.py`) DAN `"sources": {"rekaman/<ID>/<nama>": "<ID_FILE_DRIVE>", ...}`:
+   - Talking Head: `mode` "talking_head", `camera`, hook ≤ 6 kata, highlight_words 1–3, cut_silence true, outro, `make_broll` (nama b1, b2…; web/motion sesuai rencana Naskah) dan `cutaways` (`after_word` = kata pemicu dari naskah, `dur` 3–5, `clip` `rekaman/<ID>/b1.mp4`). Total sisipan ≤ 40% durasi.
+   - Reels Aktivitas: `mode` "activity", `clips` [{file, dur 2–4, start, text}], hook, outro.
+   Push lewat git_sync.sh.
 4. Actions "Edit Reels otomatis" mengunduh, mentranskrip, dan merender (±5–15 menit). Tulis "sedang dirender" di Catatan Review, biarkan status PERLU REKAM.
 5. Putaran berikutnya: git_sync.sh pull lalu cek `aset/<ID>/<ID>.mp4` sudah ada. Ada → baca `aset/<ID>/<ID>_words.json` (transkrip masuk akal?) dan lihat `<ID>_cover.jpg` (unduh via raw.githubusercontent.com lalu Read). Isi Aset = `https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>.mp4` (baris 1) dan `https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_tiktok.mp4` (baris 2), Status `SIAP REVIEW`. Isi juga dengan update_formulas (SHA = `git log -1 --format=%H -- aset/<ID>`): U `=HYPERLINK("https://cdn.jsdelivr.net/gh/brainwork-cloud/brainwork-konten@<SHA>/aset/<ID>/<ID>_tiktok.mp4","Putar video")` (bisa langsung diputar di browser), V `=IMAGE("https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/<ID>/<ID>_cover.jpg")`. Kalau ada `edit_gagal.txt` yang menyebut ID ini: baca, perbaiki spec, push ulang sekali, catat di Log Agen.
 

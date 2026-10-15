@@ -15,7 +15,8 @@ jobs:
         with:
           python-version: "3.11"
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: pip install faster-whisper pillow gdown
+      - run: pip install faster-whisper pillow gdown numpy playwright
+      - run: python -m playwright install --with-deps chromium
       - run: bash setup/fonts.sh
       - uses: actions/cache@v4
         with:
@@ -23,6 +24,8 @@ jobs:
           key: whisper-small
       - name: Unduh rekaman dari Drive
         run: python fetch_media.py || echo "ada file gagal diunduh" >> edit_gagal.txt
+      - name: Buat B-roll otomatis (web publik & mockup)
+        run: python make_broll.py || echo "ada b-roll gagal" >> edit_gagal.txt
       - name: Render spec yang belum punya video
         run: |
           for f in edits/*.json; do

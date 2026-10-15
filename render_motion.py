@@ -237,7 +237,91 @@ def sc_end(fr, s, t, dur):
         fr.fade_text(X0, 1440, s["source"], font("r", 26), t, 1.8, MUTE)
 
 
-SCENES = {"hook": sc_hook, "stat": sc_stat, "points": sc_points, "statement": sc_statement, "end": sc_end}
+def sc_mock(fr, s, t, dur):
+    """Layar aplikasi ilustrasi (generik, tanpa logo) dengan animasi ketukan pada baris "hl".
+    {"type":"mock","kicker":"...","title":"...","path":["Profil","Menu","Pengaturan"],
+     "screen":"Kualitas media","rows":[{"label":"...","on":true,"hl":true,"note":"..."}],"dur":4}"""
+    y = 280
+    if s.get("kicker"):
+        fr.fade_text(X0, y, s["kicker"].upper(), font("s", 32), t, 0, GOLD); y += 60
+    if s.get("title"):
+        f = fit(fr.d, s["title"], "x", [72, 64, 56], XW, 2)
+        y = fr.text_anim(X0, y, s["title"], f, XW, t, 0.05) + 24
+    if s.get("path"):
+        cf = font("s", 30); x = X0
+        for i, step in enumerate(s["path"]):
+            a = eo(seg(t, 0.3 + i * 0.15, 0.6 + i * 0.15))
+            tw = fr.d.textlength(step, font=cf); pw = tw + 40
+            if x + pw > X0 + XW:
+                x, y = X0, y + 74
+            last = i == len(s["path"]) - 1
+            if a > 0:
+                bg = GOLD if last else (60, 30, 100)
+                bg = tuple(int(BG[k] + (bg[k] - BG[k]) * a) for k in range(3))
+                fr.d.rounded_rectangle([x, y, x + pw, y + 58], radius=29, fill=bg)
+                fr.d.text((x + 20, y + 29), step, font=cf, fill=BG if last else INK, anchor="lm")
+            x += pw + (46 if not last else 0)
+            if not last and a > 0:
+                fr.d.text((x - 23, y + 27), ">", font=font("b", 34), fill=GOLD, anchor="mm")
+        y += 100
+    # HP
+    p = eo(seg(t, 0.2, 0.7))
+    pw, ph = 720, min(1500 - y, 1100)
+    x0 = (W - pw) / 2; y0 = y + (1 - p) * 60
+    fr.d.rounded_rectangle([x0 - 16, y0 - 16, x0 + pw + 16, y0 + ph + 16], radius=64, fill=(44, 36, 64))
+    fr.d.rounded_rectangle([x0, y0, x0 + pw, y0 + ph], radius=50, fill=(24, 18, 40))
+    yy = y0 + 70
+    fr.d.text((x0 + 40, yy), "<", font=font("b", 44), fill=MUTE)
+    fr.d.text((x0 + 96, yy + 2), s.get("screen", ""), font=font("b", 42), fill=INK)
+    yy += 96
+    fr.d.line([(x0, yy), (x0 + pw, yy)], fill=(52, 42, 76), width=2)
+    lf, nf = font("s", 40), font("r", 32)
+    tap = 1.3
+    for r in s.get("rows", []):
+        items, h = layout(fr.d, r["label"], lf, pw - 230, 1.3)
+        rh = 60 + h + (44 if r.get("note") else 0); ry = yy
+        for (w, g, wx, wy) in items:
+            fr.d.text((x0 + 40 + wx, ry + 30 + wy), w, font=lf, fill=GOLD if g else INK)
+        if r.get("note"):
+            fr.d.text((x0 + 40, ry + 30 + h + 4), r["note"], font=nf, fill=MUTE)
+        if "on" in r:
+            on = r["on"]
+            if r.get("hl") and on:
+                on = t > tap + 0.15
+            tx, ty = x0 + pw - 160, ry + rh / 2 - 32
+            k = eo(seg(t, tap + 0.1, tap + 0.35)) if (r.get("hl") and r["on"]) else (1 if on else 0)
+            col = tuple(int((78, 70, 100)[c] + (PURPLE[c] - (78, 70, 100)[c]) * k) for c in range(3))
+            fr.d.rounded_rectangle([tx, ty, tx + 120, ty + 64], radius=32, fill=col)
+            kx = tx + 32 + 56 * k
+            fr.d.ellipse([kx - 26, ty + 6, kx + 26, ty + 58], fill=INK)
+        else:
+            fr.d.text((x0 + pw - 60, ry + rh / 2), ">", font=font("b", 40), fill=MUTE, anchor="mm")
+        yy = ry + rh
+        if r.get("hl"):
+            hp = eo(seg(t, 0.9, 1.2))
+            if hp > 0:
+                fr.d.rounded_rectangle([x0 + 12, ry + 6, x0 + pw - 12, yy - 6], radius=22, outline=GOLD, width=max(1, int(7 * hp)))
+            # lingkaran ketukan
+            rp = seg(t, tap, tap + 0.6)
+            if 0 < rp < 1:
+                cx, cy, rr = x0 + pw - 100, (ry + yy) / 2, 30 + 50 * rp
+                fr.d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], outline=GOLD, width=max(1, int(8 * (1 - rp))))
+        fr.d.line([(x0 + 24, yy), (x0 + pw - 24, yy)], fill=(52, 42, 76), width=2)
+
+
+SCENES = {"hook": sc_hook, "stat": sc_stat, "points": sc_points, "statement": sc_statement, "end": sc_end, "mock": sc_mock}
+
+
+def render_clip(scenes, path):
+    """B-roll tanpa suara dari daftar scene (dipakai make_broll.py)."""
+    spec = {"scenes": scenes}
+    total = sum(s["dur"] for s in scenes)
+    cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+           "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", path]
+    pr = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    for i in range(int(round(total * FPS))):
+        pr.stdin.write(render_frame(spec, i / FPS).tobytes())
+    pr.stdin.close(); pr.wait()
 
 
 def render_frame(spec, T):

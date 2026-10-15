@@ -9,14 +9,19 @@ Pemakaian:
 Spec edit (ditulis agen Produser):
 {
   "id": "BW-261014-01",
-  "mode": "faceless",                  # faceless | talking_head
+  "mode": "faceless",                  # faceless | talking_head | activity
   "audio": "rekaman/BW-261014-01/vo.m4a",          # faceless: file voice over
   "broll": ["rekaman/BW-261014-01/layar1.mp4"],    # faceless: rekaman layar, urut
   "camera": "rekaman/BW-261014-01/kamera.mp4",     # talking_head: video + suara
   "hook": "Matiin 1 setting ini",       # teks besar 3 detik pertama (<= 6 kata)
   "highlight_words": ["pixel", "gratis"],          # kata yang diberi warna emas di subtitle
   "cut_silence": true,                  # buang jeda > 0.6 dtk
-  "outro": "Follow @nopal.brainwork buat tips iklan & AI"
+  "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+  # talking_head: sisipan B-roll (dibuat make_broll.py) yang menimpa gambar wajah, suara tetap jalan
+  "cutaways": [{"after_word": "Library", "dur": 4, "clip": "rekaman/BW-261014-01/b1.mp4"},
+               {"at": 12.5, "dur": 3, "clip": "rekaman/BW-261014-01/b2.mp4"}],
+  # activity: klip aktivitas Naufal (tanpa bicara) + teks di layar + musik otomatis
+  "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka laporan iklan dulu"}]
 }
 Hasil: MP4 H.264 1080x1920 30fps + AAC, subtitle tertanam, siap IG Reels / TikTok / Shorts.
 """
@@ -126,6 +131,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     open(path, "w", encoding="utf-8").write(head + "\n".join(lines) + "\n")
 
 
+def activity_ass(hook, items, path):
+    """items: [(start, end, text)]"""
+    build_ass([], hook, [], items[-1][1] if items else 3, path)
+    style = "Style: Txt,Poppins Black,78,&H00FFFFFF,&H00FFFFFF,&H0080184A,&H96000000,-1,0,0,0,100,100,0,0,3,22,0,2,90,90,620,1\n"
+    head, ev = open(path, encoding="utf-8").read().split("[Events]")
+    head = head.rstrip("\n") + "\n" + style + "\n"
+    lines = [f"Dialogue: 0,{ass_time(a + (0.6 if i == 0 and hook else 0))},{ass_time(b)},Txt,,0,0,0,,{{\\fad(150,150)}}{re.sub(r'[{}\\\\]', '', t)}"
+             for i, (a, b, t) in enumerate(items) if t]
+    open(path, "w", encoding="utf-8").write(head + "[Events]" + ev.rstrip("\n") + "\n" + "\n".join(lines) + "\n")
+
+
 # ---------- 4. Outro ----------
 def outro_png(text, path):
     img = Image.new("RGB", (W, H), (10, 8, 20))
@@ -163,6 +179,8 @@ def main():
     tmp = tempfile.mkdtemp()
 
     mode = spec.get("mode", "faceless")
+    if mode == "activity":
+        return activity(spec, P, out_dir, tmp)
     src_audio = P(spec["audio"] if mode == "faceless" else spec["camera"])
     wav = os.path.join(tmp, "a.wav")
     run(["ffmpeg", "-y", "-i", src_audio, "-vn", "-ac", "1", "-ar", "16000", wav])
@@ -210,6 +228,26 @@ def main():
              "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
              "-c:a", "aac", "-b:a", "160k", os.path.join(tmp, "main.mp4")])
 
+    # sisipan B-roll (talking head)
+    cuts = []
+    for c in spec.get("cutaways", []):
+        st = c.get("at")
+        if st is None and c.get("after_word"):
+            key = c["after_word"].lower().split()[0].strip(".,?!")
+            st = next((w["e"] for w in new_words if key in w["w"].lower()), None)
+        if st is not None and os.path.exists(P(c["clip"])):
+            cuts.append((max(0, st), min(float(c.get("dur", 3)), main_len - st), P(c["clip"])))
+    if cuts:
+        ins, fl, last = ["-i", os.path.join(tmp, "main.mp4")], [], "[0:v]"
+        for i, (st, du, clip) in enumerate(cuts, 1):
+            ins += ["-i", clip]
+            fl.append(f"[{i}:v]trim=0:{du:.3f},setpts=PTS-STARTPTS+{st:.3f}/TB,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}[c{i}]")
+            fl.append(f"{last}[c{i}]overlay=0:0:eof_action=pass:enable='between(t,{st:.3f},{st + du:.3f})'[o{i}]")
+            last = f"[o{i}]"
+        run(["ffmpeg", "-y", *ins, "-filter_complex", ";".join(fl), "-map", last, "-map", "0:a", "-c:v", "libx264",
+             "-preset", "veryfast", "-crf", "20", "-c:a", "copy", os.path.join(tmp, "main2.mp4")])
+        shutil.move(os.path.join(tmp, "main2.mp4"), os.path.join(tmp, "main.mp4"))
+
     # subtitle + hook
     ass = os.path.join(tmp, "cap.ass")
     build_ass(new_words, spec.get("hook"), spec.get("highlight_words"), main_len, ass)
@@ -217,6 +255,10 @@ def main():
     run(["ffmpeg", "-y", "-i", os.path.join(tmp, "main.mp4"), "-vf", f"subtitles={ass}:fontsdir={FONTS}",
          "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "copy", subbed])
 
+    finish(spec, subbed, out_dir, tmp, len(words))
+
+
+def finish(spec, subbed, out_dir, tmp, nwords):
     final = os.path.join(out_dir, f"{spec['id']}.mp4")
     if spec.get("outro"):
         png = os.path.join(tmp, "outro.png"); outro_png(spec["outro"], png)
@@ -244,7 +286,31 @@ def main():
     size_mb = os.path.getsize(final) / 1e6
     shutil.rmtree(tmp, ignore_errors=True)
     print(json.dumps({"video": final, "cover": cover, "duration": round(duration(final), 2),
-                      "size_mb": round(size_mb, 1), "words": len(words)}))
+                      "size_mb": round(size_mb, 1), "words": nwords}))
+
+
+def activity(spec, P, out_dir, tmp):
+    import numpy  # noqa: F401  (dipakai render_motion.score)
+    sys.path.insert(0, HERE)
+    import render_motion
+    norm, items, t = [], [], 0.0
+    for i, c in enumerate(spec["clips"]):
+        d = float(c.get("dur", 2.5)); n = os.path.join(tmp, f"a{i}.mp4")
+        run(["ffmpeg", "-y", "-ss", str(c.get("start", 0)), "-i", P(c["file"]), "-t", f"{d:.3f}", "-an", "-vf",
+             f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1,format=yuv420p",
+             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", n])
+        norm.append(n); items.append((t, t + d, c.get("text", ""))); t += d
+    lst = os.path.join(tmp, "list.txt"); open(lst, "w").write("".join(f"file '{n}'\n" for n in norm))
+    cat = os.path.join(tmp, "cat.mp4"); run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", cat])
+    scenes = [{"type": "hook", "dur": items[0][1]}] + [{"type": "statement", "dur": b - a} for a, b, _ in items[1:-1]] + [{"type": "end", "dur": items[-1][1] - items[-1][0]}]
+    wav = os.path.join(tmp, "m.wav"); render_motion.score({"scenes": scenes}, wav)
+    run(["ffmpeg", "-y", "-i", cat, "-i", wav, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
+         "-ar", "48000", "-shortest", os.path.join(tmp, "main.mp4")])
+    ass = os.path.join(tmp, "cap.ass"); activity_ass(spec.get("hook"), items, ass)
+    subbed = os.path.join(tmp, "sub.mp4")
+    run(["ffmpeg", "-y", "-i", os.path.join(tmp, "main.mp4"), "-vf", f"subtitles={ass}:fontsdir={FONTS}",
+         "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "copy", subbed])
+    finish(spec, subbed, out_dir, tmp, 0)
 
 
 if __name__ == "__main__":
