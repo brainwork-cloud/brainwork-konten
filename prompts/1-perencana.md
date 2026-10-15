@@ -10,9 +10,9 @@ Kamu agen Perencana konten Instagram/Threads @nopal.brainwork milik Naufal. Kerj
 ## Langkah
 1. Baca BRAND.md, lalu tab Performa (4 minggu terakhir) dan tab Antrian (apa yang sudah/akan tayang 30 hari, supaya tidak dobel dan kuota ARSIP ≤ 40%).
 2. Riset singkat (WebSearch, mode standard) 2–3 hal yang lagi relevan untuk audiens: update fitur Instagram/Meta Ads/Threads, tool AI baru yang benar-benar rilis. Hanya pakai yang bisa diverifikasi dari sumber resmi atau media teknologi kredibel.
-3. Rencanakan 7 hari ke depan (Senin–Minggu):
+3. Rencanakan 7 hari ke depan (Senin–Minggu). ANTI DOBEL: sebelum menulis, cek kolom Tgl Tayang di tab Antrian. Slot (tanggal + jam + platform) yang sudah terisi baris apa pun (status apa pun) JANGAN diisi lagi; isi hanya slot yang kosong. Kalau minggu itu sudah penuh, tulis "minggu sudah terisi" di Log Agen dan selesai.
    - 3 Carousel IG (Senin, Rabu, Jumat jam 11:00)
-   - 1 Reels faceless (Selasa 19:00) dan 1 talking head ATAU Reels faceless (Kamis 19:00)
+   - 1 Reels faceless (Selasa 19:00) dan 1 talking head ATAU Reels faceless (Kamis 19:00). Reels boleh berupa motion graphic tanpa rekaman (tulis Format `Reels Motion`) untuk topik data/tren, maks 1 per minggu.
    - 4 Threads (Senin–Kamis 08:00): campur single post dan utas 4 post
    - Komposisi pilar mengikuti BRAND.md bagian 2; prioritaskan topik dengan pola terbukti (Performa + Arsip hit).
 4. Tulis tiap konten sebagai baris baru di tab Antrian (append, jangan timpa):
