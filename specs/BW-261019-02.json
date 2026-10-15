@@ -1,0 +1,53 @@
+{
+ "id": "BW-261019-02",
+ "kicker": "INSTAGRAM",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Jangan klik **Bagikan** dulu",
+   "subtitle": "Cek 3 pengaturan ini sebelum posting",
+   "badge": "SIMPAN DULU"
+  },
+  {
+   "type": "point",
+   "num": "01",
+   "title": "Nyalakan **kualitas tertinggi**",
+   "body": [
+    "Buka Pengaturan dan aktivitas, lalu menu kualitas media",
+    "Aktifkan Upload at highest quality biar hasil nggak buram"
+   ],
+   "tip": "Cukup sekali, berlaku untuk upload berikutnya."
+  },
+  {
+   "type": "point",
+   "num": "02",
+   "title": "Tulis **alt text**",
+   "body": [
+    "Di layar terakhir, ketuk Pengaturan lanjutan, lalu Tulis teks alt",
+    "Jelaskan isi gambar dengan kalimat singkat dan jelas"
+   ],
+   "tip": "Membantu pengguna tunanetra memahami postinganmu."
+  },
+  {
+   "type": "point",
+   "num": "03",
+   "title": "Atur **jumlah suka**",
+   "body": [
+    "Di Pengaturan lanjutan, kamu bisa sembunyikan jumlah suka",
+    "Cocok kalau kamu mau audiens fokus ke isi, bukan angka"
+   ],
+   "tip": "Bisa diubah lagi setelah posting."
+  },
+  {
+   "type": "statement",
+   "text": "Postingan bagus bisa **kalah** karena hal kecil yang lupa dicek.",
+   "note": "Cuma butuh 30 detik sebelum posting."
+  },
+  {
+   "type": "cta",
+   "title": "Simpan buat **posting berikutnya**",
+   "body": "Kirim ke teman yang hasil upload-nya sering buram.",
+   "action": "Komen SETTING kalau mau tips IG lainnya"
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "id": "BW-261016-01",
+ "kicker": "META ADS PEMULA",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "CTR, CPM, CPC. Masih **bingung** bedanya?",
+   "subtitle": "Arti 6 metrik dasar Meta Ads, bahasa sederhana",
+   "badge": "SIMPAN DULU"
+  },
+  {
+   "type": "point",
+   "num": "01",
+   "title": "**Reach** vs **Impresi**",
+   "body": [
+    "Reach: jumlah akun yang melihat iklanmu minimal sekali",
+    "Impresi: berapa kali iklanmu tampil, termasuk tampil berulang"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "02",
+   "title": "**Frekuensi**",
+   "body": [
+    "Rata-rata berapa kali tiap akun melihat iklanmu",
+    "Kira-kira impresi dibagi reach"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "03",
+   "title": "**CTR**",
+   "body": [
+    "Persentase tayangan iklan yang berujung klik",
+    "Menunjukkan seberapa menarik iklanmu untuk diklik"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "04",
+   "title": "**CPC** dan **CPM**",
+   "body": [
+    "CPC: rata-rata biaya untuk satu klik",
+    "CPM: rata-rata biaya untuk 1.000 impresi"
+   ]
+  },
+  {
+   "type": "statement",
+   "text": "Angka **bagus** tiap bisnis beda. Bandingkan dengan hasilmu sendiri.",
+   "note": "Fokus ke tren, bukan patokan orang lain."
+  },
+  {
+   "type": "cta",
+   "title": "Simpan buat **cek laporan iklan**",
+   "body": "Kirim ke teman yang baru belajar Meta Ads.",
+   "action": "Komen METRIK kalau mau bahas cara bacanya"
+  }
+ ]
+}

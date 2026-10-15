@@ -1,0 +1,59 @@
+{
+ "id": "BW-261021-02",
+ "kicker": "META ADS",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Budget kecil? Masalahnya sering di **struktur campaign**",
+   "subtitle": "Pola sederhana yang gampang dibaca hasilnya",
+   "badge": "SIMPAN DULU"
+  },
+  {
+   "type": "point",
+   "num": "01",
+   "title": "Mulai dari **1 campaign**",
+   "body": [
+    "Satu tujuan saja, sesuai yang paling kamu butuhkan",
+    "Banyak campaign bikin budget kecil terpecah"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "02",
+   "title": "Cukup **1 sampai 2** ad set",
+   "body": [
+    "Satu target luas, satu lagi kalau mau tes audiens",
+    "Tiap ad set butuh data untuk belajar"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "03",
+   "title": "Isi **3 sampai 5** materi berbeda",
+   "body": [
+    "Beda hook, beda visual, bukan cuma beda warna",
+    "Biarkan sistem memilih yang paling direspons"
+   ]
+  },
+  {
+   "type": "list",
+   "title": "Cek **sebelum publish**",
+   "items": [
+    "Tujuan campaign sesuai target bisnis",
+    "Budget nggak dipecah ke banyak ad set",
+    "Biarkan jalan beberapa hari sebelum diubah"
+   ]
+  },
+  {
+   "type": "statement",
+   "text": "Struktur sederhana bikin kamu tahu **apa yang berhasil.**",
+   "note": "Pola umum, sesuaikan dengan produkmu."
+  },
+  {
+   "type": "cta",
+   "title": "Simpan sebelum **pasang iklan**",
+   "body": "Kirim ke teman yang lagi mulai jualan online.",
+   "action": "Komen STRUKTUR kalau mau dibahas lebih dalam"
+  }
+ ]
+}

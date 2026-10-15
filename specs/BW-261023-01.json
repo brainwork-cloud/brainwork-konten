@@ -1,0 +1,54 @@
+{
+ "id": "BW-261023-01",
+ "kicker": "WEBSITE BERGUNA",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Website ini kelihatan biasa. Padahal **hemat kerjaanmu**",
+   "subtitle": "4 website yang masih aktif per Oktober 2026",
+   "badge": "SIMPAN DULU"
+  },
+  {
+   "type": "point",
+   "num": "01",
+   "title": "**Photopea:** edit foto di browser",
+   "body": [
+    "Tampilannya mirip software edit foto profesional",
+    "Gratis, tanpa instal, buka di photopea.com"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "02",
+   "title": "**Squoosh:** kecilkan ukuran gambar",
+   "body": [
+    "Kompres gambar dan bandingkan hasilnya sebelum disimpan",
+    "Diproses di perangkatmu sendiri, buka di squoosh.app"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "03",
+   "title": "**iLovePDF:** semua urusan PDF",
+   "body": [
+    "Gabung, pisah, kompres, dan konversi file PDF",
+    "Fitur dasar gratis, ada juga versi berbayar"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "04",
+   "title": "**Coolors:** cari palet warna",
+   "body": [
+    "Bikin palet warna brand dalam hitungan detik",
+    "Bisa gratis, akun gratis ada batas simpan palet"
+   ]
+  },
+  {
+   "type": "cta",
+   "title": "Simpan biar **nggak lupa**",
+   "body": "Kirim ke teman yang kerjanya banyak di laptop.",
+   "action": "Komen WEB kalau mau daftar berikutnya"
+  }
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "id": "BW-261014-02",
+ "kicker": "COPYWRITING",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Orang nggak beli produkmu. Mereka beli **ceritanya.**",
+   "subtitle": "Kerangka 4 langkah buat caption dan iklan",
+   "badge": "SIMPAN DULU"
+  },
+  {
+   "type": "point",
+   "num": "01",
+   "title": "**Masalah** yang dirasakan",
+   "body": [
+    "Mulai dari situasi yang pembeli alami sehari-hari",
+    "Pakai bahasa mereka, bukan bahasa brosur"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "02",
+   "title": "**Titik balik**",
+   "body": [
+    "Momen saat solusi ditemukan",
+    "Di sini produkmu masuk, tanpa langsung jualan"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "03",
+   "title": "**Perubahan** setelahnya",
+   "body": [
+    "Tunjukkan keadaan sesudah pakai produk",
+    "Lebih kuat kalau spesifik dan mudah dibayangkan"
+   ]
+  },
+  {
+   "type": "point",
+   "num": "04",
+   "title": "**Ajakan** yang natural",
+   "body": [
+    "Tutup dengan satu langkah yang jelas",
+    "Misalnya chat sekarang, cek katalog, atau simpan dulu"
+   ]
+  },
+  {
+   "type": "list",
+   "title": "Contoh **fiktif**",
+   "items": [
+    "Masalah: Rina capek ngulek sambal tiap pagi",
+    "Titik balik: dia coba sambal rumahan dalam botol",
+    "Perubahan: sarapan siap lebih cepat, rasa tetap rumahan"
+   ]
+  },
+  {
+   "type": "cta",
+   "title": "Coba di **caption berikutnya**",
+   "body": "Kirim ke teman yang lagi bingung nulis caption.",
+   "action": "Komen CERITA kalau mau contoh lainnya"
+  }
+ ]
+}
