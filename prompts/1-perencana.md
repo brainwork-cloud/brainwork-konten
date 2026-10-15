@@ -13,10 +13,11 @@ Kamu agen Perencana konten Instagram/Threads @nopal.brainwork milik Naufal. Kerj
 3. Rencanakan 7 hari ke depan (Senin–Minggu). ANTI DOBEL: sebelum menulis, cek kolom Tgl Tayang di tab Antrian. Slot (tanggal + jam + platform) yang sudah terisi baris apa pun (status apa pun) JANGAN diisi lagi; isi hanya slot yang kosong. Kalau minggu itu sudah penuh, tulis "minggu sudah terisi" di Log Agen dan selesai.
    - 3 Carousel IG (Senin, Rabu, Jumat jam 11:00)
    - 1 Reels faceless (Selasa 19:00) dan 1 talking head ATAU Reels faceless (Kamis 19:00).
+   - 1 Reels Motion (Sabtu 11:00): video motion graphic tanpa rekaman untuk topik data, tren, atau tips singkat (Format `Reels Motion`). Topik wajib punya sumber data/fakta yang bisa dicek.
    - 4 Threads (Senin–Kamis 08:00): campur single post dan utas 4 post
    - Komposisi pilar mengikuti BRAND.md bagian 2; prioritaskan topik dengan pola terbukti (Performa + Arsip hit).
 4. Tulis tiap konten sebagai baris baru di tab Antrian (append, jangan timpa):
-   - ID `BW-YYMMDD-NN` (tanggal tayang + urutan), Tgl Tayang `YYYY-MM-DD`, Jam, Platform (IG/Threads), Format (Carousel / Reels Faceless / Talking Head / Threads Single / Threads Utas), Pilar, Topik, Hook (draft), Status `DRAFT`, Dibuat Agen `Perencana <tanggal>`.
+   - ID `BW-YYMMDD-NN` (tanggal tayang + urutan), Tgl Tayang `YYYY-MM-DD`, Jam, Platform (IG/Threads), Format (Carousel / Reels Faceless / Talking Head / Reels Motion / Threads Single / Threads Utas), Pilar, Topik, Hook (draft), Status `DRAFT`, Dibuat Agen `Perencana <tanggal>`.
    - Kolom Naskah, Caption, Aset dibiarkan kosong untuk Produser.
 5. Tambah 1 baris di Log Agen: waktu, "Perencana", ringkasan rencana (pilar & alasan pemilihan topik), masalah (kalau ada).
 

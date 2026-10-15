@@ -1,0 +1,6 @@
+{"id":"MOTION-TEST","music":true,"scenes":[
+ {"type":"hook","kicker":"Digital marketing 2026","text":"Calon pembelimu nggak cuma nyari di **Google** lagi","dur":3},
+ {"type":"stat","kicker":"Riset sebelum beli","big":"3 dari 5","text":"orang Indonesia pakai media sosial sebagai channel utama buat riset online","source":"Sumber: We Are Social & Meltwater, Digital 2026 Indonesia","dots":5,"dots_on":3,"dur":5},
+ {"type":"statement","kicker":"Sekarang juga nanya ke AI","text":"Lebih dari **1 dari 3** orang pakai ChatGPT tiap bulan","note":"Sumber yang sama","dur":4},
+ {"type":"points","kicker":"Artinya","title":"Kontenmu adalah **halaman pencarianmu**","items":["Judul yang langsung jawab pertanyaan","Kata kunci ditulis di caption","Isi yang layak disimpan"],"dur":4.5},
+ {"type":"end","kicker":"Simpan dulu","text":"Cek kontenmu minggu ini. Sudah gampang ditemukan belum?","dur":3.5}]}
