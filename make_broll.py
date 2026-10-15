@@ -21,12 +21,12 @@ sys.path.insert(0, ROOT)
 def web_clip(url, seconds, out, mobile=True):
     from playwright.sync_api import sync_playwright
     tmp = tempfile.mkdtemp()
-    vw, vh = (432, 768) if mobile else (1080, 1920)
+    vw, vh = (540, 960) if mobile else (1080, 1920)
     with sync_playwright() as p:
         b = p.chromium.launch()
-        ctx = b.new_context(viewport={"width": vw, "height": vh}, device_scale_factor=2.5 if mobile else 1,
+        ctx = b.new_context(viewport={"width": vw, "height": vh}, device_scale_factor=1,
                             is_mobile=mobile, has_touch=mobile, locale="id-ID",
-                            record_video_dir=tmp, record_video_size={"width": 1080, "height": 1920})
+                            record_video_dir=tmp, record_video_size={"width": vw, "height": vh})
         pg = ctx.new_page()
         try:
             pg.goto(url, wait_until="domcontentloaded", timeout=45000)
@@ -42,7 +42,7 @@ def web_clip(url, seconds, out, mobile=True):
         ctx.close(); b.close()
     # buang 2 detik awal (loading), samakan fps & ukuran
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "2", "-i", vid, "-t", str(seconds),
-                    "-vf", "scale=1080:1920,fps=30,format=yuv420p", "-an", "-c:v", "libx264", "-crf", "20", out], check=True)
+                    "-vf", "scale=1080:1920:flags=lanczos,fps=30,format=yuv420p", "-an", "-c:v", "libx264", "-crf", "20", out], check=True)
     shutil.rmtree(tmp, ignore_errors=True)
 
 
