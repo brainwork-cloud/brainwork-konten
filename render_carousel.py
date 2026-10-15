@@ -234,8 +234,120 @@ def centered(fn):
     return wrap
 
 
+SCREEN = (24, 18, 40)
+ROW_LINE = (52, 42, 76)
+OFF = (78, 70, 100)
+
+
+def _chips(d, y, path):
+    """Jalur menu: chip berurutan dengan panah, otomatis turun baris."""
+    f = font("semi", 30)
+    x, ph, gap = M, 58, 14
+    for i, step in enumerate(path):
+        tw = d.textlength(step, font=f)
+        pw = tw + 40
+        arrow = 0 if i == len(path) - 1 else 46
+        if x + pw > W - M and x > M:
+            x, y = M, y + ph + 16
+        last = i == len(path) - 1
+        d.rounded_rectangle([x, y, x + pw, y + ph], radius=ph / 2, fill=GOLD if last else PURPLE_D)
+        d.text((x + 20, y + ph / 2), step, font=f, fill=BG if last else WHITE, anchor="lm")
+        x += pw
+        if not last:
+            d.text((x + arrow / 2, y + ph / 2 - 2), ">", font=font("bold", 34), fill=GOLD, anchor="mm")
+            x += arrow
+    return y + ph
+
+
+def _phone(img, d, x0, y0, w, h):
+    d.rounded_rectangle([x0 - 14, y0 - 14, x0 + w + 14, y0 + h + 14], radius=58, fill=(44, 36, 64))
+    d.rounded_rectangle([x0, y0, x0 + w, y0 + h], radius=44, fill=SCREEN)
+    d.rounded_rectangle([x0 + w / 2 - 60, y0 + 16, x0 + w / 2 + 60, y0 + 36], radius=10, fill=(44, 36, 64))
+
+
+def _mock(d, x0, y0, w, h, mock):
+    """Layar pengaturan generik (bukan tampilan resmi aplikasi mana pun)."""
+    y = y0 + 70
+    d.text((x0 + 36, y), "<", font=font("bold", 44), fill=MUTE)
+    hf = fit(d, mock.get("header", ""), "bold", [44, 40, 36], w - 140, 1)
+    d.text((x0 + 90, y + 2), mock.get("header", ""), font=hf, fill=WHITE)
+    y += 92
+    d.line([(x0, y), (x0 + w, y)], fill=ROW_LINE, width=2)
+    lf, nf = font("semi", 40), font("reg", 32)
+    for r in mock.get("rows", []):
+        lines = wrap_rich(d, r["label"], lf, w - 230)
+        rh = 56 + len(lines) * 52 + (44 if r.get("note") else 0)
+        ry = y
+        yy = draw_rich(d, x0 + 40, ry + 28, r["label"], lf, w - 230, lh=1.3)
+        if r.get("note"):
+            d.text((x0 + 40, yy + 2), r["note"], font=nf, fill=MUTE)
+        if "on" in r:
+            tx, ty = x0 + w - 160, ry + rh / 2 - 32
+            d.rounded_rectangle([tx, ty, tx + 120, ty + 64], radius=32, fill=PURPLE if r["on"] else OFF)
+            kx = tx + 88 if r["on"] else tx + 32
+            d.ellipse([kx - 26, ty + 6, kx + 26, ty + 58], fill=WHITE)
+        elif r.get("chev", True):
+            d.text((x0 + w - 60, ry + rh / 2), ">", font=font("bold", 40), fill=MUTE, anchor="mm")
+        y = ry + rh
+        if r.get("hl"):
+            d.rounded_rectangle([x0 + 12, ry + 6, x0 + w - 12, y - 6], radius=22, outline=GOLD, width=7)
+            ay = (ry + y) / 2
+            d.polygon([(x0 + w + 30, ay), (x0 + w + 70, ay - 26), (x0 + w + 70, ay + 26)], fill=GOLD)
+        d.line([(x0 + 24, y), (x0 + w - 24, y)], fill=ROW_LINE, width=2)
+        if y > y0 + h - 60:
+            break
+
+
+def _shot(img, x0, y0, w, h, path, hl):
+    """Screenshot asli, dipotong pas layar, plus kotak sorot emas (koordinat pecahan 0-1)."""
+    shot = Image.open(os.path.join(HERE, path)).convert("RGB")
+    sc = w / shot.width
+    shot = shot.resize((w, int(shot.height * sc)))
+    hs = shot.height
+    top = 0
+    if hl and hs > h:
+        top = int(min(max(hl[1] * hs - h * 0.35, 0), hs - h))
+    shot = shot.crop((0, top, w, min(top + h, hs)))
+    mask = Image.new("L", shot.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, shot.width, shot.height], radius=44, fill=255)
+    img.paste(shot, (int(x0), int(y0)), mask)
+    if hl:
+        d = ImageDraw.Draw(img)
+        bx, by = x0 + hl[0] * w, y0 + hl[1] * hs - top
+        d.rounded_rectangle([bx - 6, by - 6, bx + hl[2] * w + 6, by + hl[3] * hs + 6], radius=16, outline=GOLD, width=7)
+
+
+def slide_visual(s, kicker, idx, total):
+    """Slide tutorial bergambar: judul, jalur menu, lalu mockup layar ATAU screenshot asli di bingkai HP.
+    {"type":"visual","num":"01","title":"...","path":["Profil","Menu","Pengaturan"],
+     "mock":{"header":"Kualitas media","rows":[{"label":"...","on":true,"hl":true,"note":"..."}]}
+     atau "image":"ilustrasi/<ID>/nama.png","highlight":[x,y,w,h] (pecahan 0-1 dari gambar),
+     "caption":"teks kecil di bawah"}"""
+    img, d = base(idx, total)
+    y = 96
+    if s.get("num"):
+        y = pill(d, M, y, s["num"], font("black", 34), fg=GOLD, bg=PURPLE_D) + 22
+    tf = fit(d, s["title"], "xbold", [62, 56, 50, 46], W - 2 * M, 2)
+    y = draw_rich(d, M, y, s["title"], tf, W - 2 * M, lh=1.12) + 18
+    if s.get("path"):
+        y = _chips(d, y, s["path"]) + 34
+    cap = s.get("caption")
+    bottom = H - 130 - (96 if cap else 40)
+    ph = bottom - y - 14
+    pw = min(int(ph * 0.9), W - 2 * M - 150)
+    x0 = (W - pw) / 2
+    _phone(img, d, x0, y + 14, pw, ph)
+    if s.get("image"):
+        _shot(img, int(x0), int(y + 14), pw, ph, s["image"], s.get("highlight"))
+    elif s.get("mock"):
+        _mock(d, x0, y + 14, pw, ph, s["mock"])
+    if cap:
+        draw_rich(d, M, H - 130 - 78, cap, font("reg", 34), W - 2 * M, color=MUTE, align="center")
+    return img
+
+
 RENDER = {"cover": slide_cover, "point": centered(_point), "list": centered(_list),
-          "statement": slide_statement, "cta": slide_cta}
+          "statement": slide_statement, "cta": slide_cta, "visual": slide_visual}
 
 
 def main():

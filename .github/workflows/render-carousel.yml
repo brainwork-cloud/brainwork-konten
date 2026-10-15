@@ -14,8 +14,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install pillow
+      - run: pip install pillow gdown
       - run: bash setup/fonts.sh
+      - name: Unduh screenshot ilustrasi dari Drive
+        run: python fetch_media.py specs || true
       - name: Render spec baru / yang berubah
         run: |
           for f in specs/*.json; do
