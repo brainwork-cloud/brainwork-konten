@@ -137,7 +137,9 @@ def activity_ass(hook, items, path):
     style = "Style: Txt,Poppins Black,78,&H00FFFFFF,&H00FFFFFF,&H0080184A,&H96000000,-1,0,0,0,100,100,0,0,3,22,0,2,90,90,620,1\n"
     head, ev = open(path, encoding="utf-8").read().split("[Events]")
     head = head.rstrip("\n") + "\n" + style + "\n"
-    lines = [f"Dialogue: 0,{ass_time(a + (0.6 if i == 0 and hook else 0))},{ass_time(b)},Txt,,0,0,0,,{{\\fad(150,150)}}{re.sub(r'[{}\\\\]', '', t)}"
+    clean = lambda x: re.sub(r"[{}\\]", "", x)
+    fad = "{\\fad(150,150)}"
+    lines = ["Dialogue: 0,%s,%s,Txt,,0,0,0,,%s%s" % (ass_time(a + (0.6 if i == 0 and hook else 0)), ass_time(b), fad, clean(t))
              for i, (a, b, t) in enumerate(items) if t]
     open(path, "w", encoding="utf-8").write(head + "[Events]" + ev.rstrip("\n") + "\n" + "\n".join(lines) + "\n")
 
