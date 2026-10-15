@@ -1,0 +1,5 @@
+GAGAL TES-BROLL
+  File "/home/runner/work/brainwork-konten/brainwork-konten/edit_reel.py", line 141
+    for i, (a, b, t) in enumerate(items) if t]
+    ^^^
+SyntaxError: f-string expression part cannot include a backslash
