@@ -25,13 +25,13 @@ jobs:
       - name: Unduh rekaman dari Drive
         run: python fetch_media.py || echo "ada file gagal diunduh" >> edit_gagal.txt
       - name: Buat B-roll otomatis (web publik & mockup)
-        run: python make_broll.py || echo "ada b-roll gagal" >> edit_gagal.txt
+        run: python make_broll.py > broll_log.txt 2>&1 || echo "ada b-roll gagal (lihat broll_log.txt)" >> edit_gagal.txt
       - name: Render spec yang belum punya video
         run: |
           for f in edits/*.json; do
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/$id.mp4" ]; then
-              echo "== $id"; python edit_reel.py "$f" || echo "GAGAL $id" >> edit_gagal.txt
+              echo "== $id"; python edit_reel.py "$f" 2> err.txt || { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt
             fi
           done
       - name: Simpan hasil
@@ -40,4 +40,5 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git add aset
           [ -f edit_gagal.txt ] && git add edit_gagal.txt || true
+          [ -f broll_log.txt ] && git add broll_log.txt || true
           git diff --cached --quiet || (git commit -m "edit: render reels" && git pull --rebase && git push)
