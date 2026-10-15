@@ -1,6 +1,8 @@
 name: Cek koneksi Threads & YouTube
 on:
   workflow_dispatch:
+  push:
+    paths: ["trigger/cek-koneksi.txt"]
 jobs:
   cek:
     runs-on: ubuntu-latest
