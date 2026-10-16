@@ -1,0 +1,6 @@
+{"id":"BW-261015-02","music":true,"scenes":[
+ {"type":"hook","kicker":"Mau mulai bisnis?","text":"Siapkan **4 tools** ini dulu. Bisa dipakai gratis","dur":3},
+ {"type":"points","kicker":"Desain dan chat","title":"**Canva** dan **WhatsApp Business**","items":["Canva: desain feed, katalog, logo","Ada paket gratis dan banyak template","WA Business: katalog dan balasan cepat"],"dur":5},
+ {"type":"points","kicker":"Biar gampang ditemukan","title":"**Google Business Profile**","items":["Muncul di Google Search dan Maps","Bikin profilnya gratis"],"dur":4},
+ {"type":"points","kicker":"Atur FB dan IG","title":"**Meta Business Suite**","items":["Jadwalkan postingan FB dan IG","Balas pesan dari satu tempat","Gratis dipakai"],"dur":4.5},
+ {"type":"end","kicker":"Simpan dulu","text":"Mulai dari yang paling kamu **butuhkan** dulu","dur":3.5}]}

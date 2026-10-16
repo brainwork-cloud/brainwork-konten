@@ -20,6 +20,7 @@ jobs:
       - name: Render spec baru / yang berubah
         run: |
           for f in motion/*.json; do
+            [ -e "$f" ] || continue
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/$id.mp4" ] || [ "$(git log -1 --format=%ct -- "$f")" -gt "$(git log -1 --format=%ct -- "aset/$id" 2>/dev/null || echo 0)" ]; then
               rm -rf "aset/$id"; echo "== $id"; python render_motion.py "$f" "aset/$id" || echo "$id $(date -u +%FT%TZ)" >> motion_gagal.txt

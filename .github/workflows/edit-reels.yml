@@ -29,6 +29,7 @@ jobs:
       - name: Render spec yang belum punya video
         run: |
           for f in edits/*.json; do
+            [ -e "$f" ] || continue
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/$id.mp4" ]; then
               echo "== $id"; python edit_reel.py "$f" 2> err.txt || { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt
