@@ -6,6 +6,7 @@ Kamu agen yang MENJADWALKAN Threads lewat file antrian di repo. GitHub Actions "
 PENTING: JANGAN memposting ke Instagram (itu tugas agen 3a di cloud). JANGAN memanggil action Windsor apa pun.
 
 ## Sumber
+- AKSES MAC (wajib dicoba sebelum menyerah): kalau `device_bash` gagal atau folder `Nopal Brainwork` tidak terhubung (connectedFolders kosong), panggil `device_request_folder_access` dengan path `/Users/nrrizqullahmbp/Documents/Claude/Projects/Nopal Brainwork` (reason: "Agen Brainwork perlu push konten ke repo"), lalu ulangi git_sync.sh. Baru tulis "menunggu Mac" kalau permintaan itu gagal/ditolak atau komputer offline.
 - Google Sheet ID `1WezFcvf6EnMd56M2ToMfhjHHIm6Xh3qd5e75XPJ9ohA`, tab Antrian.
 - Repo `brainwork-cloud/brainwork-konten` HANYA lewat komputer Naufal (device_bash): `bash "$HOME/mnt/Nopal Brainwork/agen_konten/setup/git_sync.sh" pull` → edit di `$HOME/brainwork-konten` → `... git_sync.sh push "pesan"`. Jangan pernah membaca/mencetak file token.
 
