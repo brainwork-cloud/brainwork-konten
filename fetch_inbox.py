@@ -15,29 +15,72 @@ Aturan:
 - queue/: file yang sudah berstatus posted/failed TIDAK ditimpa (hasil publish tidak boleh hilang);
   yang masih approved/cancelled boleh ditimpa (untuk membatalkan atau mengubah jadwal).
 - md5 file yang sudah diproses dicatat di inbox/imported.json, jadi file lama di Drive tidak diproses ulang.
-- gdown hanya bisa mengambil 50 file pertama per folder -> Produser merapikan folder (file yang sudah
-  tercatat di inbox/imported.json dipindah ke sampah).
+- Ringkasan run terakhir ditulis ke inbox/terakhir.txt (tanpa jam, supaya tidak bikin commit baru tiap 15 menit).
+- Daftar isi folder diambil dari tampilan publik embeddedfolderview (cadangan: gdown --folder, maks 50 file).
+  Produser merapikan folder: file yang sudah tercatat di inbox/imported.json dipindah ke sampah.
 """
-import os, re, sys, json, glob, hashlib, shutil, subprocess, tempfile
+import os, re, sys, json, glob, html, hashlib, shutil, subprocess, tempfile, urllib.request
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 FOLDER = os.environ.get("INBOX_FOLDER_ID", "1sd0X_qci1M688kGryJgqdDug6wMQfCOV")
 ALLOW = {"specs", "motion", "edits", "queue"}
 LINDUNGI = {"posted", "failed"}          # status queue yang tidak boleh ditimpa
 REC = os.path.join(ROOT, "inbox", "imported.json")
+LOG = os.path.join(ROOT, "inbox", "terakhir.txt")
 os.makedirs(os.path.dirname(REC), exist_ok=True)
 done = json.load(open(REC)) if os.path.exists(REC) else {}
+lines = []
+
+
+def log(*a):
+    s = " ".join(str(x) for x in a)
+    print(s); lines.append(s)
+
+
+def selesai(masuk=0, gagal=()):
+    log(f"selesai: {masuk} file diimpor, {len(gagal)} gagal")
+    open(LOG, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+
+
+def daftar_embedded():
+    """[(file_id, nama)] dari tampilan publik folder. Butuh folder dibagikan 'siapa saja yang punya link'."""
+    url = f"https://drive.google.com/embeddedfolderview?id={FOLDER}"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 brainwork-inbox"})
+    page = urllib.request.urlopen(req, timeout=60).read().decode("utf-8", "replace")
+    out = []
+    for m in re.finditer(r'id="entry-([\w-]+)".*?class="flip-entry-title">(.*?)</div>', page, re.S):
+        out.append((m.group(1), html.unescape(re.sub(r"<[^>]+>", "", m.group(2))).strip()))
+    if not out:
+        log(f"embeddedfolderview: 0 entri (panjang html {len(page)}, ada 'flip-entry': {'flip-entry' in page})")
+    return out
+
 
 tmp = tempfile.mkdtemp()
-r = subprocess.run(["gdown", "--folder", f"https://drive.google.com/drive/folders/{FOLDER}", "-O", tmp,
-                    "--quiet", "--remaining-ok"], capture_output=True, text=True)
-if r.returncode != 0:
-    print("gdown gagal:", (r.stderr or r.stdout)[-800:]); sys.exit(0)  # folder kosong juga bisa bikin gdown exit != 0
+files = []
+try:
+    import gdown
+    for fid, nama in daftar_embedded():
+        if not nama.endswith(".json"):
+            continue
+        dest = os.path.join(tmp, nama)
+        if gdown.download(id=fid, output=dest, quiet=True):
+            files.append(dest)
+        else:
+            log("GAGAL unduh:", nama, fid)
+except Exception as e:
+    log("daftar embedded gagal:", repr(e)[:300])
 
-files = sorted(glob.glob(os.path.join(tmp, "**", "*.json"), recursive=True))
-print(f"{len(files)} file di inbox")
+if not files:  # cadangan: gdown --folder (maks 50 file)
+    r = subprocess.run(["gdown", "--folder", f"https://drive.google.com/drive/folders/{FOLDER}", "-O", tmp,
+                        "--quiet", "--remaining-ok"], capture_output=True, text=True)
+    if r.returncode != 0:
+        log("gdown --folder gagal:", (r.stderr or r.stdout)[-600:].strip())
+    files = sorted(glob.glob(os.path.join(tmp, "**", "*.json"), recursive=True))
+
+files = sorted(files, key=os.path.basename)
+log(f"{len(files)} file di inbox")
 if len(files) > 40:
-    print("PERINGATAN: kotak masuk hampir penuh (batas gdown 50 file); rapikan folder _inbox")
+    log("PERINGATAN: kotak masuk hampir penuh (batas gdown 50 file); rapikan folder _inbox")
 gagal, masuk = [], 0
 for f in files:
     name = os.path.basename(f)
@@ -70,15 +113,15 @@ for f in files:
             done[md5] = name; continue
         open(dest, "wb").write(raw)
         done[md5] = name; masuk += 1
-        print("masuk:", name, "->", os.path.relpath(dest, ROOT))
+        log("masuk:", name, "->", os.path.relpath(dest, ROOT))
     except Exception as e:
         done[md5] = name  # jangan diulang terus
         gagal.append(f"{name}: {e}")
-        print("GAGAL:", name, e)
+        log("GAGAL:", name, e)
 
 json.dump(done, open(REC, "w"), indent=1)
 if gagal:
     with open(os.path.join(ROOT, "inbox_gagal.txt"), "a", encoding="utf-8") as fh:
         fh.write("\n".join(gagal) + "\n")
 shutil.rmtree(tmp, ignore_errors=True)
-print(f"selesai: {masuk} file diimpor, {len(gagal)} gagal")
+selesai(masuk, gagal)
