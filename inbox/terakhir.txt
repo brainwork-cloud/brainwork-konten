@@ -1,3 +1,10 @@
-1 file di inbox
-masuk: motion__TES-INBOX__202610171952.json -> motion/TES-INBOX.json
-selesai: 1 file diimpor, 0 gagal
+embeddedfolderview: 0 entri (panjang html 1278, ada 'flip-entry': False)
+gdown --folder gagal: usage: gdown [-h] [-V] [-O OUTPUT] [-q] [--proxy PROXY] [--speed SPEED]
+             [--cookies FILE] [--cookies-from-browser BROWSER] [--no-cookies]
+             [--no-check-certificate] [--continue] [--retries N] [--folder]
+             [--json] [--format FORMAT] [--user-agent USER_AGENT]
+             [--timeout SECONDS]
+             url_or_id
+gdown: error: unrecognized arguments: --remaining-ok
+0 file di inbox
+selesai: 0 file diimpor, 0 gagal
