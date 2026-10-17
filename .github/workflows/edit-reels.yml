@@ -22,6 +22,15 @@ jobs:
         with:
           path: ~/.cache/huggingface
           key: whisper-small
+      - name: Hapus hasil lama kalau spec berubah (REVISI)
+        run: |
+          for f in edits/*.json; do
+            [ -e "$f" ] || continue
+            id=$(basename "$f" .json)
+            if [ -d "aset/$id" ] && [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$(md5sum "$f" | cut -c1-32)" ]; then
+              echo "spec berubah: $id"; rm -rf "aset/$id"
+            fi
+          done
       - name: Unduh rekaman dari Drive
         run: python fetch_media.py || echo "ada file gagal diunduh" >> edit_gagal.txt
       - name: Buat B-roll otomatis (web publik & mockup)
@@ -32,7 +41,8 @@ jobs:
             [ -e "$f" ] || continue
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/$id.mp4" ]; then
-              echo "== $id"; python edit_reel.py "$f" 2> err.txt || { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt
+              echo "== $id"
+              if python edit_reel.py "$f" 2> err.txt; then md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"; else { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt; fi
             fi
           done
       - name: Simpan hasil

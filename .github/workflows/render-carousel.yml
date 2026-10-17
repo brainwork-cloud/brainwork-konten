@@ -16,15 +16,25 @@ jobs:
           python-version: "3.11"
       - run: pip install pillow gdown
       - run: bash setup/fonts.sh
+      - name: Hapus hasil lama kalau spec berubah (REVISI)
+        run: |
+          for f in specs/*.json; do
+            [ -e "$f" ] || continue
+            id=$(basename "$f" .json)
+            if [ -d "aset/$id" ] && [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$(md5sum "$f" | cut -c1-32)" ]; then
+              echo "spec berubah: $id"; rm -rf "aset/$id" "ilustrasi/$id"
+            fi
+          done
       - name: Unduh screenshot ilustrasi dari Drive
         run: python fetch_media.py specs || true
       - name: Render spec baru / yang berubah
         run: |
           for f in specs/*.json; do
+            [ -e "$f" ] || continue
             id=$(basename "$f" .json)
-            # render ulang kalau spec lebih baru dari hasil (untuk REVISI)
-            if [ ! -f "aset/$id/${id}_01.jpg" ] || [ "$(git log -1 --format=%ct -- "$f")" -gt "$(git log -1 --format=%ct -- "aset/$id" 2>/dev/null || echo 0)" ]; then
-              rm -rf "aset/$id"; echo "== $id"; python render_carousel.py "$f" "aset/$id"
+            if [ ! -f "aset/$id/${id}_01.jpg" ]; then
+              rm -rf "aset/$id"; echo "== $id"
+              python render_carousel.py "$f" "aset/$id" && md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"
             fi
           done
       - name: Simpan hasil

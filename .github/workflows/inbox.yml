@@ -1,0 +1,34 @@
+name: Kotak Masuk (Drive ke repo)
+# Agen di cloud tidak bisa push ke GitHub, jadi mereka mengunggah JSON ke folder Drive "_inbox".
+# Workflow ini mengambilnya tiap 15 menit lalu commit dengan BOT_PAT, supaya workflow render/publish ikut terpicu
+# (commit dengan GITHUB_TOKEN tidak memicu workflow lain).
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+  push:
+    paths: ["trigger/inbox.txt"]
+concurrency: inbox
+permissions:
+  contents: write
+jobs:
+  inbox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_PAT || github.token }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q gdown
+      - name: Ambil file dari folder Drive _inbox
+        run: python fetch_inbox.py
+      - name: Simpan ke repo
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          for p in specs motion edits queue inbox inbox_gagal.txt; do
+            if [ -e "$p" ]; then git add -A "$p"; fi
+          done
+          git diff --cached --quiet || (git commit -m "inbox: impor dari Drive" && git pull --rebase && git push)

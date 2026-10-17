@@ -4,6 +4,8 @@ Unggah rahasia (token) ke GitHub Actions secrets repo brainwork-cloud/brainwork-
 Baca file  agen_konten/rahasia.txt  berisi baris KEY=VALUE (hanya kunci di IZIN di bawah).
 Nilai tidak pernah dicetak. Setelah sukses, file rahasia.txt dihapus isinya (dikosongkan).
 Butuh: pip install pynacl ; token GitHub di agen_konten/.github_token.txt (permission Secrets: write)
+  --bot-pat : unggah juga token GitHub itu sendiri sebagai secret BOT_PAT (dipakai workflow "Kotak Masuk"
+              untuk push, supaya commit-nya memicu workflow render/publish). Tidak butuh rahasia.txt.
 """
 import os, sys, json, base64, urllib.request
 from nacl import encoding, public
@@ -24,11 +26,13 @@ def api(method, path, body=None):
         return r.status, (json.loads(r.read() or b"{}"))
 
 
-src = os.path.join(A, "rahasia.txt")
-if not os.path.exists(src):
-    sys.exit("rahasia.txt belum ada")
 pairs = {}
-for line in open(src, encoding="utf-8"):
+if "--bot-pat" in sys.argv:
+    pairs["BOT_PAT"] = GH
+src = os.path.join(A, "rahasia.txt")
+if not os.path.exists(src) and not pairs:
+    sys.exit("rahasia.txt belum ada")
+for line in (open(src, encoding="utf-8") if os.path.exists(src) else []):
     line = line.strip()
     if not line or line.startswith("#") or "=" not in line:
         continue
@@ -46,6 +50,7 @@ for k, v in pairs.items():
     st, _ = api("PUT", f"/actions/secrets/{k}", {"encrypted_value": enc, "key_id": pk["key_id"]})
     print(f"{k}: {'OK' if st in (201, 204) else 'GAGAL ' + str(st)} (panjang {len(v)} karakter)")
 
-open(src, "w").write("# sudah diunggah ke GitHub secrets & dikosongkan otomatis\n")
+if any(k != "BOT_PAT" for k in pairs):
+    open(src, "w").write("# sudah diunggah ke GitHub secrets & dikosongkan otomatis\n")
 _, lst = api("GET", "/actions/secrets")
 print("secrets di repo:", ", ".join(s["name"] for s in lst.get("secrets", [])))

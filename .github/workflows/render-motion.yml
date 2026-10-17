@@ -17,18 +17,21 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install pillow numpy
       - run: bash setup/fonts.sh
-      - name: Render spec baru / yang berubah
+      - name: Render spec baru / yang berubah (REVISI = md5 spec beda dari aset/<ID>/.spec.md5)
         run: |
           for f in motion/*.json; do
             [ -e "$f" ] || continue
             id=$(basename "$f" .json)
-            if [ ! -f "aset/$id/$id.mp4" ] || [ "$(git log -1 --format=%ct -- "$f")" -gt "$(git log -1 --format=%ct -- "aset/$id" 2>/dev/null || echo 0)" ]; then
-              rm -rf "aset/$id"; echo "== $id"; python render_motion.py "$f" "aset/$id" || echo "$id $(date -u +%FT%TZ)" >> motion_gagal.txt
+            h=$(md5sum "$f" | cut -c1-32)
+            if [ ! -f "aset/$id/$id.mp4" ] || [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$h" ]; then
+              rm -rf "aset/$id"; echo "== $id"
+              if python render_motion.py "$f" "aset/$id"; then echo "$h" > "aset/$id/.spec.md5"; else echo "$id $(date -u +%FT%TZ)" >> motion_gagal.txt; fi
             fi
           done
       - name: Simpan hasil
         run: |
           git config user.name "brainwork-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add aset motion_gagal.txt 2>/dev/null || git add aset
+          git add aset
+          [ -f motion_gagal.txt ] && git add motion_gagal.txt || true
           git diff --cached --quiet || (git commit -m "render: reels motion" && git pull --rebase && git push)
