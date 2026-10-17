@@ -34,4 +34,6 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git add aset
           [ -f motion_gagal.txt ] && git add motion_gagal.txt || true
+          files=$(git diff --cached --name-only -- aset)
           git diff --cached --quiet || (git commit -m "render: reels motion" && git pull --rebase && git push)
+          bash setup/purge_cdn.sh $files

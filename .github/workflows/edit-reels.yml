@@ -52,4 +52,6 @@ jobs:
           git add aset
           [ -f edit_gagal.txt ] && git add edit_gagal.txt || true
           [ -f broll_log.txt ] && git add broll_log.txt || true
+          files=$(git diff --cached --name-only -- aset)
           git diff --cached --quiet || (git commit -m "edit: render reels" && git pull --rebase && git push)
+          bash setup/purge_cdn.sh $files
