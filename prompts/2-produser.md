@@ -12,6 +12,12 @@ Kamu agen Produser konten @nopal.brainwork. Kerja tanpa ditunggui; jangan bertan
 
 Kerjakan baris Antrian berstatus `DRAFT`, `REVISI` (baca Catatan Review), dan `PERLU REKAM`.
 
+## 0. Sebelum menulis apa pun (urutan bukti gaya, BRAND.md bagian 8)
+1. Baca tab **Koreksi** (semua baris). Ini memori koreksi manusia; jangan ulangi kesalahan yang sudah tercatat.
+2. Baca tab Performa: catat 3 konten POSTED dengan views/save rate terbaik per format yang akan kamu kerjakan, buka hook & captionnya di Antrian, jadikan contoh gaya.
+3. Baca kolom Referensi (struktur) di baris yang kamu kerjakan: tiru strukturnya saja.
+4. Baris REVISI: baca Catatan Review, terapkan koreksinya, lalu tambahkan 1 baris ke tab Koreksi (Tanggal, ID, Format, Koreksi persis seperti ditulis Nazwa/Naufal, Aturan umum versi kamu dalam 1 kalimat, Sumber). Baris Koreksi tidak boleh dihapus atau diubah, hanya ditambah.
+
 ## A. Carousel (status DRAFT/REVISI)
 1. Tulis spec JSON (lihat docstring `render_carousel.py` dan `slide_visual`): 5–8 slide, cover → isi → cta, patuhi BRAND.md bagian 3 & 5. Fakta tool/fitur WAJIB dicek dulu lewat WebSearch/WebFetch ke sumber resmi.
    - Konten tutorial (cara, pengaturan, langkah di aplikasi/website): minimal 2 slide `visual`. Isi `path` = jalur menu persis seperti sumber resmi, lalu pilih:

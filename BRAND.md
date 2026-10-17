@@ -58,3 +58,16 @@ Aturan kemas ulang: tools/website WAJIB dicek masih ada & versi terbaru. Hook da
 ## 7. Monetisasi (soft)
 - Produk tangga 1: Pack 50 Prompt UMKM (NolKaryawan) Rp 28.000. Sebut maks 1x/minggu, di CTA atau caption, tidak hard selling.
 - CTA default: simpan, kirim ke teman, komen kata kunci.
+
+## 8. Urutan bukti gaya (wajib untuk Produser; makin atas makin kuat)
+Kalau dua sumber bertentangan, yang lebih atas menang.
+1. Instruksi Naufal langsung (di chat, atau di Catatan Review yang diawali "Naufal:").
+2. Tab **Koreksi** di Sheet: semua alasan REVISI dari Nazwa/Naufal yang pernah ada, plus aturan umum yang ditarik dari situ. Baca SEMUA sebelum menulis apa pun; jangan ulangi kesalahan yang sudah pernah dikoreksi.
+3. Konten milik akun ini yang sudah **POSTED dan performanya terbaik** (tab Performa: urutkan views dan save rate; juga baris "CONTOH GAYA" terbaru di Log Agen). Tiru hook, panjang, ritme, dan cara menutupnya.
+4. Bagian 3 dan 5 di dokumen ini (suara, gaya, format).
+5. Referensi luar (kolom **Referensi (struktur)** di Antrian, atau konten kreator lain): ambil STRUKTUR saja (urutan, jumlah poin, pola hook), JANGAN ambil gaya bicara, kalimat, atau klaimnya.
+
+## 9. Referensi luar: aturan pakai
+- Boleh meniru struktur, bukan isi. Tidak menyalin kalimat, tidak menyebut kreatornya seolah sumber, tidak memakai angka dari kontennya tanpa cek ke sumber asli.
+- Tulis di kolom Referensi (struktur) sebagai: `<link atau kode arsip> | struktur: <ringkasan 1 baris>`. Contoh: `DB89eVZyemv | struktur: hook larangan, 3 langkah bernomor, CTA simpan`.
+- Referensi terbaik urutannya: arsip hit akun sendiri (bagian 6) > konten POSTED terbaik > kreator lain.
