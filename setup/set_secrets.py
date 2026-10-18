@@ -12,7 +12,8 @@ from nacl import encoding, public
 
 A = os.path.expanduser("~/mnt/Nopal Brainwork/agen_konten")
 REPO = "brainwork-cloud/brainwork-konten"
-IZIN = {"THREADS_ACCESS_TOKEN", "THREADS_USER_ID", "YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"}
+IZIN = {"THREADS_ACCESS_TOKEN", "THREADS_USER_ID", "FB_PAGE_TOKEN", "FB_PAGE_ID",
+        "YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"}
 
 tokf = next(p for p in (os.path.join(A, ".github_token.txt"), os.path.join(A, ".github_token")) if os.path.exists(p))
 GH = open(tokf).read().strip()

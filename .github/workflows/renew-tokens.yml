@@ -1,0 +1,33 @@
+name: Perpanjang token (Threads) & cek token lain
+on:
+  schedule:
+    - cron: "17 2 * * 1"   # Senin 09:17 WIB
+  workflow_dispatch:
+  push:
+    paths: ["trigger/renew-tokens.txt"]
+permissions:
+  contents: write
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q requests pynacl
+      - env:
+          BOT_PAT: ${{ secrets.BOT_PAT }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python renew_tokens.py || echo "ada token bermasalah (lihat tokens/status.txt)"
+      - name: Simpan status
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add tokens
+          git diff --cached --quiet || (git commit -m "token: status" && git pull --rebase && git push)

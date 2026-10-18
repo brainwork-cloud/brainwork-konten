@@ -16,7 +16,7 @@ Versi 3 · 17 Okt 2026. Salinan kerja ada di repo GitHub publik `brainwork-cloud
 |---|---|---|
 | 1 Perencana | Minggu 18:52 | Tidak |
 | 2 Produser | Senin–Jumat 12:07 | Tidak (sejak 17 Okt; rekaman via Drive) |
-| 3a Penerbit IG | Tiap hari 10:55, 18:55 | Tidak |
+| 3a Penerbit IG + mirror FB/Shorts | Tiap hari 10:55, 18:55 | Tidak |
 | 3b Antrian Threads | Senin–Jumat 12:37, 16:37 | Tidak |
 | 4 Analis | Minggu 18:22 | Tidak |
 | 5 Mirror TikTok/Shorts | manual oleh Nazwa | — |
@@ -25,9 +25,11 @@ Versi 3 · 17 Okt 2026. Salinan kerja ada di repo GitHub publik `brainwork-cloud
 | Platform | Jalur |
 |---|---|
 | IG Carousel & Reels | Windsor.ai API (akun 17841468857262342) |
-| Threads | Threads API via GitHub Actions (`publish.py`) |
-| YouTube Shorts | YouTube Data API via GitHub Actions (`publish.py`) |
-| TikTok & YouTube Shorts | manual oleh Nazwa dari HP (file `_tiktok.mp4`) |
+| Threads | Threads API via GitHub Actions (`publish.py`), diantrikan agen 3b |
+| Facebook Page Brainwork.id (mirror IG) | Graph API Page token via GitHub Actions (`publish.py`: foto multi / Reels), diantrikan agen 3a setelah IG terbit |
+| YouTube Shorts (mirror Reels) | YouTube Data API via GitHub Actions (`publish.py`), diantrikan agen 3a H+1 |
+| TikTok | manual oleh Nazwa dari HP (file `_tiktok.mp4`); API TikTok butuh audit app, ditunda |
+| Token | `renew_tokens.py` tiap Senin: refresh token Threads (60 hari) & cek FB/YouTube, status di `tokens/status.txt`; setup sekali: `setup/fb_auth.py`, `setup/yt_auth.py`, lalu `setup/set_secrets.py` |
 
 ## Alur Reels
 Naufal rekam (kamera/VO saja, tidak pernah rekam layar) → upload ke Drive `Brainwork Rekaman/<ID>/` → Produser tulis `edits/<ID>.json` (+ `make_broll` untuk B-roll layar otomatis) via kotak masuk → Actions `fetch_media.py` → `make_broll.py` → `edit_reel.py` → `aset/<ID>/<ID>.mp4` + `_tiktok.mp4` + cover → Nazwa review di Sheet → terbit.

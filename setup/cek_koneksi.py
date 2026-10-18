@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cek token Threads & YouTube (dijalankan GitHub Actions). Tidak memposting apa pun; hanya cetak nama akun."""
+"""Cek token Threads, Facebook Page & YouTube (dijalankan GitHub Actions). Tidak memposting apa pun; hanya cetak nama akun."""
 import os, requests
 
 ok = True
@@ -18,6 +18,28 @@ if os.environ.get("THREADS_ACCESS_TOKEN"):
         print("THREADS: GAGAL", r.status_code, r.text[:300]); ok = False
 else:
     print("THREADS: secret belum diisi")
+
+if os.environ.get("FB_PAGE_TOKEN") and os.environ.get("FB_PAGE_ID"):
+    r = requests.get(f"https://graph.facebook.com/v23.0/{os.environ['FB_PAGE_ID']}", params={
+        "fields": "id,name,link", "access_token": os.environ["FB_PAGE_TOKEN"]}, timeout=30)
+    if r.ok:
+        d = r.json()
+        print(f"FACEBOOK: OK halaman '{d.get('name')}' | id {d.get('id')} | {d.get('link')}")
+        if "brainwork" not in (d.get("name") or "").lower():
+            print("FACEBOOK: PERINGATAN ini BUKAN halaman Brainwork; publish.py akan menolak posting"); ok = False
+        dbg = requests.get("https://graph.facebook.com/v23.0/debug_token", params={
+            "input_token": os.environ["FB_PAGE_TOKEN"], "access_token": os.environ["FB_PAGE_TOKEN"]}, timeout=30)
+        if dbg.ok:
+            data = dbg.json().get("data", {})
+            exp = data.get("expires_at", 0)
+            print("FACEBOOK: token", "tidak kedaluwarsa" if not exp else f"kedaluwarsa (epoch {exp}), buat ulang token long-lived!",
+                  "| izin:", ", ".join(data.get("scopes", [])))
+            if exp:
+                ok = False
+    else:
+        print("FACEBOOK: GAGAL", r.status_code, r.text[:300]); ok = False
+else:
+    print("FACEBOOK: secret belum diisi (FB_PAGE_TOKEN, FB_PAGE_ID)")
 
 if os.environ.get("YT_REFRESH_TOKEN"):
     t = requests.post("https://oauth2.googleapis.com/token", data={
