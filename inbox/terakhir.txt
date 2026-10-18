@@ -1,5 +1,2 @@
 3 file di inbox
-masuk: queue__BW-261015-03__facebook__202610181857.json -> queue/BW-261015-03__facebook.json
-masuk: queue__BW-261015-03__youtube__202610181857.json -> queue/BW-261015-03__youtube.json
-masuk: queue__BW-261016-01__facebook__202610181857.json -> queue/BW-261016-01__facebook.json
-selesai: 3 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
