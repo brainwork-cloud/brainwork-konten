@@ -2,7 +2,7 @@
   "id": "BW-261015-02",
   "platform": "youtube",
   "publish_at": "2026-10-18T18:37:11+07:00",
-  "status": "approved",
+  "status": "posted",
   "video_path": "aset/BW-261015-02/BW-261015-02.mp4",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261015-02/BW-261015-02.mp4",
   "title": "4 Tools Gratis Sebelum Mulai Bisnis #Shorts",
@@ -14,5 +14,10 @@
     "canva",
     "whatsapp business",
     "digital marketing"
-  ]
+  ],
+  "result": {
+    "id": "H6V6qpEy4YQ",
+    "url": "https://youtube.com/shorts/H6V6qpEy4YQ"
+  },
+  "posted_at": "2026-10-18T11:39:49.444804+00:00"
 }
