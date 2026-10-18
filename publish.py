@@ -89,8 +89,8 @@ def facebook_post(item):
         s = requests.post(f"{FB}/{pid}/video_reels", data={"upload_phase": "start", "access_token": tok}, timeout=60)
         s.raise_for_status()
         vid = s.json()["video_id"]
-        u = requests.post(f"https://rupload.facebook.com/video_reels/{vid}",
-                          headers={"Authorization": f"OAuth {tok}", "file_url": item["video_url"]}, timeout=300)
+        up_url = s.json().get("upload_url") or f"https://rupload.facebook.com/video-upload/v23.0/{vid}"
+        u = requests.post(up_url, headers={"Authorization": f"OAuth {tok}", "file_url": item["video_url"]}, timeout=300)
         u.raise_for_status()
         _fb_wait(vid, tok, "uploading_phase")
         f = requests.post(f"{FB}/{pid}/video_reels", data={"upload_phase": "finish", "video_id": vid,
