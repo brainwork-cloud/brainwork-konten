@@ -16,7 +16,7 @@ Aturan:
   yang masih approved/cancelled boleh ditimpa (untuk membatalkan atau mengubah jadwal).
 - md5 file yang sudah diproses dicatat di inbox/imported.json, jadi file lama di Drive tidak diproses ulang.
 - Ringkasan run terakhir ditulis ke inbox/terakhir.txt (tanpa jam, supaya tidak bikin commit baru tiap 15 menit).
-- Daftar isi folder diambil dari tampilan publik embeddedfolderview (cadangan: gdown --folder, maks 50 file).
+- Daftar isi folder diambil dari tampilan publik embeddedfolderview (cadangan: gdown --folder, maks 50 file per folder).
   Produser merapikan folder: file yang sudah tercatat di inbox/imported.json dipindah ke sampah.
 """
 import os, re, sys, json, glob, html, hashlib, shutil, subprocess, tempfile, urllib.request
@@ -71,8 +71,8 @@ except Exception as e:
     log("daftar embedded gagal:", repr(e)[:300])
 
 if not files:  # cadangan: gdown --folder (maks 50 file)
-    r = subprocess.run(["gdown", "--folder", f"https://drive.google.com/drive/folders/{FOLDER}", "-O", tmp,
-                        "--quiet", "--remaining-ok"], capture_output=True, text=True)
+    r = subprocess.run(["gdown", "--folder", f"https://drive.google.com/drive/folders/{FOLDER}", "-O", tmp, "--quiet"],
+                       capture_output=True, text=True)
     if r.returncode != 0:
         log("gdown --folder gagal:", (r.stderr or r.stdout)[-600:].strip())
     files = sorted(glob.glob(os.path.join(tmp, "**", "*.json"), recursive=True))
