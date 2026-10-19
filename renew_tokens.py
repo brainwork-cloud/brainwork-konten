@@ -3,7 +3,9 @@
 Perpanjang token otomatis (GitHub Actions "Perpanjang token", tiap Senin).
 - Threads: token long-lived berlaku 60 hari; di-refresh lewat /refresh_access_token lalu disimpan ulang
   ke secret THREADS_ACCESS_TOKEN memakai BOT_PAT (izin Secrets: write). Nilai token tidak pernah dicetak.
-- Facebook Page token long-lived tidak kedaluwarsa; hanya dicek. YouTube refresh token: hanya dicek.
+- Facebook Page token long-lived tidak kedaluwarsa; hanya dicek (mirror Nopal dan portal Brainwork.id). YouTube refresh token: hanya dicek.
+  Baris portal di tokens/status.txt diawali `PORTAL: OK` hanya bila token valid, tidak kedaluwarsa, dan halamannya brainwork.id
+  (agen Redaktur Portal membaca baris ini sebagai gerbang).
 Ringkasan ditulis ke tokens/status.txt (tanpa nilai token).
 """
 import os, json, base64, datetime as dt, requests
@@ -54,6 +56,25 @@ if fbt and fbp:
         lines.append(f"FACEBOOK: token TIDAK valid {today} -> buat ulang (setup/fb_auth.py)"); ok = False
 else:
     lines.append("FACEBOOK: secret belum diisi")
+
+pt, pp = os.environ.get("PORTAL_FB_PAGE_TOKEN"), os.environ.get("PORTAL_FB_PAGE_ID")
+if pt and pp:
+    d = requests.get("https://graph.facebook.com/v23.0/debug_token",
+                     params={"input_token": pt, "access_token": pt}, timeout=30).json().get("data", {})
+    info = requests.get(f"https://graph.facebook.com/v23.0/{pp}", params={"fields": "id,name,username", "access_token": pt}, timeout=30).json()
+    user = (info.get("username") or "").lower()
+    if not d.get("is_valid"):
+        lines.append(f"PORTAL: token TIDAK valid {today} -> buat ulang (python3 setup/fb_auth.py portal)"); ok = False
+    elif d.get("expires_at", 0):
+        lines.append(f"PORTAL: KEDALUWARSA {dt.datetime.utcfromtimestamp(d['expires_at']).date()} -> buat ulang (python3 setup/fb_auth.py portal)"); ok = False
+    elif user != "brainwork.id":
+        lines.append(f"PORTAL: SALAH HALAMAN (username {user!r}, bukan brainwork.id) -> ulangi python3 setup/fb_auth.py portal"); ok = False
+    elif pp == os.environ.get("FB_PAGE_ID"):
+        lines.append("PORTAL: SALAH HALAMAN (id sama dengan FB_PAGE_ID mirror Nopal)"); ok = False
+    else:
+        lines.append(f"PORTAL: OK halaman '{info.get('name')}' (@brainwork.id), token tidak kedaluwarsa, dicek {today}")
+else:
+    lines.append("PORTAL: secret belum diisi")
 
 if os.environ.get("YT_REFRESH_TOKEN"):
     t = requests.post("https://oauth2.googleapis.com/token", data={

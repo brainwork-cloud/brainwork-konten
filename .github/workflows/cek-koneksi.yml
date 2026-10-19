@@ -17,6 +17,8 @@ jobs:
           THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
           FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          PORTAL_FB_PAGE_TOKEN: ${{ secrets.PORTAL_FB_PAGE_TOKEN }}
+          PORTAL_FB_PAGE_ID: ${{ secrets.PORTAL_FB_PAGE_ID }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}

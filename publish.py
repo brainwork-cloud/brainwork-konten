@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Publisher Threads + Facebook Page + YouTube Shorts @nopal.brainwork (dijalankan GitHub Actions tiap 30 menit).
+Publisher Threads + Facebook Page + YouTube Shorts @nopal.brainwork + Facebook portal Brainwork.id
+(dijalankan GitHub Actions tiap 30 menit).
 
 Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berstatus APPROVED/POSTED di Sheet.
 {
   "id": "BW-261014-01",
-  "platform": "threads" | "facebook" | "youtube",
+  "platform": "threads" | "facebook" | "youtube" | "facebook_portal",
   "publish_at": "2026-10-14T19:00:00+07:00",
   "status": "approved",                 # approved -> posted | failed ; cancelled = dilewati
   # threads
@@ -15,14 +16,21 @@ Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berst
   "message": "caption",
   "image_urls": ["https://raw.githubusercontent.com/.../_01.jpg", ...],   # carousel -> post multi-foto
   "video_url": "https://raw.githubusercontent.com/.../<ID>.mp4",          # reels -> Facebook Reels
+  # facebook_portal (portal berita Brainwork.id, produksi sendiri, BUKAN mirror; halaman Facebook terpisah)
+  "message": "caption (wajib memuat kata 'Sumber' dan tautan http)",
+  "image_url": "https://raw.githubusercontent.com/.../aset/<ID>/<ID>.jpg"     # kartu berita (atau "image_urls": [...])
   # youtube
   "video_path": "aset/BW-261014-01/BW-261014-01.mp4",
   "title": "...", "description": "...", "tags": ["..."]
 }
 Hasil ditulis kembali ke file yang sama: status, posted_at, result (id/url) atau error.
 Secrets (GitHub Actions): THREADS_ACCESS_TOKEN, THREADS_USER_ID, FB_PAGE_TOKEN, FB_PAGE_ID,
+                          PORTAL_FB_PAGE_TOKEN, PORTAL_FB_PAGE_ID,
                           YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
-Pengaman: Facebook hanya diposting kalau nama halaman FB_PAGE_ID mengandung "brainwork" (tidak pernah ke halaman lain).
+Pengaman (dua halaman Facebook tidak boleh tertukar):
+- "facebook" (mirror @nopal.brainwork): nama halaman FB_PAGE_ID harus mengandung "brainwork" DAN halamannya bukan brainwork.id.
+- "facebook_portal": username halaman PORTAL_FB_PAGE_ID harus "brainwork.id", id-nya beda dari FB_PAGE_ID, caption wajib memuat
+  "Sumber" + tautan, hanya gambar (tanpa video). Gambar belum ada (404) = ditunda, tetap approved, dicoba lagi 30 menit kemudian.
 """
 import os, sys, json, glob, time, datetime as dt
 import requests
@@ -30,6 +38,11 @@ import requests
 ROOT = os.path.dirname(os.path.abspath(__file__))
 NOW = dt.datetime.now(dt.timezone.utc)
 MAX_PER_RUN = 4
+PORTAL_USERNAME = "brainwork.id"
+
+
+class Tunda(Exception):
+    """Belum bisa diposting sekarang (mis. gambar belum dirender); status tetap approved."""
 TH = "https://graph.threads.net/v1.0"
 FB = "https://graph.facebook.com/v23.0"
 
@@ -59,14 +72,26 @@ def threads_post(item):
     return {"ids": ids, "url": link.get("permalink")}
 
 
-def fb_page():
-    """Kembalikan (page_id, token) setelah memastikan halamannya Brainwork. Tidak pernah posting ke halaman lain."""
-    tok, pid = os.environ["FB_PAGE_TOKEN"], os.environ["FB_PAGE_ID"]
-    r = requests.get(f"{FB}/{pid}", params={"fields": "id,name", "access_token": tok}, timeout=30)
+def fb_page(portal=False):
+    """Kembalikan (page_id, token) setelah memastikan halamannya benar. Ada DUA halaman Facebook yang tidak boleh tertukar:
+    - Mirror @nopal.brainwork: FB_PAGE_ID/FB_PAGE_TOKEN. Nama harus mengandung "brainwork" dan BUKAN halaman portal.
+    - Portal Brainwork.id: PORTAL_FB_PAGE_ID/PORTAL_FB_PAGE_TOKEN. Username halaman harus "brainwork.id".
+    Id kedua halaman juga harus berbeda. Tidak pernah posting ke halaman lain."""
+    pre = "PORTAL_" if portal else ""
+    tok, pid = os.environ[pre + "FB_PAGE_TOKEN"], os.environ[pre + "FB_PAGE_ID"]
+    r = requests.get(f"{FB}/{pid}", params={"fields": "id,name,username,link", "access_token": tok}, timeout=30)
     r.raise_for_status()
-    name = r.json().get("name", "")
-    if "brainwork" not in name.lower():
-        raise RuntimeError(f"FB_PAGE_ID bukan halaman Brainwork (nama: {name!r}); posting dibatalkan")
+    d = r.json()
+    name, user = d.get("name", ""), (d.get("username") or "").lower()
+    link = (d.get("link") or "").lower().rstrip("/")
+    is_portal = user == PORTAL_USERNAME or link.endswith("/" + PORTAL_USERNAME)
+    lain = os.environ.get("FB_PAGE_ID" if portal else "PORTAL_FB_PAGE_ID", "")
+    if lain and lain in (pid, d.get("id")):
+        raise RuntimeError("FB_PAGE_ID dan PORTAL_FB_PAGE_ID menunjuk halaman yang sama; posting dibatalkan")
+    if portal and not is_portal:
+        raise RuntimeError(f"PORTAL_FB_PAGE_ID bukan halaman brainwork.id (nama: {name!r}, username: {user!r}); posting dibatalkan")
+    if not portal and ("brainwork" not in name.lower() or is_portal):
+        raise RuntimeError(f"FB_PAGE_ID bukan halaman mirror Nopal (nama: {name!r}, username: {user!r}); posting dibatalkan")
     return pid, tok
 
 
@@ -82,8 +107,8 @@ def _fb_wait(vid, tok, phase, tries=90):
     raise TimeoutError(f"{phase} belum selesai setelah {tries * 10} detik")
 
 
-def facebook_post(item):
-    pid, tok = fb_page()
+def facebook_post(item, portal=False):
+    pid, tok = fb_page(portal)
     text = item.get("message", "") or ""
     if item.get("video_url"):  # Facebook Reels dari file publik (raw.githubusercontent)
         s = requests.post(f"{FB}/{pid}/video_reels", data={"upload_phase": "start", "access_token": tok}, timeout=60)
@@ -100,6 +125,12 @@ def facebook_post(item):
         perma = requests.get(f"{FB}/{vid}", params={"fields": "permalink_url", "access_token": tok}, timeout=30).json().get("permalink_url", "")
         url = ("https://www.facebook.com" + perma) if perma.startswith("/") else (perma or f"https://www.facebook.com/reel/{vid}")
         return {"id": vid, "url": url}
+    if item.get("image_url") and not item.get("image_urls"):  # satu foto (kartu berita portal)
+        r = requests.post(f"{FB}/{pid}/photos", data={"url": item["image_url"], "message": text, "access_token": tok}, timeout=120)
+        r.raise_for_status()
+        j = r.json()
+        post_id = j.get("post_id") or j["id"]
+        return {"id": post_id, "url": f"https://www.facebook.com/{post_id}"}
     if item.get("image_urls"):  # carousel IG -> post multi-foto
         ids = []
         for url in item["image_urls"][:10]:
@@ -119,6 +150,26 @@ def facebook_post(item):
     r.raise_for_status()
     post_id = r.json()["id"]
     return {"id": post_id, "url": f"https://www.facebook.com/{post_id}"}
+
+
+def facebook_portal(item):
+    """Portal Brainwork.id: berita bersumber, kartu gambar saja, ke halaman portal saja."""
+    text = item.get("message") or ""
+    if "sumber" not in text.lower() or "http" not in text.lower():
+        raise ValueError("portal: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
+    if item.get("video_url"):
+        raise ValueError("portal: video belum didukung")
+    urls = item.get("image_urls") or ([item["image_url"]] if item.get("image_url") else [])
+    if not urls:
+        raise ValueError("portal: butuh image_url (kartu berita)")
+    for u in urls:
+        try:
+            ok = requests.head(u, allow_redirects=True, timeout=30).status_code == 200
+        except requests.RequestException:
+            ok = False
+        if not ok:
+            raise Tunda(f"gambar belum tersedia: {u}")
+    return facebook_post(item, portal=True)
 
 
 def youtube_post(item):
@@ -153,8 +204,9 @@ def youtube_post(item):
     return {"id": resp["id"], "url": f"https://youtube.com/shorts/{resp['id']}"}
 
 
-HANDLERS = {"threads": threads_post, "facebook": facebook_post, "youtube": youtube_post}
+HANDLERS = {"threads": threads_post, "facebook": facebook_post, "youtube": youtube_post, "facebook_portal": facebook_portal}
 NEEDS = {"threads": ["THREADS_ACCESS_TOKEN"], "facebook": ["FB_PAGE_TOKEN", "FB_PAGE_ID"],
+         "facebook_portal": ["PORTAL_FB_PAGE_TOKEN", "PORTAL_FB_PAGE_ID"],
          "youtube": ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"]}
 
 
@@ -180,6 +232,9 @@ def main():
         try:
             item["result"] = HANDLERS[plat](item)
             item["status"] = "posted"
+        except Tunda as e:  # belum siap: biarkan approved, coba lagi di run berikutnya
+            print(item["id"], plat, "ditunda:", e)
+            continue
         except Exception as e:  # catat, jangan ulang terus
             item["status"] = "failed"
             item["error"] = f"{type(e).__name__}: {getattr(getattr(e, 'response', None), 'text', '') or e}"[:800]

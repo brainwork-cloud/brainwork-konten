@@ -6,9 +6,11 @@ lalu skrip ini menaruhnya ke folder repo yang benar:
 
   Nama file di Drive:  <dir>__<nama>[__<stamp>].json
   Hasil di repo:       <dir>/<nama>.json
-  dir yang diizinkan:  specs | motion | edits | queue
+  dir yang diizinkan:  specs | motion | edits | queue | portal
   contoh:              specs__BW-261027-02__202610271205.json  ->  specs/BW-261027-02.json
                        queue__BW-261027-01__threads__202610271240.json -> queue/BW-261027-01__threads.json
+                       portal__PT-261027-01__202610270640.json -> portal/PT-261027-01.json  (kartu berita Brainwork.id)
+                       queue__PT-261027-01__facebook_portal__202610270641.json -> queue/PT-261027-01__facebook_portal.json
 
 Aturan:
 - Isi harus JSON valid dan punya "id" yang sama dengan <nama> (untuk queue: nama diawali id). Gagal -> inbox_gagal.txt.
@@ -23,7 +25,7 @@ import os, re, sys, json, glob, html, hashlib, shutil, subprocess, tempfile, url
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 FOLDER = os.environ.get("INBOX_FOLDER_ID", "1sd0X_qci1M688kGryJgqdDug6wMQfCOV")
-ALLOW = {"specs", "motion", "edits", "queue"}
+ALLOW = {"specs", "motion", "edits", "queue", "portal"}
 LINDUNGI = {"posted", "failed"}          # status queue yang tidak boleh ditimpa
 REC = os.path.join(ROOT, "inbox", "imported.json")
 LOG = os.path.join(ROOT, "inbox", "terakhir.txt")

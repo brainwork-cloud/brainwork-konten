@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "brainwork-bot"
           git config user.email "bot@users.noreply.github.com"
-          for p in specs motion edits queue inbox inbox_gagal.txt; do
+          for p in specs motion edits queue portal inbox inbox_gagal.txt; do
             if [ -e "$p" ]; then git add -A "$p"; fi
           done
           git diff --cached --quiet || (git commit -m "inbox: impor dari Drive" && git pull --rebase && git push)
