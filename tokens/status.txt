@@ -1,4 +1,5 @@
 Cek terakhir: 2026-10-19
-THREADS: diperbarui 2026-10-19, berlaku sampai 2026-12-17
+THREADS: diperbarui 2026-10-19, berlaku sampai 2026-12-18
 FACEBOOK: token valid, tidak kedaluwarsa
+PORTAL: OK halaman 'Brainwork.id' (@brainwork.id), token tidak kedaluwarsa, dicek 2026-10-19
 YOUTUBE: refresh token OK
