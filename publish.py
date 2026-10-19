@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Publisher Threads + Facebook Page + YouTube Shorts @nopal.brainwork + Facebook portal Brainwork.id
+Publisher Threads + Facebook Page + YouTube Shorts @nopal.brainwork + Facebook dan Instagram portal Brainwork.id
 (dijalankan GitHub Actions tiap 30 menit).
 
 Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berstatus APPROVED/POSTED di Sheet.
 {
   "id": "BW-261014-01",
-  "platform": "threads" | "facebook" | "youtube" | "facebook_portal",
+  "platform": "threads" | "facebook" | "youtube" | "facebook_portal" | "instagram_portal",
   "publish_at": "2026-10-14T19:00:00+07:00",
   "status": "approved",                 # approved -> posted | failed ; cancelled = dilewati
   # threads
@@ -19,6 +19,8 @@ Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berst
   # facebook_portal (portal berita Brainwork.id, produksi sendiri, BUKAN mirror; halaman Facebook terpisah)
   "message": "caption (wajib memuat kata 'Sumber' dan tautan http)",
   "image_url": "https://raw.githubusercontent.com/.../aset/<ID>/<ID>.jpg"     # kartu berita (atau "image_urls": [...])
+  # instagram_portal (mirror kartu portal yang sama ke @brainwork.id lewat Graph API; akun IG dicari dari halaman portal)
+  "message": "caption (wajib memuat 'Sumber' dan tautan http, maks 2200 karakter)", "image_url": "<kartu berita yang sama, tepat 1 gambar>"
   # youtube
   "video_path": "aset/BW-261014-01/BW-261014-01.mp4",
   "title": "...", "description": "...", "tags": ["..."]
@@ -31,6 +33,8 @@ Pengaman (dua halaman Facebook tidak boleh tertukar):
 - "facebook" (mirror @nopal.brainwork): nama halaman FB_PAGE_ID harus mengandung "brainwork" DAN halamannya bukan brainwork.id.
 - "facebook_portal": username halaman PORTAL_FB_PAGE_ID harus "brainwork.id", id-nya beda dari FB_PAGE_ID, caption wajib memuat
   "Sumber" + tautan, hanya gambar (tanpa video). Gambar belum ada (404) = ditunda, tetap approved, dicoba lagi 30 menit kemudian.
+- "instagram_portal": lolos pengaman halaman portal di atas, lalu akun IG yang tertaut ke halaman itu harus berusername "brainwork.id".
+  Token yang sama (PORTAL_FB_PAGE_TOKEN), tanpa secret baru. Kegagalan IG tidak memengaruhi posting Facebook (file antrian terpisah).
 """
 import os, sys, json, glob, time, datetime as dt
 import requests
@@ -172,6 +176,56 @@ def facebook_portal(item):
     return facebook_post(item, portal=True)
 
 
+def ig_portal_account():
+    """Akun Instagram portal: dicari dari halaman Facebook portal (tertaut), username WAJIB brainwork.id.
+    Memakai token halaman portal yang sama; tidak ada secret baru. Mengembalikan (ig_user_id, token)."""
+    pid, tok = fb_page(portal=True)  # pengaman halaman Facebook portal (username brainwork.id, bukan halaman mirror Nopal)
+    r = requests.get(f"{FB}/{pid}", params={"fields": "instagram_business_account{id,username}", "access_token": tok}, timeout=30)
+    r.raise_for_status()
+    ig = r.json().get("instagram_business_account") or {}
+    if not ig.get("id") or (ig.get("username") or "").lower() != PORTAL_USERNAME:
+        raise RuntimeError(f"akun Instagram yang tertaut ke halaman portal bukan @brainwork.id (ditemukan: {ig.get('username')!r}); posting dibatalkan")
+    return ig["id"], tok
+
+
+def instagram_portal(item):
+    """Portal Brainwork.id di Instagram: kartu berita yang sama dengan Facebook, satu gambar, ke @brainwork.id saja (Graph API)."""
+    text = item.get("message") or ""
+    if "sumber" not in text.lower() or "http" not in text.lower():
+        raise ValueError("portal IG: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
+    if item.get("video_url"):
+        raise ValueError("portal IG: video belum didukung")
+    urls = item.get("image_urls") or ([item["image_url"]] if item.get("image_url") else [])
+    if len(urls) != 1:
+        raise ValueError("portal IG: butuh tepat 1 image_url (kartu berita)")
+    if len(text) > 2200:
+        raise ValueError(f"portal IG: caption {len(text)} karakter, batas Instagram 2200")
+    try:
+        ok = requests.head(urls[0], allow_redirects=True, timeout=30).status_code == 200
+    except requests.RequestException:
+        ok = False
+    if not ok:
+        raise Tunda(f"gambar belum tersedia: {urls[0]}")
+    ig, tok = ig_portal_account()
+    c = requests.post(f"{FB}/{ig}/media", data={"image_url": urls[0], "caption": text, "access_token": tok}, timeout=120)
+    c.raise_for_status()
+    cid = c.json()["id"]
+    for _ in range(30):
+        st = requests.get(f"{FB}/{cid}", params={"fields": "status_code", "access_token": tok}, timeout=30).json().get("status_code")
+        if st == "FINISHED":
+            break
+        if st in ("ERROR", "EXPIRED"):
+            raise RuntimeError(f"container Instagram {st}")
+        time.sleep(5)
+    else:
+        raise TimeoutError("container Instagram belum FINISHED setelah 150 detik")
+    p = requests.post(f"{FB}/{ig}/media_publish", data={"creation_id": cid, "access_token": tok}, timeout=120)
+    p.raise_for_status()
+    mid = p.json()["id"]
+    perma = requests.get(f"{FB}/{mid}", params={"fields": "permalink", "access_token": tok}, timeout=30).json().get("permalink")
+    return {"id": mid, "url": perma or f"https://www.instagram.com/{PORTAL_USERNAME}/"}
+
+
 def youtube_post(item):
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
@@ -204,9 +258,11 @@ def youtube_post(item):
     return {"id": resp["id"], "url": f"https://youtube.com/shorts/{resp['id']}"}
 
 
-HANDLERS = {"threads": threads_post, "facebook": facebook_post, "youtube": youtube_post, "facebook_portal": facebook_portal}
+HANDLERS = {"threads": threads_post, "facebook": facebook_post, "youtube": youtube_post, "facebook_portal": facebook_portal,
+            "instagram_portal": instagram_portal}
 NEEDS = {"threads": ["THREADS_ACCESS_TOKEN"], "facebook": ["FB_PAGE_TOKEN", "FB_PAGE_ID"],
          "facebook_portal": ["PORTAL_FB_PAGE_TOKEN", "PORTAL_FB_PAGE_ID"],
+         "instagram_portal": ["PORTAL_FB_PAGE_TOKEN", "PORTAL_FB_PAGE_ID"],
          "youtube": ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"]}
 
 

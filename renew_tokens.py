@@ -76,6 +76,21 @@ if pt and pp:
 else:
     lines.append("PORTAL: secret belum diisi")
 
+# Mirror Instagram portal: akun IG @brainwork.id harus tertaut ke halaman portal dan token halaman punya izin posting IG.
+# Baris ini TERPISAH dari gerbang "PORTAL: OK" (Facebook), jadi masalah IG tidak menghentikan agen 5.
+if pt and pp and any(l.startswith("PORTAL: OK") for l in lines):
+    try:
+        ig = requests.get(f"https://graph.facebook.com/v23.0/{pp}", params={"fields": "instagram_business_account{id,username}", "access_token": pt}, timeout=30).json().get("instagram_business_account") or {}
+        scopes = requests.get("https://graph.facebook.com/v23.0/debug_token", params={"input_token": pt, "access_token": pt}, timeout=30).json().get("data", {}).get("scopes", [])
+        if (ig.get("username") or "").lower() != "brainwork.id":
+            lines.append(f"PORTAL_IG: BELUM SIAP (akun IG tertaut: {ig.get('username')!r}, bukan brainwork.id) {today}")
+        elif "instagram_content_publish" not in scopes:
+            lines.append(f"PORTAL_IG: BELUM SIAP (token halaman portal tidak punya izin instagram_content_publish) {today} -> buat ulang token: python3 setup/fb_auth.py portal")
+        else:
+            lines.append(f"PORTAL_IG: OK @brainwork.id (id {ig.get('id')}), izin posting ada, dicek {today}")
+    except Exception as e:
+        lines.append(f"PORTAL_IG: BELUM SIAP (gagal cek: {type(e).__name__}) {today}")
+
 if os.environ.get("YT_REFRESH_TOKEN"):
     t = requests.post("https://oauth2.googleapis.com/token", data={
         "client_id": os.environ.get("YT_CLIENT_ID"), "client_secret": os.environ.get("YT_CLIENT_SECRET"),

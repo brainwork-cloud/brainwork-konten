@@ -80,7 +80,7 @@ Kalau dua sumber bertentangan, yang lebih atas menang.
 | Brainwork.id: Instagram dan Facebook Page | MEDIA PORTAL ("homeless media": hidup di sosial media tanpa website). Produksi kontennya SENDIRI, terpisah dari @nopal.brainwork. Hanya berita (NEWS). Bukan mirror. |
 Aturan agen:
 - Agen konten @nopal.brainwork TIDAK mengantrikan apa pun ke Brainwork.id. Kolom X (Mirror FB) selalu `TIDAK PERLU`.
-- Pipeline portal (dibangun 19 Okt 2026): agen 5 Redaktur Portal (`prompts/5-redaktur-portal.md`), kartu `portal/<ID>.json` dirender jadi `aset/<ID>/<ID>.jpg`, antrian `queue/<ID>__facebook_portal.json`, tab Sheet `Portal` dan `Review Portal`, halaman Facebook `facebook.com/brainwork.id` (secret PORTAL_FB_PAGE_ID/TOKEN). Aturan lengkap di bagian 13. Instagram Brainwork.id belum terhubung ke penerbit.
+- Pipeline portal (dibangun 19 Okt 2026): agen 5 Redaktur Portal (`prompts/5-redaktur-portal.md`), kartu `portal/<ID>.json` dirender jadi `aset/<ID>/<ID>.jpg`, antrian `queue/<ID>__facebook_portal.json`, tab Sheet `Portal` dan `Review Portal`, halaman Facebook `facebook.com/brainwork.id` (secret PORTAL_FB_PAGE_ID/TOKEN). Aturan lengkap di bagian 13. Instagram @brainwork.id (tertaut ke Page, ±4,3 rb pengikut per 19 Okt) dimirror dari kartu yang sama lewat `queue/<ID>__instagram_portal.json` (Graph API langsung oleh `publish.py`, token halaman portal yang sama; akun IG dicari dari Page dan harus berusername brainwork.id; bukan Windsor).
 - Dua halaman Facebook TIDAK boleh tertukar: halaman portal (username brainwork.id, mulai dari 0 pengikut) hanya untuk berita Redaktur Portal; halaman lain yang lama (±44 rb pengikut, akan diganti nama oleh Naufal menjadi "nopal.brainwork") milik @nopal.brainwork. publish.py menolak posting kalau tertukar.
 - YouTube Shorts tetap menerima semua pilar (channel Brainwork milik @nopal.brainwork).
 
@@ -105,7 +105,7 @@ Aturan agen:
 - BERKAS IG: Instagram menolak unggahan video lewat API di atas ±4 MB (sejak 30 Sep 2026). Editor karena itu membuat `<ID>_ig.mp4` (720x1280, ≤ 3,3 MB, kualitas hampir sama di layar ponsel) di samping `<ID>.mp4` (penuh, untuk YouTube Shorts) dan `<ID>_tiktok.mp4` (±9 MB, untuk TikTok). Kolom Aset Reels hasil editor berisi 3 baris: `.mp4`, `_tiktok.mp4`, `_ig.mp4`; Penerbit IG memakai `_ig.mp4`.
 
 ## 13. Portal Brainwork.id (keputusan Naufal 19 Okt 2026)
-- Media portal "homeless media" di Facebook Page `brainwork.id` (Instagram menyusul). Produksi SENDIRI, bukan mirror @nopal.brainwork. Hanya berita.
+- Media portal "homeless media" di Facebook Page `brainwork.id` (Instagram @brainwork.id dimirror otomatis dari kartu yang sama). Produksi SENDIRI, bukan mirror @nopal.brainwork. Hanya berita.
 - Berjalan PENUH OTOMATIS tanpa persetujuan per post (agen 5 mengantrikan sendiri, publisher memposting). Kontrol manusia: review sekali seminggu (Senin) oleh Naufal/Nazwa di tab `Review Portal`, plus kolom Catatan Review di tab `Portal` untuk membatalkan atau menandai kesalahan.
 - Gaya media netral: tanpa "aku/kamu", tanpa wajah, nama, atau suara Nopal. Kartu 1080x1350: kategori, judul berita, 1–3 poin fakta, sumber, tanggal rilis sumber.
 - Bahan baku wajib sumber primer resmi yang dibuka sendiri (atau 2 media kredibel independen). Rilis ≤ 48 jam (pekan sepi ≤ 5 hari). Bedakan "sudah rilis", "bertahap", "masih uji coba". Caption wajib memuat `Sumber: <nama> — <URL>`. Tanpa rumor, bocoran, politik praktis, SARA, klaim kesehatan, atau saran investasi.
