@@ -1,0 +1,17 @@
+durasi akhir: 58.4 dtk (batas 60 dtk; isi 56.6 + penutup 1.8); rekaman asli 88.4 dtk
+pemadatan otomatis: jeda > 0.45 dtk dipotong (hemat 1.1 dtk)
+[   2.2 -    8.4]  6.2 dtk | Kamu bisa lihat iklan apa saja yang dipakai kompetitor gratis, begini cara aku pakainya.
+[   9.4 -   10.9]  1.5 dtk | Buka Meta Ad Library,
+[  11.4 -   14.7]  3.2 dtk | pilih negara Indonesia dan kategori semua iklan.
+[  15.2 -   17.2]  2.0 dtk | Lalu ketik nama brand kompetitor.
+[  17.7 -   23.8]  6.1 dtk | Lihat iklan yang masih aktif, iklan yang sudah jalan lama biasanya yang masih dipertahankan.
+[  24.2 -   29.2]  5.0 dtk | Tapi bukan berarti performanya pasti bagus. Catat beberapa iklan,
+[  29.9 -   34.9]  5.0 dtk | kalimat pembuka penawaran dan formatnya entah video gambar atau carousel.
+[  35.6 -   42.5]  6.9 dtk | Rampel catatan itu ke Claude minta dia ringkas polahuk yang paling sering, jenis penawaran dan celah
+[  42.5 -   44.0]  1.5 dtk | yang belum dipakai kompetitor.
+[  44.7 -   47.3]  2.6 dtk  [SUDAH DIPOTONG] | Pakai hasilnya buat bikin versimu sendiri,
+[  47.9 -   54.8]  6.9 dtk | ambil polanya jangan jiplak iklannya. Kalau butuh contekan prompt buat jualan, aku kumpulin di pack 50
+[  54.8 -   57.3]  2.5 dtk | prompt umkm info di caption.
+[  58.0 -   61.6]  3.6 dtk  [SUDAH DIPOTONG] | riset kecil begini bikin kamu nggak mulai dari nol.
+[  65.2 -   66.6]  1.4 dtk | riset iklan kecil
+[  79.8 -   87.5]  7.6 dtk | begini bikin kamu nggak mulai dari nol. Simpan dan coba satu kompetitor di minggu ini.
