@@ -1,0 +1,4 @@
+/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PIL/Image.py:1134: UserWarning: Palette images with Transparency expressed in bytes should be converted to RGBA images
+  warnings.warn(
+foto: ok 1200x1045, pembesaran 1.11x
+{"format": "single", "file": "preview/out/PV-01/PV-01.jpg", "files": ["preview/out/PV-01/PV-01.jpg"]}
