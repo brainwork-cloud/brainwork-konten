@@ -3,7 +3,7 @@
 Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 
 ## 1. Siapa akun ini
-- Instagram @nopal.brainwork, ±210K pengikut, bio: "Spesialis Bangun Sosial Media · 8 tahun di Digital Marketing · Meta Ads, Google Ads, AI".
+- Instagram @nopal.brainwork, ±210K pengikut (puncak 221K, turun karena lama tidak aktif; sedang dibangun lagi), bio: "Spesialis Bangun Sosial Media · 8 tahun di Digital Marketing · Meta Ads, Google Ads, AI".
 - Identitas fase baru: **praktisi iklan yang sekarang kerja di korporat dan memakai AI untuk kerja lebih cepat.**
 - Audiens: pemilik UMKM, marketer/social media manager, freelancer, mahasiswa marketing, usia 20–40.
 
@@ -12,8 +12,9 @@ Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 |---|---|---|---|
 | EVERGREEN | 40% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist |
 | NEWS | 20% | Threads, Reels Motion, Carousel | Update platform (Meta, IG, Threads, TikTok, Google, YouTube), rilis/fitur tool AI, data riset industri terbaru, tren digital marketing Indonesia. WAJIB dari sumber resmi/media kredibel yang dibuka sendiri, berita ≤ 7 hari saat tayang, sebut sumber di caption, bedakan "sudah rilis" vs "masih tes". Tanpa politik, gosip, atau rumor. |
-| ARSIP (kemas ulang hit lama) | 20% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
-| IDENTITAS | 20% | Talking head, Reels Aktivitas, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja, keseharian kerja (tanpa data perusahaan) |
+| ARSIP (kemas ulang hit lama) | 10% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
+| IDENTITAS | 10% | Talking head, Reels Aktivitas, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja, keseharian kerja (tanpa data perusahaan) |
+| SERI "Hari ke-N bangun akun dari 0" | 20% | Talking Head, Reels Motion, Carousel progres, Threads | Seri andalan awal akun, lanjut dari Hari ke-1 = 21 Agu 2024. Aturan lengkap di bagian 11 |
 | THREADS | 3–5 post/minggu | Single post ATAU utas 4 post | Kasus + angka + cliffhanger |
 
 ## 3. Suara & gaya (wajib)
@@ -55,17 +56,6 @@ Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 | DNGPK-DvkCd | 2025-08-08 | 597 rb | Tebak kekayaan dari hewan peliharaan (AI) |
 Aturan kemas ulang: tools/website WAJIB dicek masih ada & versi terbaru. Hook dan cover baru, jangan copy caption lama.
 
-## 8. Akun & distribusi (keputusan Naufal, 19 Okt 2026)
-| Akun | Isi |
-|---|---|
-| @nopal.brainwork: Instagram, Threads, TikTok (manual Nazwa), YouTube Shorts | SEMUA pilar, termasuk NEWS |
-| Brainwork.id: Instagram dan Facebook Page | HANYA pilar NEWS (Carousel dan Reels Motion; Threads tidak) |
-Aturan agen:
-- Konten NEWS tayang di @nopal.brainwork DAN di Brainwork.id (materi dan caption sama). Pilar lain tidak pernah masuk Brainwork.id.
-- Produser mengisi kolom X (Mirror FB) = `BELUM` hanya untuk baris Pilar NEWS berformat Carousel / Reels; semua pilar lain `TIDAK PERLU`.
-- Penerbit IG (agen 3a) hanya mengantrikan Facebook Brainwork.id untuk baris Pilar NEWS. YouTube Shorts tetap untuk semua pilar (channel Brainwork milik @nopal.brainwork).
-- Instagram Brainwork.id belum terhubung ke penerbit per 19 Okt 2026; diaktifkan setelah akunnya dihubungkan.
-
 ## 7. Monetisasi (soft)
 - Produk tangga 1: Pack 50 Prompt UMKM (NolKaryawan) Rp 28.000. Sebut maks 1x/minggu, di CTA atau caption, tidak hard selling.
 - CTA default: simpan, kirim ke teman, komen kata kunci.
@@ -82,3 +72,24 @@ Kalau dua sumber bertentangan, yang lebih atas menang.
 - Boleh meniru struktur, bukan isi. Tidak menyalin kalimat, tidak menyebut kreatornya seolah sumber, tidak memakai angka dari kontennya tanpa cek ke sumber asli.
 - Tulis di kolom Referensi (struktur) sebagai: `<link atau kode arsip> | struktur: <ringkasan 1 baris>`. Contoh: `DB89eVZyemv | struktur: hook larangan, 3 langkah bernomor, CTA simpan`.
 - Referensi terbaik urutannya: arsip hit akun sendiri (bagian 6) > konten POSTED terbaik > kreator lain.
+
+## 10. Akun & distribusi (diperbarui 19 Okt 2026)
+| Akun | Isi |
+|---|---|
+| @nopal.brainwork: Instagram, Threads, TikTok (manual Nazwa), YouTube Shorts | SEMUA pilar, termasuk NEWS versi Nopal (suara aku/kamu) |
+| Brainwork.id: Instagram dan Facebook Page | MEDIA PORTAL ("homeless media": hidup di sosial media tanpa website). Produksi kontennya SENDIRI, terpisah dari @nopal.brainwork. Hanya berita (NEWS). Bukan mirror. |
+Aturan agen:
+- Agen konten @nopal.brainwork TIDAK mengantrikan apa pun ke Brainwork.id. Kolom X (Mirror FB) selalu `TIDAK PERLU`.
+- Pipeline portal (redaktur berita, antrian sendiri, gaya media netral tanpa aku/kamu, tanpa wajah atau nama Nopal) belum dibangun per 19 Okt 2026. Instagram Brainwork.id belum terhubung ke penerbit.
+- YouTube Shorts tetap menerima semua pilar (channel Brainwork milik @nopal.brainwork).
+
+## 11. Seri andalan "Hari ke-N bangun akun dari 0" (Pilar `SERI`, keputusan Naufal 19 Okt 2026)
+- Asal: seri awal @nopal.brainwork sejak 21 Agu 2024. Episode LANJUT, bukan mulai ulang dari 1.
+- Penomoran: N = jumlah hari dari 21 Agu 2024 sampai Tgl Tayang, rumus `(tanggal_tayang - date(2024,8,21)).days`. Contoh: 19 Okt 2026 = Hari ke-789, 20 Okt 2026 = Hari ke-790. Cek: 5 Des 2025 = Hari ke-471, sama dengan postingan lama.
+- Kerangka cerita (jujur): kisah bangkit. Puncak pengikut 221 rb (fakta dari Naufal), turun jadi ±210 rb karena lama tidak aktif, sekarang dibangun lagi dengan sistem baru (AI dan otomasi). Jangan menutupi penurunan, jangan melebih-lebihkan, jangan menyalahkan platform.
+- Angka nyata saja. Pengikut terbaru dari tab **Seri** di Sheet (agen 3a mencatatnya tiap pagi dari Windsor `followers_count`). Boleh dibandingkan dengan puncak 221 rb dan milestone lama yang memang pernah Naufal posting: 10 rb organik di Hari ke-39, 100 rb di Minggu ke-20, 200 rb di Minggu ke-35. Kemas menarik: angka besar di cover, selisih naik atau turun dari minggu lalu, satu pelajaran. Tanpa angka karangan.
+- Dilarang mengulang klaim lama yang tidak bisa diverifikasi (contoh: diundang 10+ perusahaan dan kementerian, penghasilan puluhan juta), kecuali Naufal memberi bukti di Catatan Review. Bagian 4 tetap berlaku (jangan sebut tempat kerja atau data pemberi kerja).
+- Isi bergilir: (a) angka dan pelajaran minggu ini; (b) pelajaran dari post terbaik atau terburuk (tab Performa); (c) kabar terbaru digital marketing yang dites di akun ini (aturan NEWS: sumber resmi, ≤ 7 hari, bedakan sudah rilis vs masih tes); (d) di balik layar sistem konten otomatis (tanpa data perusahaan pemberi kerja).
+- Format dan ritme: 1 Reels per minggu (Talking Head, atau Reels Motion bila Naufal belum sempat merekam), Carousel progres saat ada milestone, 1 Threads per minggu.
+- Caption: baris pertama persis "Hari ke-N bangun akun dari 0", hashtag #bangunakundari0 (dihitung dalam batas 5).
+- Distribusi: @nopal.brainwork saja (Instagram, Threads, YouTube Shorts, TikTok manual Nazwa). TIDAK ke Brainwork.id.
