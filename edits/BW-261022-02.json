@@ -1,97 +1,159 @@
 {
- "id": "BW-261022-02",
- "mode": "talking_head",
- "camera": "rekaman/BW-261022-02/kamera.mp4",
- "hook": "Intip iklan kompetitor, gratis",
- "highlight_words": [
-  "gratis",
-  "kompetitor",
-  "Claude"
- ],
- "cut_silence": true,
- "outro": "Follow @nopal.brainwork buat tips iklan & AI",
- "make_broll": [
-  {
-   "name": "b1",
-   "type": "motion",
-   "scenes": [
+  "id": "BW-261022-02",
+  "mode": "talking_head",
+  "camera": "rekaman/BW-261022-02/kamera.mp4",
+  "hook": "Intip iklan kompetitor, gratis",
+  "highlight_words": [
+    "gratis",
+    "kompetitor",
+    "Claude"
+  ],
+  "cut_silence": true,
+  "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+  "sources": {
+    "rekaman/BW-261022-02/kamera.mp4": "1x9woZa7KfeZsbEFrTKbQIQA477sR-d9U"
+  },
+  "whisper_prompt": false,
+  "fix": {
+    "metaedge library": "Meta Ad Library",
+    "rempel": "Tempel",
+    "cloud": "Claude",
+    "kerusel": "carousel",
+    "prom": "prompt",
+    "reset": "riset",
+    "versi mu": "versimu"
+  },
+  "cut_ranges": [
+    [
+      57.8,
+      64.9
+    ]
+  ],
+  "cover": [
     {
-     "type": "points",
-     "kicker": "Meta Ad Library",
-     "title": "Intip iklan **kompetitor**",
-     "items": [
-      "Pilih negara Indonesia",
-      "Ketik nama brand kompetitor",
-      "Lihat iklan yang masih aktif"
-     ],
-     "dur": 5
-    }
-   ]
-  },
-  {
-   "name": "b2",
-   "type": "motion",
-   "scenes": [
+      "from_word": "pakainya",
+      "scene": {
+        "type": "steps",
+        "kicker": "Meta Ad Library",
+        "title": "Cara **pakainya**",
+        "items": [
+          "Buka Meta Ad Library",
+          "Pilih negara Indonesia",
+          "Kategori semua iklan"
+        ]
+      }
+    },
     {
-     "type": "points",
-     "kicker": "Tempel ke Claude",
-     "title": "Minta ringkas **polanya**",
-     "items": [
-      "Hook yang paling sering",
-      "Jenis penawaran",
-      "Celah yang belum dipakai"
-     ],
-     "dur": 5
-    }
-   ]
-  },
-  {
-   "name": "b3",
-   "type": "motion",
-   "scenes": [
+      "from_word": "semua iklan",
+      "scene": {
+        "type": "icon",
+        "icon": "search",
+        "kicker": "Lalu",
+        "text": "Ketik nama **brand kompetitor**"
+      }
+    },
     {
-     "type": "statement",
-     "kicker": "Ingat",
-     "text": "Ambil **polanya**, jangan jiplak iklannya",
-     "dur": 3
+      "from_word": "brand kompetitor",
+      "scene": {
+        "type": "icon",
+        "icon": "clock",
+        "kicker": "Lihat yang masih aktif",
+        "text": "Iklan yang **sudah jalan lama** biasanya masih dipertahankan"
+      }
+    },
+    {
+      "from_word": "dipertahankan",
+      "scene": {
+        "type": "icon",
+        "icon": "warning",
+        "kicker": "Tapi",
+        "text": "Bukan berarti performanya **pasti bagus**"
+      }
+    },
+    {
+      "from_word": "bagus",
+      "scene": {
+        "type": "steps",
+        "kicker": "Catat",
+        "title": "Dari tiap **iklan**",
+        "items": [
+          "Kalimat pembuka",
+          "Penawarannya",
+          "Formatnya: video, gambar, carousel"
+        ]
+      }
+    },
+    {
+      "from_word": "carousel",
+      "scene": {
+        "type": "flow",
+        "kicker": "Tempel ke Claude",
+        "title": "Minta dia **ringkas polanya**",
+        "items": [
+          {
+            "icon": "doc",
+            "label": "Catatan iklan"
+          },
+          {
+            "icon": "sparkle",
+            "label": "Claude"
+          }
+        ]
+      }
+    },
+    {
+      "from_word": "ringkas pola",
+      "scene": {
+        "type": "steps",
+        "kicker": "Minta Claude cari",
+        "title": "**Polanya**",
+        "items": [
+          "Hook yang paling sering",
+          "Jenis penawaran",
+          "Celah yang belum dipakai kompetitor"
+        ]
+      }
+    },
+    {
+      "from_word": "kompetitor#3",
+      "scene": {
+        "type": "vs",
+        "kicker": "Pakai hasilnya",
+        "yes": {
+          "title": "Ambil **polanya**"
+        },
+        "no": {
+          "title": "Jangan jiplak iklannya"
+        }
+      }
+    },
+    {
+      "from_word": "iklannya",
+      "scene": {
+        "type": "icon",
+        "icon": "chat",
+        "kicker": "Butuh contekan prompt buat jualan?",
+        "text": "Aku **kumpulin** buat kamu"
+      }
+    },
+    {
+      "from_word": "kumpulin",
+      "scene": {
+        "type": "icon",
+        "icon": "doc",
+        "kicker": "Info di caption",
+        "text": "**Pack 50 Prompt UMKM**"
+      }
+    },
+    {
+      "from_word": "caption",
+      "scene": {
+        "type": "icon",
+        "icon": "chart",
+        "kicker": "Riset iklan kecil begini",
+        "text": "Bikin kamu **nggak mulai dari nol**"
+      }
     }
-   ]
-  }
- ],
- "cutaways": [
-  {
-   "after_word": "Library",
-   "dur": 4,
-   "clip": "rekaman/BW-261022-02/b1.mp4"
-  },
-  {
-   "after_word": "Claude",
-   "dur": 5,
-   "clip": "rekaman/BW-261022-02/b2.mp4"
-  },
-  {
-   "after_word": "jiplak",
-   "dur": 3,
-   "clip": "rekaman/BW-261022-02/b3.mp4"
-  }
- ],
- "sources": {
-  "rekaman/BW-261022-02/kamera.mp4": "1x9woZa7KfeZsbEFrTKbQIQA477sR-d9U"
- },
- "whisper_prompt": false,
- "fix": {
-  "metaedge library": "Meta Ad Library",
-  "rempel": "Tempel",
-  "cloud": "Claude",
-  "kerusel": "carousel",
-  "prom": "prompt",
-  "reset": "riset",
-  "versi mu": "versimu"
- },
- "cut_ranges": [
-  [
-   57.8,
-   64.9
-  ]
- ]
+  ],
+  "close_from_word": "dari nol"
 }

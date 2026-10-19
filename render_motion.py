@@ -311,6 +311,10 @@ def sc_mock(fr, s, t, dur):
 
 SCENES = {"hook": sc_hook, "stat": sc_stat, "points": sc_points, "statement": sc_statement, "end": sc_end, "mock": sc_mock}
 
+# scene tambahan (icon, flow, steps, vs) untuk B-roll penuh
+import scenes_extra
+scenes_extra.register(sys.modules[__name__])
+
 
 def render_clip(scenes, path):
     """B-roll tanpa suara dari daftar scene (dipakai make_broll.py)."""

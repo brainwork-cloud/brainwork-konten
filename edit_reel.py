@@ -22,6 +22,13 @@ Spec edit (ditulis agen Produser):
   # talking_head: sisipan B-roll (dibuat make_broll.py) yang menimpa gambar wajah, suara tetap jalan
   "cutaways": [{"after_word": "Library", "dur": 4, "clip": "rekaman/BW-261014-01/b1.mp4"},
                {"at": 12.5, "dur": 3, "clip": "rekaman/BW-261014-01/b2.mp4"}],
+  # talking_head, MODE WAJAH HANYA DI PEMBUKA & PENUTUP: tengah video penuh animasi/grafis (scene render_motion + scenes_extra).
+  # Tiap item menutup layar dari akhir kata pemicu sampai item berikutnya (item terakhir sampai penutup).
+  # Durasi scene dihitung otomatis dari ucapan, jadi tidak perlu "dur". Kata pemicu: "kata", "dua kata", atau "kata#2" (kemunculan ke-2).
+  "cover": [{"from_word": "editor", "scene": {"type": "icon", "icon": "image", "kicker": "Advantage+", "text": "Foto statis jadi **video iklan**"}},
+            {"at": 12.5, "scene": {"type": "steps", "title": "Caranya", "items": ["...", "..."]}}],
+  "close_sec": 6,                       # wajah kembali di N detik terakhir (default 6)
+  "close_from_word": "Simpan",          # atau: wajah kembali mulai akhir kata ini (menggantikan close_sec)
   # activity: klip aktivitas Naufal (tanpa bicara) + teks di layar + musik otomatis
   "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka laporan iklan dulu"}]
 }
@@ -151,17 +158,74 @@ def subtract_ranges(segs, ranges):
 
 
 def find_word_end(new_words, after_word):
-    """Akhir kata pemicu sisipan: cocok persis dulu, lalu yang mirip (>= 0,75). None kalau tidak ketemu."""
-    key = _norm(after_word.split()[0])
-    for w in new_words:
-        if key and key in _norm(w["w"]):
-            return w["e"]
+    """Akhir kata pemicu sisipan/cover. Boleh "kata", "dua kata" (berurutan), atau "kata#2" (kemunculan ke-2).
+    Cocok persis dulu, lalu yang mirip (>= 0,75, hanya kata pertama). None kalau tidak ketemu."""
+    spec, nth = after_word.strip(), 1
+    m = re.match(r"^(.*)#(\d+)$", spec)
+    if m:
+        spec, nth = m.group(1).strip(), max(1, int(m.group(2)))
+    keys = [_norm(x) for x in spec.split()]
+    if not keys or not all(keys):
+        return None
+    n, seen = len(keys), 0
+    for i in range(len(new_words) - n + 1):
+        if all(keys[j] in _norm(new_words[i + j]["w"]) for j in range(n)):
+            seen += 1
+            if seen == nth:
+                return new_words[i + n - 1]["e"]
+    if nth > 1:
+        return None
     best, score = None, 0.0
     for w in new_words:
-        r = difflib.SequenceMatcher(None, key, _norm(w["w"])).ratio()
+        r = difflib.SequenceMatcher(None, keys[0], _norm(w["w"])).ratio()
         if r > score:
             best, score = w, r
     return best["e"] if best and score >= 0.75 else None
+
+
+def plan_cover(spec, new_words, main_len, tmp, out_dir):
+    """Mode wajah hanya di pembuka dan penutup: tiap item cover menutup layar dari kata pemicunya sampai item berikutnya,
+    item terakhir sampai penutup. Scene dirender di sini dengan durasi yang pas dengan ucapan.
+    -> (daftar (mulai, durasi, klip, fade_masuk, fade_keluar), peringatan)"""
+    sys.path.insert(0, HERE)
+    import render_motion
+    warns, plan = [], []
+    for c in spec["cover"]:
+        st = c.get("at")
+        if st is None and c.get("from_word"):
+            st = find_word_end(new_words, c["from_word"])
+            if st is None:
+                warns.append(f"cover dari kata '{c['from_word']}' tidak ketemu di transkrip, dilewati (perbaiki 'fix' atau pakai 'at' detik)")
+        if st is not None and c.get("scene"):
+            plan.append((float(st), c))
+    close = find_word_end(new_words, spec["close_from_word"]) if spec.get("close_from_word") else None
+    if close is None:
+        if spec.get("close_from_word"):
+            warns.append(f"close_from_word '{spec['close_from_word']}' tidak ketemu, pakai close_sec")
+        close = main_len - float(spec.get("close_sec", 6))
+    plan.sort(key=lambda x: x[0])
+    plan = [(st, c) for st, c in plan if st < close - 0.8]
+    if plan and plan[0][0] < 2.0:
+        warns.append(f"cover pertama mulai {plan[0][0]:.1f} dtk: wajah perlu tampil di pembuka (minimal 2 dtk)")
+    res, lines = [], []
+    for i, (st, c) in enumerate(plan):
+        end = plan[i + 1][0] if i + 1 < len(plan) else close
+        du = end - st
+        if du < 0.8:
+            warns.append(f"cover pada {st:.1f} dtk hanya {du:.1f} dtk, dilewati (geser kata pemicu)")
+            continue
+        if du > 8.5:
+            warns.append(f"cover pada {st:.1f} dtk berdurasi {du:.1f} dtk (> 8,5): tambah item cover supaya layar tidak diam lama")
+        last = i + 1 == len(plan)
+        scene = dict(c["scene"]); scene["dur"] = round(du + (0 if last else 0.06), 3)   # tumpang tindih 0,06 dtk: tidak ada kedipan wajah
+        path = os.path.join(tmp, f"cover{i}.mp4")
+        render_motion.render_clip([scene], path)
+        res.append((st, scene["dur"], path))
+        lines.append(f"{st:6.1f} dtk | {du:4.1f} dtk | {scene.get('type')} | {(scene.get('text') or scene.get('title') or '')[:60]}")
+    out = [(st, du, path, k == 0, k == len(res) - 1) for k, (st, du, path) in enumerate(res)]
+    open(os.path.join(out_dir, f"{spec['id']}_cover.txt"), "w", encoding="utf-8").write(
+        f"wajah tampil: 0-{(res[0][0] if res else main_len):.1f} dtk dan {close:.1f}-{main_len:.1f} dtk\n" + "\n".join(lines) + "\n")
+    return out, warns
 
 
 # ---------- 3. Subtitle ASS ----------
@@ -332,6 +396,10 @@ def main():
             cuts.append((max(0, st), min(float(c.get("dur", 3)), main_len - st), P(c["clip"])))
         elif st is not None:
             warns.append(f"klip sisipan tidak ada: {c['clip']}")
+    if spec.get("cover"):
+        cv, cw = plan_cover(spec, new_words, main_len, tmp, out_dir)
+        cuts += cv
+        warns += cw
     # catatan untuk Produser: teks subtitle akhir + peringatan
     open(os.path.join(out_dir, f"{spec['id']}_teks.txt"), "w", encoding="utf-8").write(" ".join(w["w"] for w in new_words) + "\n")
     pf = os.path.join(out_dir, f"{spec['id']}_peringatan.txt")
@@ -342,9 +410,18 @@ def main():
         os.remove(pf)
     if cuts:
         ins, fl, last = ["-i", os.path.join(tmp, "main.mp4")], [], "[0:v]"
-        for i, (st, du, clip) in enumerate(cuts, 1):
+        for i, cu in enumerate(cuts, 1):
+            st, du, clip = cu[:3]
+            fin, fout = (cu[3], cu[4]) if len(cu) > 3 else (False, False)
+            fx = ""
+            if fin or fout:
+                fx = ",format=yuva420p"
+                if fin:
+                    fx += f",fade=t=in:st={st:.3f}:d=0.2:alpha=1"
+                if fout:
+                    fx += f",fade=t=out:st={st + du - 0.2:.3f}:d=0.2:alpha=1"
             ins += ["-i", clip]
-            fl.append(f"[{i}:v]trim=0:{du:.3f},setpts=PTS-STARTPTS+{st:.3f}/TB,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}[c{i}]")
+            fl.append(f"[{i}:v]trim=0:{du:.3f},setpts=PTS-STARTPTS+{st:.3f}/TB,scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}{fx}[c{i}]")
             fl.append(f"{last}[c{i}]overlay=0:0:eof_action=pass:enable='between(t,{st:.3f},{st + du:.3f})'[o{i}]")
             last = f"[o{i}]"
         run(["ffmpeg", "-y", *ins, "-filter_complex", ";".join(fl), "-map", last, "-map", "0:a", "-c:v", "libx264",

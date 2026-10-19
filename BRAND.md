@@ -93,3 +93,9 @@ Aturan agen:
 - Format dan ritme: 1 Reels per minggu (Talking Head, atau Reels Motion bila Naufal belum sempat merekam), Carousel progres saat ada milestone, 1 Threads per minggu.
 - Caption: baris pertama persis "Hari ke-N bangun akun dari 0", hashtag #bangunakundari0 (dihitung dalam batas 5).
 - Distribusi: @nopal.brainwork saja (Instagram, Threads, YouTube Shorts, TikTok manual Nazwa). TIDAK ke Brainwork.id.
+
+## 12. Aturan visual Talking Head (diputuskan Naufal 19 Okt 2026)
+- Wajah Naufal hanya tampil di pembuka (kalimat pembuka) dan penutup (kalimat terakhir). Seluruh bagian tengah penuh animasi, grafis, atau ilustrasi buatan agen yang mengikuti ucapan; suara dan subtitle tetap jalan.
+- Alasan: di rekaman HP wajah sering keluar frame. Editor tidak melacak wajah, jadi bagian tengah ditutup grafis.
+- Jenis scene: icon (ilustrasi besar), flow (alur ikon), steps (langkah bernomor), vs (ya/tidak), stat (angka bersumber), points, statement. Variasikan, jangan tiga scene sama berturut-turut.
+- Isi grafis hanya hal yang diucapkan Naufal atau sumber resmi yang dibuka agen; tanpa logo atau tampilan resmi merek; tanpa angka karangan.
