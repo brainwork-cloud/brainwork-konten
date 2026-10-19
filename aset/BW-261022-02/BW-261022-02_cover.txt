@@ -1,12 +1,12 @@
-wajah tampil: 0-6.4 dtk dan 59.9-63.2 dtk
-   6.4 dtk |  5.5 dtk | steps | Cara **pakainya**
-  11.9 dtk |  2.5 dtk | icon | Ketik nama **brand kompetitor**
-  14.4 dtk |  6.6 dtk | icon | Iklan yang **sudah jalan lama** biasanya masih dipertahankan
+wajah tampil: 0-6.4 dtk dan 59.7-63.2 dtk
+   6.4 dtk |  5.5 dtk | ui | Cara **pakainya**
+  11.9 dtk |  2.5 dtk | ui | Ketik nama **brand kompetitor**
+  14.4 dtk |  6.6 dtk | ui | Yang **sudah jalan lama**
   21.0 dtk |  3.4 dtk | icon | Bukan berarti performanya **pasti bagus**
   24.4 dtk |  7.3 dtk | steps | Dari tiap **iklan**
-  31.7 dtk |  3.7 dtk | flow | Minta dia **ringkas polanya**
-  35.4 dtk |  5.0 dtk | steps | **Polanya**
+  31.7 dtk |  3.9 dtk | ui | Minta dia **ringkas polanya**
+  35.6 dtk |  4.8 dtk | ui | **Polanya**
   40.4 dtk |  5.6 dtk | vs | 
   46.0 dtk |  3.4 dtk | icon | Aku **kumpulin** buat kamu
   49.4 dtk |  3.9 dtk | icon | **Pack 50 Prompt UMKM**
-  53.4 dtk |  6.5 dtk | icon | Bikin kamu **nggak mulai dari nol**
+  53.4 dtk |  6.3 dtk | icon | Bikin kamu **nggak mulai dari nol**
