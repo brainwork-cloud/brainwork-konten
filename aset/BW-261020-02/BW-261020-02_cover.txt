@@ -1,4 +1,4 @@
-wajah tampil: 0-4.3 dtk dan 52.4-56.5 dtk
+wajah tampil: 0-4.3 dtk dan 52.5-56.6 dtk
    4.3 dtk |  5.3 dtk | flow | Foto statis jadi **video iklan**
    9.6 dtk |  3.4 dtk | icon | Gambar statis yang **sudah kamu punya**
   13.1 dtk |  2.1 dtk | icon | Sudah **tersedia umum**
@@ -6,7 +6,7 @@ wajah tampil: 0-4.3 dtk dan 52.4-56.5 dtk
   20.0 dtk |  4.7 dtk | ui | Bikin iklan pakai **foto produkmu**
   24.7 dtk |  6.3 dtk | ui | Buka **Advantage+ creative**
   31.0 dtk |  2.8 dtk | icon | Nama opsi bisa **sedikit beda** di akunmu
-  33.7 dtk |  2.4 dtk | ui | Cek **pratinjaunya**
-  36.1 dtk |  3.8 dtk | ui | **Matiin** lagi aja
+  33.8 dtk |  2.4 dtk | ui | Cek **pratinjaunya**
+  36.2 dtk |  3.7 dtk | ui | **Matiin** lagi aja
   39.9 dtk |  6.6 dtk | vs | 
   46.5 dtk |  5.9 dtk | icon | Wajar. **Cek lagi** beberapa hari ke depan

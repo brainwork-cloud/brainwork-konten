@@ -1,12 +1,13 @@
-durasi akhir: 58.3 dtk (batas 60 dtk; isi 56.5 + penutup 1.8); rekaman asli 61.1 dtk
+durasi akhir: 58.4 dtk (batas 60 dtk; isi 56.6 + penutup 1.8); rekaman asli 61.1 dtk
 [   0.8 -    4.9]  4.1 dtk | foto produk kamu bisa jadi iklan video tanpa editor.
 [   6.8 -   14.6]  7.8 dtk | Meta sekarang punya video di Advantage+ creative yang bisa bikin video dari gambar statis yang sudah
-[  14.6 -   17.4]  2.8 dtk | kamu punya. Statusnya sudah tersedia umum.
+[  14.6 -   15.3]  0.7 dtk | kamu punya.
+[  15.7 -   17.4]  1.6 dtk | Statusnya sudah tersedia umum.
 [  17.9 -   23.1]  5.2 dtk | Cocok buat kamu yang jualan tapi belum punya stok video produk. Caranya,
-[  23.6 -   31.4]  7.7 dtk | di Ads Manager bikin iklan pakai foto produkmu lalu buka bagian Advantage+ creative dan cari opsi
+[  23.6 -   31.4]  7.7 dtk | di Ads Manager bikin iklan pakai foto produkmu, lalu buka bagian Advantage+ creative dan cari opsi
 [  31.4 -   33.2]  1.8 dtk | yang mengubah gambar jadi video.
 [  33.7 -   35.9]  2.2 dtk | Nama opsinya bisa sedikit beda di akunmu.
-[  36.3 -   42.1]  5.8 dtk | Sebelum publish, cek pratinjaunya. Kalau gerakannya aneh atau bikin pesan gak jelas matiin lagi aja.
+[  36.3 -   42.1]  5.8 dtk | Sebelum publish, cek pratinjaunya. Kalau gerakannya aneh atau bikin pesan gak jelas, matiin lagi aja.
 [  42.6 -   43.3]  0.7 dtk | Saranku,
 [  43.7 -   51.8]  8.1 dtk | jadikan ini bahan tes di samping materi lain. Bukan pengganti video aslimu. Kalau opsinya belum muncul,
 [  52.2 -   54.7]  2.5 dtk | wajar cek lagi beberapa hari ke depan.
