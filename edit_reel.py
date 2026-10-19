@@ -3,7 +3,7 @@
 Editor Reels otomatis @nopal.brainwork  (dijalankan GitHub Actions / mesin dengan internet)
 
 Pemakaian:
-  python3 edit_reel.py edits/<ID>.json            -> aset/<ID>/<ID>.mp4 + <ID>_cover.jpg
+  python3 edit_reel.py edits/<ID>.json            -> aset/<ID>/<ID>.mp4 + <ID>_tiktok.mp4 + <ID>_ig.mp4 (<= 3,3 MB untuk API Instagram) + <ID>_cover.jpg
   python3 edit_reel.py edits/<ID>.json --words w.json   (lewati transkripsi; untuk uji)
 
 Spec edit (ditulis agen Produser):
@@ -523,6 +523,20 @@ def finish(spec, subbed, out_dir, tmp, nwords):
     run(["ffmpeg", "-y", "-i", final, "-vf", "scale=720:1280", "-c:v", "libx264", "-preset", "slow",
          "-b:v", f"{vbit}k", "-maxrate", f"{vbit}k", "-bufsize", f"{vbit * 2}k", "-c:a", "aac", "-b:a", "128k",
          "-movflags", "+faststart", tiktok])
+
+    # versi Instagram (<= 3,3 MB): API Instagram menolak unggahan video di atas +-4 MB (ProcessingFailedError sejak 30 Sep 2026).
+    # 720x1280, dua lintasan supaya ukurannya pas; SSIM terhadap file penuh ~0,99 (tampak sama di layar ponsel).
+    ig = os.path.join(out_dir, f"{spec['id']}_ig.mp4")
+    ig_vbit = int(max(250, 3.3 * 8000 / dur - 72))
+    ig_log = os.path.join(tmp, "ig2pass")
+    ig_args = ["-vf", "scale=720:1280:flags=lanczos", "-c:v", "libx264", "-preset", "slow", "-b:v", f"{ig_vbit}k",
+               "-maxrate", f"{ig_vbit * 3 // 2}k", "-bufsize", f"{ig_vbit * 2}k", "-passlogfile", ig_log]
+    run(["ffmpeg", "-y", "-i", final, *ig_args, "-pass", "1", "-an", "-f", "null", os.devnull])
+    run(["ffmpeg", "-y", "-i", final, *ig_args, "-pass", "2", "-pix_fmt", "yuv420p", "-profile:v", "high",
+         "-c:a", "aac", "-b:a", "64k", "-ac", "1", "-movflags", "+faststart", ig])
+    if os.path.getsize(ig) > 3.6e6:
+        with open(os.path.join(out_dir, f"{spec['id']}_peringatan.txt"), "a", encoding="utf-8") as pw:
+            pw.write(f"Versi IG {os.path.getsize(ig) / 1e6:.1f} MB (batas aman 3,6 MB): Instagram bisa menolak. Pendekkan video.\n")
 
     cover = os.path.join(out_dir, f"{spec['id']}_cover.jpg")
     run(["ffmpeg", "-y", "-ss", "0.8", "-i", final, "-frames:v", "1", "-q:v", "3", cover])
