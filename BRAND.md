@@ -36,7 +36,7 @@ Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 - Carousel: 5–8 slide, 1080×1350 JPEG, dirender oleh `render_carousel.py` dari spec JSON. Slide 1 = cover (hook), slide terakhir = CTA. Tipe slide: cover, point, list, statement, cta. `**kata**` = warna emas, maks 1–2 frasa per slide.
 - Teks per slide: judul ≤ 10 kata, maks 3 poin per slide, tiap poin ≤ 14 kata.
 - Reels faceless: naskah VO 30–45 detik (±90–110 kata), hook 3 detik pertama, shot list per baris (screen recording apa yang direkam), teks overlay ≤ 6 kata.
-- Talking head: naskah 45–60 detik, poin bicara, bukan dibaca kata per kata.
+- Talking head: naskah yang diucapkan ±45–55 detik, poin bicara, bukan dibaca kata per kata. Video akhir (dengan penutup merek 1,8 detik) maksimal 60 detik; lebih dari itu dipotong bagian tak pentingnya (lihat bagian 12).
 
 ## 6. Arsip hit (bahan pilar ARSIP; views per Okt 2026)
 | Kode | Tgl | Views | Topik |
@@ -100,7 +100,8 @@ Aturan agen:
 - Alasan: di rekaman HP wajah sering keluar frame. Editor tidak melacak wajah, jadi bagian tengah ditutup grafis.
 - Jenis scene: icon (ilustrasi besar), flow (alur ikon), steps (langkah bernomor), vs (ya/tidak), stat (angka bersumber), points, statement. Variasikan, jangan tiga scene sama berturut-turut.
 - Isi grafis hanya hal yang diucapkan Naufal atau sumber resmi yang dibuka agen; tanpa logo atau tampilan resmi merek; tanpa angka karangan.
-- Scene `ui` (permintaan Naufal 19 Okt 2026, "lebih realistis agar orang kebayang dashboardnya"): jendela aplikasi/dashboard buatan sendiri dengan kursor, klik, toggle, ketikan, angka naik, dan zoom kamera. Layout form (pengaturan iklan), library (pencarian iklan), chat (asisten AI), table (hasil iklan). Dipakai untuk setiap pembahasan tool, menu, atau dashboard. Aturan tetap: generik (bukan tangkapan layar), tanpa logo atau tampilan resmi merek, selalu berlabel "Ilustrasi · data contoh", angka di dalamnya contoh dan tidak boleh disiratkan sebagai hasil nyata.
+- Scene `ui` adalah STANDAR SEMUA EDITING (keputusan Naufal 19 Okt 2026, "lebih realistis agar orang kebayang dashboardnya", lalu "jadikan ini standar semua editing"): jendela aplikasi/dashboard buatan sendiri dengan kursor, klik, toggle, ketikan, angka naik, efek memuat, notifikasi "Perubahan disimpan", dan zoom kamera yang bergeser pelan. Enam layout: form (pengaturan iklan), library (pencarian iklan), chat (asisten AI), table (hasil iklan), chart (grafik tren), feed (insight postingan). Dipakai setiap kali tool, menu, pengaturan, dashboard, atau angka performa dibahas, termasuk Reels Faceless dan Motion. Aturan tetap: generik (bukan tangkapan layar), tanpa logo atau tampilan resmi merek, selalu berlabel "Ilustrasi · data contoh", angka di dalamnya contoh dan tidak boleh disiratkan sebagai hasil nyata.
+- BATAS DURASI REELS 60 DETIK (keputusan Naufal 19 Okt 2026): semua Reels (Talking Head, Faceless, Aktivitas, Motion) maksimal 60 detik termasuk penutup merek 1,8 detik. Editor otomatis merapatkan jeda dan membuang kata isian; kalau masih lebih, bagian paling tidak penting dipotong lewat `cut_ranges` dengan urutan prioritas: rekaman ulang atau kalimat berulang, basa-basi, penjelasan kedua untuk poin yang sama, poin berdampak terkecil. Kalimat pembuka dan penutup tidak pernah dipotong.
 
 ## 13. Portal Brainwork.id (keputusan Naufal 19 Okt 2026)
 - Media portal "homeless media" di Facebook Page `brainwork.id` (Instagram menyusul). Produksi SENDIRI, bukan mirror @nopal.brainwork. Hanya berita.

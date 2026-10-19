@@ -25,6 +25,14 @@
  },
  "cut_ranges": [
   [
+   17.55,
+   19.7
+  ],
+  [
+   44.5,
+   47.7
+  ],
+  [
    57.8,
    64.9
   ]
@@ -66,7 +74,7 @@
      "results",
      "highlight"
     ],
-    "kicker": "Lihat yang masih aktif",
+    "kicker": "Cek tanggal tayang",
     "title": "Yang **sudah jalan lama**",
     "tag": "Jalan lama",
     "hl_card": 0

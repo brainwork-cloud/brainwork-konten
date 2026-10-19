@@ -18,6 +18,8 @@ Spec edit (ditulis agen Produser):
   "cut_silence": true,                  # buang jeda > 0.6 dtk
   "fix": {"cloud": "Claude", "perating jauhnya": "pratinjaunya"},   # koreksi salah dengar (kunci boleh >1 kata)
   "cut_ranges": [[57.8, 64.9]],         # buang rentang detik (waktu rekaman asli), mis. kalimat yang diulang
+  "max_sec": 60,                        # batas durasi video akhir (termasuk penutup 1,8 dtk). Default 60. Kalau lebih: jeda dipadatkan otomatis,
+                                        # sisanya dilaporkan di <ID>_peringatan.txt supaya Produser memotong lewat cut_ranges (daftar kalimat: <ID>_kalimat.txt)
   "outro": "Follow @nopal.brainwork buat tips iklan & AI",
   # talking_head: sisipan B-roll (dibuat make_broll.py) yang menimpa gambar wajah, suara tetap jalan
   "cutaways": [{"after_word": "Library", "dur": 4, "clip": "rekaman/BW-261014-01/b1.mp4"},
@@ -82,6 +84,55 @@ def keep_segments(words, total, gap=0.6, pad=0.15):
             start = max(0, b["s"] - pad)
     segs.append((start, min(total, words[-1]["e"] + pad)))
     return segs
+
+
+OUTRO_SEC = 1.8                        # panjang klip penutup (outro) yang ditambahkan finish()
+FILLERS = {"eh", "ehm", "em", "emm", "hm", "hmm", "mm", "mmm", "uh", "uhm", "umm", "anu", "ee", "eee"}
+
+
+def plan_segments(words, total, cut, limit, spec):
+    """Tentukan bagian yang dipertahankan. Kalau terlalu panjang (> limit), padatkan jeda (dua tahap) lalu buang kata isian (eh, hmm, anu).
+    Isi kalimat TIDAK dihapus otomatis: itu keputusan Produser lewat cut_ranges.
+    -> (words, segs, catatan)"""
+    notes = []
+    if not spec.get("cut_silence", True):
+        return words, subtract_ranges([(0, total)], cut), notes
+    segs = subtract_ranges(keep_segments(words, total), cut)
+    cur = sum(e - b for b, e in segs)
+    if cur <= limit or not spec.get("auto_tighten", True):
+        return words, segs, notes
+    for gap, pad in ((0.45, 0.12), (0.32, 0.08)):
+        segs2 = subtract_ranges(keep_segments(words, total, gap, pad), cut)
+        new = sum(e - b for b, e in segs2)
+        notes.append(f"jeda > {gap:.2f} dtk dipotong (hemat {cur - new:.1f} dtk)")
+        segs, cur = segs2, new
+        if cur <= limit:
+            return words, segs, notes
+    fill = [(w["s"], w["e"]) for w in words if _norm(w["w"]) in FILLERS]
+    if fill:
+        words = drop_ranges(words, fill)
+        segs2 = subtract_ranges(keep_segments(words, total, 0.32, 0.08), cut + fill)
+        new = sum(e - b for b, e in segs2)
+        notes.append(f"{len(fill)} kata isian dibuang (hemat {cur - new:.1f} dtk)")
+        segs, cur = segs2, new
+    return words, segs, notes
+
+
+def sentence_list(words, cut, gap=0.4):
+    """Kalimat berwaktu (waktu rekaman ASLI) untuk memilih cut_ranges. Baris bertanda [SUDAH DIPOTONG] ada di cut_ranges."""
+    out, cur = [], []
+    for w in words:
+        if cur and (w["s"] - cur[-1]["e"] > gap or len(cur) >= 16):
+            out.append(cur); cur = []
+        cur.append(w)
+    if cur:
+        out.append(cur)
+    lines = []
+    for sn in out:
+        a, b = sn[0]["s"], sn[-1]["e"]
+        gone = any(c0 - 0.05 <= a and b <= c1 + 0.05 for c0, c1 in cut)
+        lines.append(f"[{a:6.1f} - {b:6.1f}] {b - a:4.1f} dtk{'  [SUDAH DIPOTONG]' if gone else ''} | " + " ".join(x["w"] for x in sn))
+    return lines
 
 
 def remap(t, segs):
@@ -341,13 +392,16 @@ def main():
     # _words.json = hasil mentah Whisper (untuk diperiksa); koreksi dipakai untuk subtitle dan pemicu sisipan
     json.dump(words, open(os.path.join(out_dir, f"{spec['id']}_words.json"), "w"), ensure_ascii=False)
     words = apply_fix(words, {**gl.get("fix", {}), **spec.get("fix", {})})
+    words_all = list(words)
     cut = [(float(a), float(b)) for a, b in spec.get("cut_ranges", [])]
     words = drop_ranges(words, cut)
 
-    segs = keep_segments(words, total) if spec.get("cut_silence", True) else [(0, total)]
-    segs = subtract_ranges(segs, cut)
+    max_sec = float(spec.get("max_sec", 60))
+    outro_len = OUTRO_SEC if spec.get("outro") else 0.0
+    words, segs, tight_notes = plan_segments(words, total, cut, max_sec - outro_len - 1.0, spec)   # sasaran 1 dtk di bawah batas supaya aman
     new_words = [{"w": w["w"], "s": remap(w["s"], segs), "e": remap(w["e"], segs)} for w in words]
     main_len = sum(e - s for s, e in segs)
+    final_len = main_len + outro_len
 
     # filter potong audio
     sel = "+".join(f"between(t,{s:.3f},{e:.3f})" for s, e in segs)
@@ -400,6 +454,15 @@ def main():
         cv, cw = plan_cover(spec, new_words, main_len, tmp, out_dir)
         cuts += cv
         warns += cw
+    # batas durasi Reels (default 60 dtk): bagian yang tak penting dipotong Produser lewat cut_ranges
+    if final_len > max_sec + 0.05:
+        warns.append(f"DURASI {final_len:.1f} dtk melebihi batas {max_sec:.0f} dtk: potong minimal {final_len - max_sec + 0.5:.1f} dtk lagi lewat 'cut_ranges' "
+                     f"(detik rekaman asli; daftar kalimat berwaktu ada di {spec['id']}_kalimat.txt). Buang dulu rekaman ulang atau kalimat berulang, basa-basi, "
+                     "penjelasan kedua untuk poin yang sama, lalu poin paling tidak berdampak. Jangan buang kalimat pembuka dan penutup.")
+    open(os.path.join(out_dir, f"{spec['id']}_kalimat.txt"), "w", encoding="utf-8").write(
+        f"durasi akhir: {final_len:.1f} dtk (batas {max_sec:.0f} dtk; isi {main_len:.1f} + penutup {outro_len:.1f}); rekaman asli {total:.1f} dtk\n"
+        + ("".join(f"pemadatan otomatis: {n}\n" for n in tight_notes))
+        + "\n".join(sentence_list(words_all, cut)) + "\n")
     # catatan untuk Produser: teks subtitle akhir + peringatan
     open(os.path.join(out_dir, f"{spec['id']}_teks.txt"), "w", encoding="utf-8").write(" ".join(w["w"] for w in new_words) + "\n")
     pf = os.path.join(out_dir, f"{spec['id']}_peringatan.txt")

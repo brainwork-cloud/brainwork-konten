@@ -4,10 +4,14 @@ Scene "ui": tampilan aplikasi/dashboard yang realistis (ilustrasi buatan sendiri
 untuk B-roll penuh @nopal.brainwork. Didaftarkan ke render_motion.SCENES, jadi dipakai di motion/*.json, make_broll
 dan item "cover" di edits/*.json.
 
-Isi: jendela aplikasi terang (bilah judul + alamat), kursor yang bergerak dan mengklik, toggle yang menyala, teks yang diketik,
-angka yang menghitung naik, kamera yang zoom ke bagian penting, label "Ilustrasi". Semua data di dalamnya hanya contoh.
+STANDAR SEMUA EDITING @nopal.brainwork (keputusan Naufal 19 Okt 2026): scene ini dipakai setiap kali tool, menu, pengaturan, dashboard,
+atau angka performa dibahas. Enam layout: form, library, chat, table, chart, feed.
 
-Umum:  {"type":"ui","layout":"form|library|chat|table","kicker":"Di Ads Manager","title":"Aktifkan **opsinya**","dur":6, ...}
+Isi: jendela aplikasi terang (bilah judul + alamat), kursor yang bergerak dan mengklik, toggle yang menyala, teks yang diketik,
+angka yang menghitung naik, kerangka abu berkilau saat data "memuat" (shimmer), notifikasi toast "Perubahan disimpan" setelah toggle,
+kamera yang zoom ke bagian penting lalu bergeser pelan (drift), label "Ilustrasi · data contoh". Semua data di dalamnya hanya contoh.
+
+Umum:  {"type":"ui","layout":"form|library|chat|table|chart|feed","kicker":"Di Ads Manager","title":"Aktifkan **opsinya**","dur":6, ...}
   title  satu baris di atas jendela (maks ±34 karakter). kicker opsional. "tag" (opsional) = teks label emas di dekat target.
   Jendela berada di y 392-1132 supaya tidak menabrak subtitle talking head (y 1170-1360).
 
@@ -31,6 +35,21 @@ layout "chat" (asisten AI generik: lampiran + pesan pengguna, jawaban diketik pe
 layout "table" (dashboard: kartu angka + tabel iklan)
   {"layout":"table","heading":"Iklan","kpis":[{"label":"Hasil","value":128},{"label":"Biaya per hasil","value":"Rp12 rb"}],
    "rows":[{"name":"Iklan A","on":true,"budget":"Rp150 rb","result":"54","cost":"Rp9 rb"}],"hl_row":0,"hl_col":"cost"}
+
+layout "chart" (dashboard grafik garis: kartu angka di atas + kurva yang tergambar, titik penting ditandai)
+  {"layout":"chart","url":"manajer-iklan.app/performa","heading":"Performa iklan","range":"7 hari terakhir",
+   "kpis":[{"label":"Hasil","value":128},{"label":"Biaya per hasil","value":"Rp12 rb"},{"label":"ROAS","value":"3,4x"}],   # maks 3
+   "series":[18,22,20,31,44,52,61],"series2":[...opsional garis pembanding...],"labels":["Sen","Sel","Rab","Kam","Jum","Sab","Min"],
+   "hl_idx":4,"unit":"hasil","fmt":"rb","legend":"Iklan A","legend2":"Iklan B","tag":"Mulai naik"}
+  hl_idx = indeks titik yang disorot kamera. fmt "rb" = angka diringkas (12400 -> 12,4 rb).
+
+layout "feed" (insight postingan di layar ponsel: kartu metrik berurutan, satu metrik disorot)
+  {"layout":"feed","heading":"Insight postingan","hl":3,"tag":"Paling berharga",
+   "metrics":[{"label":"Jangkauan","value":12400,"fmt":"rb","icon":"chart"},{"label":"Disimpan","value":842,"icon":"bookmark"}]}
+  Tanpa "metrics" dipakai bawaan (Jangkauan, Disukai, Komentar, Disimpan, Dibagikan). icon: chart, heart, chat, bookmark, arrow.
+  hl = indeks metrik yang disorot (angka 0 = pertama).
+
+Catatan: layout form otomatis memunculkan toast "Perubahan disimpan" setelah toggle diklik ("toast":false mematikan, "toast_text" mengganti teks).
 """
 import math, os, json, sys
 from functools import lru_cache
@@ -286,6 +305,76 @@ def center(box):
     return (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
 
 
+def shimmer(u, box, t, r=8):
+    """Kotak abu-abu berkilau (skeleton loading) sebelum gambar muncul."""
+    x0, y0, x1, y1 = box
+    w, h = max(1, round((x1 - x0) * K)), max(1, round((y1 - y0) * K))
+    tile = Image.new("RGB", (w, h), C["bar"])
+    d = ImageDraw.Draw(tile)
+    band = ((t * 0.85) % 1.5) - 0.25
+    for xx in range(w):
+        a = max(0.0, 1 - abs(xx / w - band) / 0.2)
+        if a > 0:
+            d.line([(xx, 0), (xx, h)], fill=mix(C["bar"], (252, 252, 253), a * 0.9))
+    mask = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, w - 1, h - 1], radius=r * K, fill=255)
+    u.im.paste(tile, (round(u.X(x0)), round(u.Y(y0))), mask)
+
+
+def toast(u, text, p, x0=300, y_top=62):
+    """Notifikasi kecil 'Perubahan disimpan' yang turun dari atas. p 0..1 = seberapa terlihat."""
+    p = clamp(p)
+    if p <= 0:
+        return
+    w = u.width(text, 17, 600) + 76
+    y0 = y_top + (1 - p) * 26
+    u.rect(x0, y0 + 3, x0 + w, y0 + 49, 23, fill=(190, 194, 202))
+    u.rect(x0, y0, x0 + w, y0 + 46, 23, fill=C["dark"])
+    u.circle(x0 + 26, y0 + 23, 12, fill=C["green"])
+    u.line(x0 + 20, y0 + 23, x0 + 25, y0 + 28, (255, 255, 255), 2.4)
+    u.line(x0 + 25, y0 + 28, x0 + 33, y0 + 18, (255, 255, 255), 2.4)
+    u.text(x0 + 48, y0 + 23, text, 17, 600, (255, 255, 255))
+
+
+def fmt_num(v, fmt=None, p=1.0):
+    if isinstance(v, str):
+        return v
+    v = v * p
+    if fmt == "rb":
+        return f"{v / 1000:.1f}".replace(".", ",") + " rb"
+    return f"{int(round(v)):,}".replace(",", ".")
+
+
+def heart(u, cx, cy, r, fill=None, line=None):
+    """Ikon hati: dua lingkaran + segitiga."""
+    if fill:
+        u.circle(cx - r * 0.5, cy - r * 0.28, r * 0.56, fill=fill)
+        u.circle(cx + r * 0.5, cy - r * 0.28, r * 0.56, fill=fill)
+        u.poly([(cx - r * 1.04, cy - r * 0.05), (cx + r * 1.04, cy - r * 0.05), (cx, cy + r * 1.0)], fill)
+    else:
+        u.circle(cx - r * 0.5, cy - r * 0.28, r * 0.56, line=line, w=2)
+        u.circle(cx + r * 0.5, cy - r * 0.28, r * 0.56, line=line, w=2)
+        u.line(cx - r * 1.02, cy + r * 0.08, cx, cy + r * 1.0, line, 2)
+        u.line(cx + r * 1.02, cy + r * 0.08, cx, cy + r * 1.0, line, 2)
+        u.circle(cx - r * 0.5, cy - r * 0.22, r * 0.4, fill=C["card"])
+        u.circle(cx + r * 0.5, cy - r * 0.22, r * 0.4, fill=C["card"])
+        u.poly([(cx - r * 0.9, cy - r * 0.1), (cx + r * 0.9, cy - r * 0.1), (cx, cy + r * 0.82)], C["card"])
+
+
+def bookmark(u, cx, cy, r, col, fill=False):
+    pts = [(cx - r * 0.7, cy - r), (cx + r * 0.7, cy - r), (cx + r * 0.7, cy + r), (cx, cy + r * 0.45), (cx - r * 0.7, cy + r)]
+    if fill:
+        u.poly(pts, col)
+    else:
+        for a, b in zip(pts, pts[1:] + pts[:1]):
+            u.line(a[0], a[1], b[0], b[1], col, 2)
+
+
+def bubble_icon(u, cx, cy, r, col):
+    u.rect(cx - r, cy - r * 0.8, cx + r, cy + r * 0.6, r * 0.6, line=col, w=2)
+    u.poly([(cx - r * 0.5, cy + r * 0.45), (cx - r * 0.7, cy + r * 1.0), (cx - r * 0.05, cy + r * 0.5)], col)
+
+
 # --------------------------------------------------------------------------------------------- layout: form
 def phone(u, x, y, w, h, vk, t, kind="bottle"):
     """HP kecil berisi pratinjau iklan. vk 0 = gambar statis, 1 = video yang bergerak."""
@@ -299,7 +388,10 @@ def phone(u, x, y, w, h, vk, t, kind="bottle"):
     ax0, ay0, ax1, ay1 = x + 6, y + 100, x + w - 6, y + 100 + 250
     loop = (t * 0.30) % 1.0
     z = 1.0 + vk * (0.05 + 0.10 * loop)
-    art(u, (ax0, ay0, ax1, ay1), kind, zoom=z, pan=(vk * (loop - 0.5) * 0.8, 0))
+    if t < 0.9:
+        shimmer(u, (ax0, ay0, ax1, ay1), t)
+    else:
+        art(u, (ax0, ay0, ax1, ay1), kind, zoom=z, pan=(vk * (loop - 0.5) * 0.8, 0))
     tag = "Video" if vk > 0.5 else "Gambar"
     pill(u, ax0 + 10, ay0 + 10, tag, 12, (255, 255, 255), C["txt"], 700, 9, 22)
     if vk > 0.5:
@@ -382,6 +474,11 @@ def form_draw(u, s, t, P):
                 u.rect(b[2] - tw - 6, b[1] - 12, b[2] - 6, b[1] + 12, 12, fill=mix(C["card"], C["gold"], hp))
                 u.text(b[2] - tw + 6, b[1], s["tag"], 15, 800, C["dark"])
 
+    if tgt is not None and s.get("toast", True):
+        pt = t - P.ev.get("click", 1e9) - 0.5
+        if 0 < pt < 2.0:
+            toast(u, s.get("toast_text", "Perubahan disimpan"), min(smooth(pt / 0.25), smooth((2.0 - pt) / 0.25)), x0=130, y_top=626)
+
 
 def form_plan(u, s, dur):
     P = Plan()
@@ -422,7 +519,7 @@ def dropdown(u, x, y, w, label, value, active=False):
     u.line(cx, cy + 3, cx + 6, cy - 3, C["mute"], 2)
 
 
-def library_card(u, i, c, t, P, show_hl):
+def library_card(u, i, c, t, P, show_hl, loading=False):
     col, row = i % 2, i // 2
     x, y = 48 + col * (CARD_W + 24), 244 + row * (CARD_H + 16)
     sub = U(CARD_W + 4, CARD_H + 4, x - 2, y - 2, bg=C["bg"])
@@ -434,7 +531,10 @@ def library_card(u, i, c, t, P, show_hl):
     sub.text(x + 130, y + 48, "Mulai tayang " + c["date"], 14, 500, C["mute"])
     for j in range(2):
         sub.circle(x + CARD_W - 28 - j * 24, y + 34, 9, fill=C["bar"])
-    art(sub, (x + 14, y + 66, x + CARD_W - 14, y + 66 + 106), c.get("art", "a"), r=10)
+    if loading:
+        shimmer(sub, (x + 14, y + 66, x + CARD_W - 14, y + 66 + 106), t, r=10)
+    else:
+        art(sub, (x + 14, y + 66, x + CARD_W - 14, y + 66 + 106), c.get("art", "a"), r=10)
     sub.rect(x + 14, y + 190, x + 190, y + 198, 4, fill=C["bar"])
     sub.rect(x + 14, y + 206, x + 120, y + 214, 4, fill=C["bar"])
     sub.rect(x + CARD_W - 130, y + 186, x + CARD_W - 14, y + 218, 9, fill=C["blue_l"])
@@ -481,7 +581,7 @@ def library_draw(u, s, t, P):
             u.text(48, 224, "± 24 iklan ditemukan", 15, 600, C["mute"])
     for i, c in enumerate(cards):
         p = smooth((t - tres - i * 0.16) / 0.38)
-        sub, (cx, cy) = library_card(u, i, c, t, P, False)
+        sub, (cx, cy) = library_card(u, i, c, t, P, False, loading=(t - tres - i * 0.16) < 0.8)
         u.reg(f"card{i}", (cx, cy, cx + CARD_W, cy + CARD_H))
         u.reg(f"meta{i}", (cx + 60, cy + 38, cx + 408, cy + 58))
         if p > 0:
@@ -745,9 +845,242 @@ def table_plan(u, s, dur):
     return P
 
 
+# --------------------------------------------------------------------------------------------- layout: chart
+PX0, PX1, PY0, PY1 = 176, 896, 316, 628
+
+
+def spline(pts, n=12):
+    """Kurva halus (Catmull-Rom) melewati titik-titik data."""
+    if len(pts) < 3:
+        return list(pts)
+    P_ = [pts[0]] + list(pts) + [pts[-1]]
+    out = []
+    for i in range(1, len(P_) - 2):
+        p0, p1, p2, p3 = P_[i - 1], P_[i], P_[i + 1], P_[i + 2]
+        for k in range(n):
+            t_ = k / n
+            out.append(tuple(0.5 * ((2 * p1[j]) + (-p0[j] + p2[j]) * t_ + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t_ ** 2
+                                    + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t_ ** 3) for j in (0, 1)))
+    out.append(tuple(pts[-1]))
+    return out
+
+
+def chart_pts(vals, vmax):
+    n = len(vals)
+    return [(PX0 + (PX1 - PX0) * i / max(1, n - 1), PY1 - (PY1 - PY0) * v / vmax) for i, v in enumerate(vals)]
+
+
+def chart_draw(u, s, t, P):
+    ev = P.ev
+    chrome(u, s.get("url", "manajer-iklan.app/performa"))
+    sidebar(u, 0)
+    u.text(104, 88, s.get("heading", "Performa iklan"), 26, 800)
+    u.rect(722, 70, 928, 106, 18, fill=C["card"], line=C["line"])
+    u.text(742, 88, s.get("range", "7 hari terakhir"), 16, 600)
+    u.line(900, 85, 906, 91, C["mute"], 2); u.line(906, 91, 912, 85, C["mute"], 2)
+    kp = (s.get("kpis") or [{"label": "Hasil", "value": 128}, {"label": "Biaya per hasil", "value": "Rp12 rb"},
+                            {"label": "ROAS", "value": "3,4x"}])[:3]
+    kw = (DW - 104 - 32 - 2 * 16) / 3
+    pk = smooth((t - 0.2) / 1.0)
+    for i, k in enumerate(kp):
+        x0 = 104 + i * (kw + 16)
+        u.rect(x0, 124, x0 + kw, 214, 14, fill=C["card"], line=C["line"])
+        u.text(x0 + 18, 148, k["label"], 15, 500, C["mute"])
+        u.text(x0 + 18, 184, fmt_num(k["value"], k.get("fmt"), pk), 32, 800)
+    vals = s.get("series", [18, 22, 20, 31, 44, 52, 61])
+    n = len(vals)
+    labels = s.get("labels") or ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"][:n]
+    labels = (labels + [""] * n)[:n]
+    v2 = s.get("series2")
+    top = max(vals + (v2 or [])) * 1.12
+    step = 10 ** max(0, len(str(int(top))) - 1)
+    vmax = math.ceil(top / (step / 2)) * (step / 2) or 1
+    u.rect(104, 236, DW - 32, 706, 14, fill=C["card"], line=C["line"])
+    u.text(128, 266, s.get("chart_title", "Hasil per hari"), 19, 700)
+    lx = 690 if v2 else 780
+    u.circle(lx, 266, 6, fill=C["blue"]); u.text(lx + 12, 266, s.get("legend", "Pekan ini"), 14, 500, C["mute"])
+    if v2:
+        u.circle(lx + 104, 266, 6, fill=C["faint"]); u.text(lx + 116, 266, s.get("legend2", "Pekan lalu"), 14, 500, C["mute"])
+    for g in range(5):
+        yy = PY1 - (PY1 - PY0) * g / 4
+        u.line(PX0, yy, PX1, yy, C["line"], 1)
+        u.text(PX0 - 14, yy, str(int(round(vmax * g / 4))), 14, 500, C["faint"], "rm")
+    pts = chart_pts(vals, vmax)
+    for i, (x, _) in enumerate(pts):
+        u.text(x, PY1 + 24, labels[i], 14, 500, C["mute"], "mm")
+    if v2:
+        d2 = spline(chart_pts(v2, vmax))
+        for a, b in list(zip(d2, d2[1:]))[::2]:
+            u.line(a[0], a[1], b[0], b[1], C["faint"], 2)
+    dense = spline(pts)
+    pdraw = smooth((t - ev.get("draw", 1e9)) / 1.7)
+    xcut = PX0 + (PX1 - PX0) * pdraw
+    vis = [q for q in dense if q[0] <= xcut]
+    if pdraw >= 1:
+        vis = dense
+    elif vis:
+        a = vis[-1]
+        nxt = next((q for q in dense if q[0] > xcut), None)
+        if nxt and nxt[0] > a[0]:
+            f = (xcut - a[0]) / (nxt[0] - a[0])
+            vis.append((xcut, lerp(a[1], nxt[1], f)))
+    if len(vis) > 1:
+        u.poly(vis + [(vis[-1][0], PY1), (vis[0][0], PY1)], mix(C["card"], C["blue_l"], 0.75))
+        for a, b in zip(vis, vis[1:]):
+            u.line(a[0], a[1], b[0], b[1], C["blue"], 3.4)
+    for (x, y) in pts:
+        if x <= xcut + 0.5:
+            u.circle(x, y, 6.5, fill=C["card"], line=C["blue"], w=2.6)
+    hi = min(s.get("hl_idx", n - 2), n - 1)
+    hx, hy = pts[hi]
+    u.reg("pt", (hx - 10, hy - 10, hx + 10, hy + 10))
+    u.reg("plot", (PX0, PY0, PX1, PY1))
+    hp = smooth((t - ev.get("hl", 1e9)) / 0.3)
+    if hp > 0:
+        u.circle(hx, hy, 14, line=mix(C["card"], C["gold"], hp), w=3.6)
+        u.circle(hx, hy, 6.5, fill=C["gold"])
+        txt1, txt2 = labels[hi], fmt_num(vals[hi], s.get("fmt"), 1.0) + (" " + s["unit"] if s.get("unit") else "")
+        bw = max(u.width(txt1, 14, 500), u.width(txt2, 22, 800)) + 32
+        by = hy - 92 if hy - 92 > PY0 - 20 else hy + 24
+        bx = min(max(hx - bw / 2, PX0 - 10), PX1 - bw + 20)
+        u.rect(bx + 2, by + 3, bx + bw + 2, by + 67, 12, fill=(214, 218, 226))
+        u.rect(bx, by, bx + bw, by + 64, 12, fill=C["dark"])
+        u.text(bx + 16, by + 20, txt1, 14, 500, (200, 204, 212))
+        u.text(bx + 16, by + 45, txt2, 22, 800, (255, 255, 255))
+        if s.get("tag"):
+            tw = u.width(s["tag"], 14, 800) + 22
+            ty = by - 30 if by - 30 > 244 else by + 70
+            u.rect(bx, ty, bx + tw, ty + 24, 12, fill=mix(C["card"], C["gold"], hp))
+            u.text(bx + 11, ty + 12, s["tag"], 14, 800, C["dark"])
+
+
+def chart_plan(u, s, dur):
+    P = Plan()
+    R = u.R
+    ev, cur = {}, [(0.3, 860, 690)]
+    cam = [(0.0, DW / 2, DH / 2, 1.0)]
+    t = 0.6
+    ev["draw"] = t
+    cam.append((t + 0.2, 560, 430, 1.1))
+    t += 1.9
+    pt = center(R["pt"])
+    cur.append((t + 0.8, pt[0] + 6, pt[1] + 8)); cam.append((t + 0.8, pt[0] - 30, max(pt[1] - 10, 236 + (DH / 1.5) / 2 + 6), 1.5)); t += 0.8
+    ev["hl"] = t
+    t += 1.2
+    f = min(1.0, (dur - 0.2) / t)
+    P.ev = {k: v * f for k, v in ev.items()}
+    P.cur = [(a * f, x, y) for a, x, y in cur]
+    P.cam = [(a * f, x, y, z) for a, x, y, z in cam]
+    return P
+
+
+# --------------------------------------------------------------------------------------------- layout: feed
+FEED_DEF = [{"label": "Jangkauan", "value": 12400, "fmt": "rb", "icon": "chart"}, {"label": "Disukai", "value": 1248, "icon": "heart"},
+            {"label": "Komentar", "value": 86, "icon": "chat"}, {"label": "Disimpan", "value": 842, "icon": "bookmark"},
+            {"label": "Dibagikan", "value": 210, "icon": "arrow"}]
+FPX, FPY, FPW, FPH = 70, 84, 300, 640
+
+
+def metric_icon(u, name, cx, cy):
+    if name == "heart":
+        heart(u, cx, cy - 1, 11, fill=C["red"])
+    elif name == "bookmark":
+        bookmark(u, cx, cy, 11, C["blue"], fill=True)
+    else:
+        ic(u, name, cx, cy, 24, C["blue"], C["blue_l"])
+
+
+def feed_draw(u, s, t, P):
+    ev = P.ev
+    chrome(u, s.get("url", "insight-sosmed.app"))
+    u.rect(0, 54, DW, DH, 0, fill=C["bg"])
+    metrics = (s.get("metrics") or FEED_DEF)[:5]
+    pc = smooth((t - ev.get("count", 1e9)) / 1.5)
+    px, py, pw, ph = FPX, FPY, FPW, FPH
+    u.rect(px - 7, py - 7, px + pw + 7, py + ph + 7, 40, fill=C["dark"])
+    u.rect(px, py, px + pw, py + ph, 33, fill=C["card"])
+    u.rect(px + pw / 2 - 44, py + 9, px + pw / 2 + 44, py + 29, 10, fill=C["dark"])
+    u.text(px + 28, py + 20, "09.41", 13, 700)
+    u.rect(px + pw - 52, py + 14, px + pw - 26, py + 25, 4, line=C["txt"], w=1.5)
+    u.circle(px + 28, py + 62, 17, fill=C["purple"])
+    u.rect(px + 54, py + 52, px + 150, py + 60, 4, fill=C["bar"])
+    u.rect(px + 54, py + 66, px + 112, py + 72, 3, fill=C["bar"])
+    u.text(px + pw - 44, py + 62, "Ikuti", 14, 700, C["blue"], "mm")
+    ay0, ay1 = py + 92, py + 92 + pw
+    if t < 0.9:
+        shimmer(u, (px, ay0, px + pw, ay1), t, r=0)
+    else:
+        art(u, (px, ay0, px + pw, ay1), s.get("art", "bottle"), zoom=1.0 + 0.05 * smooth(t / 6))
+    yact = ay1 + 28
+    lk = ev.get("like", 1e9)
+    lp = clamp((t - lk) / 0.35)
+    liked = t >= lk
+    sc = 1.0 + 0.4 * math.sin(math.pi * lp) if liked and lp < 1 else 1.0
+    if liked:
+        heart(u, px + 28, yact, 12 * sc, fill=C["red"])
+    else:
+        heart(u, px + 28, yact, 12, line=C["txt"])
+    u.reg("heart", (px + 10, yact - 18, px + 46, yact + 18))
+    bubble_icon(u, px + 72, yact - 1, 12, C["txt"])
+    u.poly([(px + 108, yact - 11), (px + 132, yact), (px + 108, yact + 11), (px + 112, yact)], C["txt"])
+    bookmark(u, px + pw - 30, yact, 12, C["txt"], fill=(t >= ev.get("save", 1e9)))
+    likes = [m for m in metrics if m.get("icon") == "heart"]
+    lv = likes[0]["value"] if likes else 1248
+    u.text(px + 18, yact + 38, "Disukai " + fmt_num(lv, None, pc), 15, 800)
+    u.rect(px + 18, yact + 58, px + pw - 40, yact + 66, 4, fill=C["bar"])
+    u.rect(px + 18, yact + 74, px + pw - 110, yact + 82, 4, fill=C["bar"])
+    for i in range(4):
+        u.circle(px + 40 + i * ((pw - 80) / 3), py + ph - 24, 7, fill=C["bar"])
+    u.text(410, 100, s.get("heading", "Insight postingan"), 24, 800)
+    u.text(410, 128, s.get("sub", "7 hari pertama setelah tayang"), 15, 400, C["mute"])
+    hl = s.get("hl", 3)
+    mx = max(1.0, max(m["value"] if not isinstance(m["value"], str) else 0 for m in metrics))
+    for i, m in enumerate(metrics):
+        y0 = 150 + i * 100
+        u.rect(410, y0, 930, y0 + 88, 14, fill=C["card"], line=C["line"])
+        u.circle(446, y0 + 44, 22, fill=C["blue_l"] if m.get("icon") not in ("heart",) else (253, 232, 234))
+        metric_icon(u, m.get("icon", "chart"), 446, y0 + 44)
+        u.text(488, y0 + 30, m["label"], 16, 500, C["mute"])
+        u.text(488, y0 + 62, fmt_num(m["value"], m.get("fmt"), pc), 30, 800)
+        frac = 0.0 if isinstance(m["value"], str) else (m["value"] / mx) ** 0.5
+        u.rect(720, y0 + 40, 900, y0 + 48, 4, fill=C["bar"])
+        u.rect(720, y0 + 40, 720 + 180 * frac * pc, y0 + 48, 4, fill=C["blue"])
+        u.reg(f"m{i}", (410, y0, 930, y0 + 88))
+    hp = smooth((t - ev.get("hl", 1e9)) / 0.3)
+    if hp > 0 and hl < len(metrics):
+        b = u.R[f"m{hl}"]
+        u.rect(b[0], b[1], b[2], b[3], 14, line=mix(C["card"], C["gold"], hp), w=3.6)
+        if s.get("tag"):
+            tw = u.width(s["tag"], 14, 800) + 22
+            u.rect(b[2] - tw - 10, b[1] - 12, b[2] - 10, b[1] + 12, 12, fill=mix(C["card"], C["gold"], hp))
+            u.text(b[2] - tw + 1, b[1], s["tag"], 14, 800, C["dark"])
+
+
+def feed_plan(u, s, dur):
+    P = Plan()
+    R = u.R
+    hl = min(s.get("hl", 3), len(s.get("metrics") or FEED_DEF) - 1)
+    ev, cur, clicks = {"count": 0.5}, [(0.3, 700, 690)], []
+    cam = [(0.0, DW / 2, DH / 2, 1.0)]
+    t = 0.7
+    hc = center(R["heart"])
+    cur.append((t + 0.8, hc[0] + 4, hc[1] + 6)); cam.append((t + 0.8, 240, 470, 1.35)); t += 0.8
+    ev["like"] = t + 0.05; clicks.append(t + 0.05); t += 0.9
+    mc = center(R[f"m{hl}"])
+    cur.append((t + 0.8, mc[0] - 60, mc[1] + 6)); cam.append((t + 0.9, 640, mc[1], 1.25)); t += 0.9
+    ev["hl"] = t
+    t += 1.0
+    f = min(1.0, (dur - 0.2) / t)
+    P.ev = {k: v * f for k, v in ev.items()}
+    P.cur = [(a * f, x, y) for a, x, y in cur]
+    P.cam = [(a * f, x, y, z) for a, x, y, z in cam]
+    P.clicks = [c * f for c in clicks]
+    return P
+
+
 # --------------------------------------------------------------------------------------------- scene
 LAYOUTS = {"form": (form_draw, form_plan), "library": (library_draw, library_plan), "chat": (chat_draw, chat_plan),
-           "table": (table_draw, table_plan)}
+           "table": (table_draw, table_plan), "chart": (chart_draw, chart_plan), "feed": (feed_draw, feed_plan)}
 _PLANS = {}
 _SHADOW = {}
 _CURSOR = {}
@@ -808,6 +1141,7 @@ def register(rm):
         u = U()
         LAYOUTS[lay][0](u, s, t, P)
         cx, cy, z = P.camera(t)
+        z *= 1.0 + 0.025 * clamp(t / max(dur, 0.1))
         vw, vh = DW / z, DH / z
         x0 = clamp(cx - vw / 2, 0, DW - vw)
         y0 = clamp(cy - vh / 2, 0, DH - vh)
