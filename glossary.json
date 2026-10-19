@@ -1,0 +1,19 @@
+{
+ "terms": [
+  "Claude",
+  "Meta Ad Library",
+  "Advantage+ creative",
+  "Ads Manager",
+  "Meta Ads",
+  "pratinjau",
+  "prompt",
+  "carousel",
+  "riset",
+  "tempel",
+  "Brainwork"
+ ],
+ "fix": {
+  "Advantage Plus Kreatif": "Advantage+ creative",
+  "Advantage Plus": "Advantage+"
+ }
+}

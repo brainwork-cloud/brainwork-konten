@@ -16,6 +16,8 @@ Spec edit (ditulis agen Produser):
   "hook": "Matiin 1 setting ini",       # teks besar 3 detik pertama (<= 6 kata)
   "highlight_words": ["pixel", "gratis"],          # kata yang diberi warna emas di subtitle
   "cut_silence": true,                  # buang jeda > 0.6 dtk
+  "fix": {"cloud": "Claude", "perating jauhnya": "pratinjaunya"},   # koreksi salah dengar (kunci boleh >1 kata)
+  "cut_ranges": [[57.8, 64.9]],         # buang rentang detik (waktu rekaman asli), mis. kalimat yang diulang
   "outro": "Follow @nopal.brainwork buat tips iklan & AI",
   # talking_head: sisipan B-roll (dibuat make_broll.py) yang menimpa gambar wajah, suara tetap jalan
   "cutaways": [{"after_word": "Library", "dur": 4, "clip": "rekaman/BW-261014-01/b1.mp4"},
@@ -25,7 +27,7 @@ Spec edit (ditulis agen Produser):
 }
 Hasil: MP4 H.264 1080x1920 30fps + AAC, subtitle tertanam, siap IG Reels / TikTok / Shorts.
 """
-import sys, os, json, subprocess, tempfile, shutil, re
+import sys, os, json, subprocess, tempfile, shutil, re, difflib
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -48,10 +50,13 @@ def duration(path):
 
 
 # ---------- 1. Transkripsi ----------
-def transcribe(audio):
+def transcribe(audio, prompt=None):
     from faster_whisper import WhisperModel
     model = WhisperModel(os.environ.get("WHISPER_MODEL", "small"), device="cpu", compute_type="int8")
-    segs, _ = model.transcribe(audio, language="id", word_timestamps=True, vad_filter=True)
+    kw = dict(language="id", word_timestamps=True, vad_filter=True)
+    if prompt:
+        kw["initial_prompt"] = prompt   # memandu ejaan istilah (Claude, Meta Ad Library, dst)
+    segs, _ = model.transcribe(audio, **kw)
     words = []
     for s in segs:
         for w in s.words or []:
@@ -81,6 +86,82 @@ def remap(t, segs):
             return acc + (t - s)
         acc += e - s
     return acc
+
+
+# ---------- 2b. Koreksi transkrip ----------
+def load_glossary():
+    try:
+        return json.load(open(os.path.join(HERE, "glossary.json"), encoding="utf-8"))
+    except Exception:
+        return {"terms": [], "fix": {}}
+
+
+def _norm(t):
+    return re.sub(r"^[^\w+]+|[^\w+]+$", "", t.lower())
+
+
+def apply_fix(words, fix):
+    """Ganti salah dengar. Kunci boleh beberapa kata ("perating jauhnya": "pratinjaunya"); waktu dibagi rata."""
+    rules = sorted(((k.lower().split(), v.split()) for k, v in (fix or {}).items() if k.strip() and v.strip()),
+                   key=lambda r: -len(r[0]))
+    out, i = [], 0
+    while i < len(words):
+        for key, val in rules:
+            n = len(key)
+            if i + n <= len(words) and all(_norm(words[i + j]["w"]) == key[j] for j in range(n)):
+                s, e = words[i]["s"], words[i + n - 1]["e"]
+                m = re.search(r"[.,?!:;]+$", words[i + n - 1]["w"])
+                trail = m.group(0) if m else ""
+                step = (e - s) / len(val)
+                for k, tok in enumerate(val):
+                    out.append({"w": tok + (trail if k == len(val) - 1 else ""),
+                                "s": round(s + k * step, 3), "e": round(s + (k + 1) * step, 3)})
+                i += n
+                break
+        else:
+            out.append(words[i])
+            i += 1
+    return out
+
+
+def drop_ranges(words, ranges):
+    """Buang kata yang titik tengahnya jatuh di rentang (detik rekaman asli): kalimat yang diulang (retake)."""
+    if not ranges:
+        return words
+    return [w for w in words if not any(a <= (w["s"] + w["e"]) / 2 <= b for a, b in ranges)]
+
+
+def subtract_ranges(segs, ranges):
+    out = []
+    for s, e in segs:
+        cur = [(s, e)]
+        for a, b in ranges or []:
+            nxt = []
+            for x, y in cur:
+                if b <= x or a >= y:
+                    nxt.append((x, y))
+                else:
+                    if a > x:
+                        nxt.append((x, a))
+                    if b < y:
+                        nxt.append((b, y))
+            cur = nxt
+        out += cur
+    return [(x, y) for x, y in out if y - x > 0.05]
+
+
+def find_word_end(new_words, after_word):
+    """Akhir kata pemicu sisipan: cocok persis dulu, lalu yang mirip (>= 0,75). None kalau tidak ketemu."""
+    key = _norm(after_word.split()[0])
+    for w in new_words:
+        if key and key in _norm(w["w"]):
+            return w["e"]
+    best, score = None, 0.0
+    for w in new_words:
+        r = difflib.SequenceMatcher(None, key, _norm(w["w"])).ratio()
+        if r > score:
+            best, score = w, r
+    return best["e"] if best and score >= 0.75 else None
 
 
 # ---------- 3. Subtitle ASS ----------
@@ -188,10 +269,19 @@ def main():
     run(["ffmpeg", "-y", "-i", src_audio, "-vn", "-ac", "1", "-ar", "16000", wav])
     total = duration(wav)
 
-    words = json.load(open(words_override)) if words_override else transcribe(wav)
+    gl = load_glossary()
+    prompt = None
+    if spec.get("whisper_prompt", True) and gl.get("terms"):
+        prompt = "Video edukasi digital marketing berbahasa Indonesia. Istilah: " + ", ".join(gl["terms"]) + "."
+    words = json.load(open(words_override)) if words_override else transcribe(wav, prompt)
+    # _words.json = hasil mentah Whisper (untuk diperiksa); koreksi dipakai untuk subtitle dan pemicu sisipan
     json.dump(words, open(os.path.join(out_dir, f"{spec['id']}_words.json"), "w"), ensure_ascii=False)
+    words = apply_fix(words, {**gl.get("fix", {}), **spec.get("fix", {})})
+    cut = [(float(a), float(b)) for a, b in spec.get("cut_ranges", [])]
+    words = drop_ranges(words, cut)
 
     segs = keep_segments(words, total) if spec.get("cut_silence", True) else [(0, total)]
+    segs = subtract_ranges(segs, cut)
     new_words = [{"w": w["w"], "s": remap(w["s"], segs), "e": remap(w["e"], segs)} for w in words]
     main_len = sum(e - s for s, e in segs)
 
@@ -231,14 +321,25 @@ def main():
              "-c:a", "aac", "-b:a", "160k", os.path.join(tmp, "main.mp4")])
 
     # sisipan B-roll (talking head)
-    cuts = []
+    cuts, warns = [], []
     for c in spec.get("cutaways", []):
         st = c.get("at")
         if st is None and c.get("after_word"):
-            key = c["after_word"].lower().split()[0].strip(".,?!")
-            st = next((w["e"] for w in new_words if key in w["w"].lower()), None)
+            st = find_word_end(new_words, c["after_word"])
+            if st is None:
+                warns.append(f"sisipan setelah kata '{c['after_word']}' tidak ketemu di transkrip, dilewati (tambah koreksi di 'fix' atau pakai 'at')")
         if st is not None and os.path.exists(P(c["clip"])):
             cuts.append((max(0, st), min(float(c.get("dur", 3)), main_len - st), P(c["clip"])))
+        elif st is not None:
+            warns.append(f"klip sisipan tidak ada: {c['clip']}")
+    # catatan untuk Produser: teks subtitle akhir + peringatan
+    open(os.path.join(out_dir, f"{spec['id']}_teks.txt"), "w", encoding="utf-8").write(" ".join(w["w"] for w in new_words) + "\n")
+    pf = os.path.join(out_dir, f"{spec['id']}_peringatan.txt")
+    if warns:
+        open(pf, "w", encoding="utf-8").write("\n".join(warns) + "\n")
+        print("PERINGATAN:", *warns, sep="\n  ", file=sys.stderr)
+    elif os.path.exists(pf):
+        os.remove(pf)
     if cuts:
         ins, fl, last = ["-i", os.path.join(tmp, "main.mp4")], [], "[0:v]"
         for i, (st, du, clip) in enumerate(cuts, 1):
