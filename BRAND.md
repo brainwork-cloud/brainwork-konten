@@ -1,6 +1,6 @@
 # BRAND — @nopal.brainwork (dibaca SEMUA agen sebelum kerja)
 
-Versi 1 · 12 Okt 2026 · pemilik: Naufal · admin: Nazwa
+Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 
 ## 1. Siapa akun ini
 - Instagram @nopal.brainwork, ±210K pengikut, bio: "Spesialis Bangun Sosial Media · 8 tahun di Digital Marketing · Meta Ads, Google Ads, AI".
@@ -54,6 +54,17 @@ Versi 1 · 12 Okt 2026 · pemilik: Naufal · admin: Nazwa
 | DQwLeelCJPs | 2025-11-07 | 1,7 jt | "Dimana kamu berada?" (posisi skill marketing) |
 | DNGPK-DvkCd | 2025-08-08 | 597 rb | Tebak kekayaan dari hewan peliharaan (AI) |
 Aturan kemas ulang: tools/website WAJIB dicek masih ada & versi terbaru. Hook dan cover baru, jangan copy caption lama.
+
+## 8. Akun & distribusi (keputusan Naufal, 19 Okt 2026)
+| Akun | Isi |
+|---|---|
+| @nopal.brainwork: Instagram, Threads, TikTok (manual Nazwa), YouTube Shorts | SEMUA pilar, termasuk NEWS |
+| Brainwork.id: Instagram dan Facebook Page | HANYA pilar NEWS (Carousel dan Reels Motion; Threads tidak) |
+Aturan agen:
+- Konten NEWS tayang di @nopal.brainwork DAN di Brainwork.id (materi dan caption sama). Pilar lain tidak pernah masuk Brainwork.id.
+- Produser mengisi kolom X (Mirror FB) = `BELUM` hanya untuk baris Pilar NEWS berformat Carousel / Reels; semua pilar lain `TIDAK PERLU`.
+- Penerbit IG (agen 3a) hanya mengantrikan Facebook Brainwork.id untuk baris Pilar NEWS. YouTube Shorts tetap untuk semua pilar (channel Brainwork milik @nopal.brainwork).
+- Instagram Brainwork.id belum terhubung ke penerbit per 19 Okt 2026; diaktifkan setelah akunnya dihubungkan.
 
 ## 7. Monetisasi (soft)
 - Produk tangga 1: Pack 50 Prompt UMKM (NolKaryawan) Rp 28.000. Sebut maks 1x/minggu, di CTA atau caption, tidak hard selling.
