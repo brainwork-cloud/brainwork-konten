@@ -1,0 +1,21 @@
+{
+ "id": "PV-03",
+ "format": "motion",
+ "kategori": "PLATFORM",
+ "judul": "WhatsApp izinkan siapa pun ikut panggilan lewat tautan **tanpa akun**",
+ "ringkas": [
+  "Pengguna WhatsApp bisa mengundang siapa pun ke panggilan lewat tautan, termasuk yang tidak punya akun.",
+  "Tamu bergabung dari browser komputer dengan memasukkan nama, lalu menunggu persetujuan host.",
+  "Panggilan 1:1 atau grup hingga 32 orang, gratis dan tanpa batas waktu."
+ ],
+ "sumber": "Social Media Today & BetaNews",
+ "tanggal": "14 Okt 2026",
+ "status": "Bertahap, belum ada konfirmasi untuk Indonesia",
+ "gambar": {
+  "jenis": "panggilan"
+ },
+ "foto": {
+  "url": "https://techcrunch.com/wp-content/uploads/2026/10/YourAlgorithm-FB.png?w=1200",
+  "kredit": "TechCrunch / Facebook"
+ }
+}

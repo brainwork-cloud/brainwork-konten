@@ -19,6 +19,7 @@ Format portal/<ID>.json:
   "tanggal": "20 Okt 2026",                  # tanggal rilis sumber
   "status": "Sudah rilis untuk semua",       # opsional: "Sudah rilis ...", "Bertahap", "Masih uji coba"; tampil di slide/scene terakhir (kartu single mengabaikannya)
   "slides": [{"judul": "Apa yang berubah", "isi": "kalimat fakta"}],   # hanya carousel: 2-4 slide isi (default: dari "ringkas")
+  "foto": {"url": "https://situs.com/gambar-utama.jpg", "kredit": "TechCrunch"},   # opsional: foto dari artikel sumber (portal_foto.py), latar penuh gaya referensi; gagal/terlalu kecil -> otomatis pakai "gambar"
   "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-iklan | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
   "music": true,                             # hanya motion (default true)
   "caption": "teks postingan"                # dipakai agen redaktur untuk antrian, tidak digambar
@@ -29,16 +30,35 @@ Motion: scene pembuka (judul), satu scene per fakta (dari "ringkas"), scene stat
 Semua teks berasal dari field yang sama dengan kartu, jadi tidak ada fakta baru yang muncul hanya di slide/video.
 """
 import sys, os, json, shutil, tempfile
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from render_carousel import (font, wrap_rich, draw_rich, fit, pill, W, H, M, BG, BG2, PURPLE, PURPLE_D,
                              PURPLE_L, GRID, GOLD, WHITE, MUTE)
 import portal_art
+import portal_foto
 
 FOOT = 190  # tinggi footer
 CTA = "Ikuti **Brainwork.id** untuk kabar marketing dan AI tiap hari."
 FORMATS = ("single", "carousel", "motion")
+FOTO = None          # PIL.Image foto latar bila spec["foto"] ada dan lolos pemeriksaan (portal_foto.ambil), selain itu None
+FOTO_KREDIT = ""
+_FOTO_PESAN = ""
+FOTO_FOKUS = [(0.5, 0.45, 1.2), (0.3, 0.5, 1.4), (0.7, 0.45, 1.4)]   # sorotan foto per slide/scene fakta (x, y, zoom)
+
+
+def _muat_foto(spec):
+    """Unduh/baca foto sumber. Gagal = pakai ilustrasi (render tidak pernah gagal karena foto)."""
+    global FOTO, FOTO_KREDIT, _FOTO_PESAN
+    FOTO, FOTO_KREDIT, _FOTO_PESAN = None, "", ""
+    f = spec.get("foto")
+    if not f:
+        return
+    im, ket = portal_foto.ambil(f, W, H - FOOT)
+    _FOTO_PESAN = ket
+    print(f"foto: {ket}", file=sys.stderr)
+    if im is not None:
+        FOTO, FOTO_KREDIT = im, f["kredit"].strip()
 
 
 def base():
@@ -72,8 +92,81 @@ def footer(d, spec, with_source=True):
         sf = fit(d, spec.get("sumber", ""), "bold", [40, 36, 32, 28], W - 2 * M - 300, 1)
         d.text((M, fy + 40), spec.get("sumber", ""), font=sf, fill=WHITE)
         d.text((W - M, fy + 64), "brainwork.id", font=font("semi", 30), fill=PURPLE_L, anchor="rm")
+        if FOTO is not None and FOTO_KREDIT:
+            d.text((M, fy + 92), f"Foto: {FOTO_KREDIT}", font=font("reg", 26), fill=MUTE)
     else:
         d.text((W // 2, H - FOOT // 2 + 4), "brainwork.id", font=font("bold", 36), fill=PURPLE_L, anchor="mm")
+
+
+def base_foto(focus=(0.5, 0.4), zoom=1.0, gelap=0.0, blur=0.0, sat=0.35, bawah=(0.30, 0.80, 0.95)):
+    """Latar foto penuh di atas footer: redup, gradasi gelap di atas (untuk logo) dan di bawah (untuk teks)."""
+    img = Image.new("RGB", (W, H), BG)
+    ph = H - FOOT
+    img.paste(portal_foto.latar(FOTO, W, ph, focus, zoom, sat, gelap, blur), (0, 0))
+    portal_foto.gradasi(img, 0, 300, 0.72, 0.0, box=(0, 0, W, ph))
+    portal_foto.gradasi(img, int(ph * bawah[0]), int(ph * bawah[1]), 0.0, bawah[2], box=(0, 0, W, ph))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, H - FOOT, W, H], fill=(8, 6, 16))
+    d.rectangle([0, H - FOOT, W, H - FOOT + 4], fill=PURPLE)
+    return img, d
+
+
+def render_foto(spec, out_path):
+    """Single dengan foto penuh: judul di atas foto, poin singkat di bawahnya (gaya referensi)."""
+    img, d = base_foto()
+    wordmark(d, M, 64)
+    d.text((W - M, 90), spec.get("tanggal", ""), font=font("semi", 30), fill=(230, 224, 245), anchor="rm")
+    yb = H - FOOT - 36
+    pf, bf = font("bold", 28), font("reg", 34)
+    tf, n = None, 0
+    for sz in (74, 70, 66, 62, 58, 54):
+        ff = font("black", sz)
+        n = len(wrap_rich(d, spec["judul"], ff, W - 2 * M))
+        if n <= 4:
+            tf = ff
+            break
+    tf = tf or font("black", 54)
+    th = n * int(tf.size * 1.12)
+    base_h = (28 + 26) + 28 + th + 20 + 10 + 30
+    chosen, bh = [], 0
+    for b in spec.get("ringkas", [])[:3]:
+        need = len(wrap_rich(d, b, bf, W - 2 * M - 46)) * int(34 * 1.3) + 16
+        if base_h + bh + need <= (yb - 340):
+            chosen.append(b)
+            bh += need
+        else:
+            break
+    y = pill(d, M, yb - base_h - bh, spec.get("kategori", "BERITA").upper(), pf) + 28
+    y = draw_rich(d, M, y, spec["judul"], tf, W - 2 * M, lh=1.12) + 20
+    d.rounded_rectangle([M, y, M + 150, y + 10], radius=5, fill=GOLD)
+    y += 40
+    for b in chosen:
+        d.regular_polygon((M + 10, y + 24, 10), 4, fill=GOLD)
+        y = draw_rich(d, M + 46, y, b, bf, W - 2 * M - 46, color=(232, 228, 244), lh=1.3) + 16
+    footer(d, spec)
+    img.save(out_path, "JPEG", quality=90, optimize=True)
+
+
+def slide_cover_foto(spec, idx, total):
+    img, d = base_foto()
+    wordmark(d, M, 64)
+    d.text((W - M, 90), spec.get("tanggal", ""), font=font("semi", 30), fill=(230, 224, 245), anchor="rm")
+    gy = H - FOOT - 100
+    tf, n = None, 0
+    for sz in (80, 74, 70, 66, 62, 58, 54):
+        ff = font("black", sz)
+        n = len(wrap_rich(d, spec["judul"], ff, W - 2 * M))
+        if n <= 5:
+            tf = ff
+            break
+    tf = tf or font("black", 52)
+    th = n * int(tf.size * 1.12)
+    y0 = gy - 30 - th - 28 - 54
+    y = pill(d, M, y0, spec.get("kategori", "BERITA").upper(), font("bold", 28)) + 28
+    draw_rich(d, M, y, spec["judul"], tf, W - 2 * M, lh=1.12)
+    pill(d, M, gy, "GESER UNTUK DETAIL  ›", font("bold", 32), fg=WHITE, bg=PURPLE_D)
+    footer(d, spec)
+    return img
 
 
 def _gambar(spec):
@@ -139,6 +232,8 @@ def render_art(spec, out_path, g):
 
 def render(spec, out_path):
     """Format single: satu kartu berita."""
+    if FOTO is not None:
+        return render_foto(spec, out_path)
     g = _gambar(spec)
     if g:
         return render_art(spec, out_path, g)
@@ -200,6 +295,8 @@ def slide_cover_art(spec, idx, total, g):
 
 
 def slide_cover(spec, idx, total):
+    if FOTO is not None:
+        return slide_cover_foto(spec, idx, total)
     g = _gambar(spec)
     if g:
         return slide_cover_art(spec, idx, total, g)
@@ -225,10 +322,14 @@ def slide_cover(spec, idx, total):
 
 
 def slide_fact(spec, label, isi, idx, total):
-    img, d = base()
+    if FOTO is not None:
+        fx, fy, fz = FOTO_FOKUS[(idx - 2) % len(FOTO_FOKUS)]
+        img, d = base_foto((fx, fy), fz, gelap=0.5, blur=2.0, sat=0.3, bawah=(0.0, 0.5, 0.88))
+    else:
+        img, d = base()
     wordmark(d, M, 64)
     d.text((W - M, 90), f"{idx} / {total}", font=font("semi", 30), fill=MUTE, anchor="rm")
-    g = _gambar(spec)
+    g = None if FOTO is not None else _gambar(spec)
     if g:
         hy, hh = 150, 400
         _paste_art(img, d, M, hy, W - 2 * M, hh, g, idx=idx - 2)
@@ -357,26 +458,65 @@ def _register_scene(rm):
         fr.text_anim(rm.X0 + 40, y + 58, s["text"], f, rm.XW - 44, t, 0.4)
     rm.SCENES["fakta_art"] = sc_fakta_art
 
+    # ---- varian foto (foto sumber redup sebagai latar, gaya referensi)
+    soft = {}
+
+    def foto_soft():
+        if "im" not in soft:
+            soft["im"] = FOTO.filter(ImageFilter.GaussianBlur(max(2, FOTO.width / 400)))
+        return soft["im"]
+
+    def sc_hook_foto(fr, s, t, dur):
+        k = rm.eo(rm.seg(t, 0, max(0.5, dur)))
+        ph = 1180
+        fr.img.paste(portal_foto.latar(FOTO, rm.W, ph, (0.5, 0.42), 1.0 + 0.08 * k, 0.35), (0, 0))
+        portal_foto.gradasi(fr.img, 0, 360, 0.6, 0.0, box=(0, 0, rm.W, ph))
+        portal_foto.gradasi(fr.img, 520, ph, 0.0, 1.0, box=(0, 0, rm.W, ph))
+        fr.d = ImageDraw.Draw(fr.img)
+        y = 880
+        fr.fade_text(rm.X0, y, s.get("kicker", "").upper(), rm.font("s", 32), t, 0.2, rm.GOLD)
+        f = rm.fit(fr.d, s["text"], "x", [84, 78, 72, 66, 60], rm.XW, 5)
+        y = fr.text_anim(rm.X0, y + 62, s["text"], f, rm.XW, t, 0.3)
+        p = rm.eo(rm.seg(t, 1.1, 1.7))
+        if p > 0:
+            fr.d.rounded_rectangle([rm.X0, y + 28, rm.X0 + int(240 * p), y + 40], radius=6, fill=rm.GOLD)
+        if s.get("sub"):
+            fr.text_anim(rm.X0, y + 70, s["sub"], rm.font("r", 40), rm.XW, t, 1.4, color=rm.MUTE, stagger=0.04)
+        fr.fade_text(rm.X0, 1468, f"Foto: {FOTO_KREDIT}", rm.font("r", 26), t, 1.0, rm.MUTE)
+    rm.SCENES["hook_foto"] = sc_hook_foto
+
+    def sc_fakta_foto(fr, s, t, dur):
+        fx, fy, fz = FOTO_FOKUS[s.get("fi", 0) % len(FOTO_FOKUS)]
+        k = rm.eo(rm.seg(t, 0, max(0.5, dur)))
+        fr.img.paste(portal_foto.latar(foto_soft(), rm.W, rm.H, (fx, fy), fz * (1.0 + 0.06 * k), 0.3, 0.55), (0, 0))
+        portal_foto.gradasi(fr.img, 0, 300, 0.5, 0.0)
+        fr.d = ImageDraw.Draw(fr.img)
+        rm.SCENES["fakta"](fr, s, t, dur)
+    rm.SCENES["fakta_foto"] = sc_fakta_foto
+
 
 def build_scenes(spec):
     facts = [b for b in spec.get("ringkas", [])[:3] if b]
     if len(facts) < 2:
         sys.exit("motion butuh minimal 2 poin di 'ringkas'")
-    g = _gambar(spec)
+    g = None if FOTO is not None else _gambar(spec)
     art = {"art": g[0], "teks": g[1], "fokus": g[2]} if g else {}
-    sc = [dict({"type": "hook_art" if g else "hook", "kicker": spec.get("kategori", "BERITA"), "text": spec["judul"], "dur": 3.6}, **art)]
+    ht = "hook_foto" if FOTO is not None else "hook_art" if g else "hook"
+    ft = "fakta_foto" if FOTO is not None else "fakta_art" if g else "fakta"
+    sc = [dict({"type": ht, "kicker": spec.get("kategori", "BERITA"), "text": spec["judul"], "dur": 3.6}, **art)]
     if spec.get("tanggal"):
         sc[0]["sub"] = spec["tanggal"]
     for i, b in enumerate(facts):
         dur = max(3.8, min(6.5, 2.4 + len(b) / 20.0))
-        sc.append(dict({"type": "fakta_art" if g else "fakta", "kicker": f"FAKTA {i + 1} DARI {len(facts)}", "text": b, "dur": round(dur, 1)},
-                       **(dict(art, fi=i) if g else {})))
+        sc.append(dict({"type": ft, "kicker": f"FAKTA {i + 1} DARI {len(facts)}", "text": b, "dur": round(dur, 1)},
+                       **(dict(art, fi=i) if g else {"fi": i} if FOTO is not None else {})))
     if spec.get("status"):
         sc.append({"type": "fakta", "kicker": "STATUS", "text": spec["status"], "dur": 3.2})
     src = spec.get("sumber", "")
     end = {"type": "end", "kicker": "IKUTI", "text": CTA, "dur": 4.0}
     if src:
-        end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "")
+        end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "") \
+            + (f" · Foto: {FOTO_KREDIT}" if FOTO is not None and FOTO_KREDIT else "")
     sc.append(end)
     total = sum(s["dur"] for s in sc)
     if total < 12.5:
@@ -417,8 +557,11 @@ def main():
         frames = sys.argv[sys.argv.index("--frames") + 1]
         args = [a for a in args if a != frames]
     spec = json.load(open(args[0], encoding="utf-8"))
+    _muat_foto(spec)
     out = args[1] if len(args) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", spec["id"])
     os.makedirs(out, exist_ok=True)
+    if spec.get("foto"):   # catatan hasil foto (dibaca agen 5 dan manusia): dipakai atau alasan diganti ilustrasi
+        open(os.path.join(out, ".foto.txt"), "w", encoding="utf-8").write(("dipakai" if FOTO is not None else "diganti ilustrasi") + "\n" + _FOTO_PESAN + "\n")
     fmt = spec.get("format", "single")
     if fmt not in FORMATS:
         sys.exit(f"format tidak dikenal: {fmt!r} (pilih {', '.join(FORMATS)})")

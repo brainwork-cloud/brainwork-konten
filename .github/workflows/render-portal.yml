@@ -16,7 +16,7 @@ jobs:
           python-version: "3.11"
       # ffmpeg + numpy hanya dibutuhkan format motion; dipasang selalu supaya satu workflow melayani tiga format
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - run: pip install pillow numpy
+      - run: pip install pillow numpy requests
       - run: bash setup/fonts.sh
       - name: Render konten baru / yang berubah (single, carousel, motion; revisi = md5 spec beda dari aset/<ID>/.spec.md5)
         run: |

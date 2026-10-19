@@ -1,0 +1,42 @@
+{
+ "id": "PV-02",
+ "format": "carousel",
+ "kategori": "IKLAN",
+ "judul": "Meta hapus **placement manual** di ad set untuk kampanye Sales, Leads, Engagement, dan App",
+ "ringkas": [
+  "Untuk objektif Sales, Leads, Engagement, dan App promotion, pengiklan tidak lagi memilih placement manual di ad set.",
+  "Awareness dan Traffic masih bisa memakai placement manual.",
+  "Pengganti: kustomisasi media per placement, placement value rules, dan pengecualian placement di level akun."
+ ],
+ "slides": [
+  {
+   "judul": "Apa yang berubah",
+   "isi": "Untuk objektif Sales, Leads, Engagement, dan App promotion, pengiklan tidak lagi memilih placement secara manual di level ad set."
+  },
+  {
+   "judul": "Yang tidak berubah",
+   "isi": "Objektif Awareness dan Traffic masih bisa memakai placement manual."
+  },
+  {
+   "judul": "Penggantinya",
+   "isi": "Kustomisasi media per placement, placement value rules (naikkan atau turunkan bid per placement), dan pengecualian placement di level akun per objektif."
+  }
+ ],
+ "sumber": "Social Media Today & Relevant Audience",
+ "tanggal": "12 Okt 2026",
+ "status": "Bertahap, belum tentu tampil di semua akun",
+ "gambar": {
+  "jenis": "dashboard-iklan",
+  "teks": [
+   "Placements",
+   "Placement otomatis",
+   "Placement manual",
+   "Awareness dan Traffic: masih manual",
+   "Pengganti"
+  ]
+ },
+ "foto": {
+  "url": "https://imgproxy.divecdn.com/ksn9bE0orRdNOl1KedQzKgvLgG6hBUiDdJo-KLpoVCo/g:ce/rs:fit:770:435/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS93aGF0c2FwcF9ndWVzdF9jYWxsaW5nLnBuZw==.webp",
+  "kredit": "Social Media Today"
+ }
+}
