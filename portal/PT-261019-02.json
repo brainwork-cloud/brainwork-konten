@@ -1,0 +1,29 @@
+{
+  "id": "PT-261019-02",
+  "format": "carousel",
+  "kategori": "IKLAN",
+  "judul": "Meta hapus **placement manual** di ad set untuk kampanye Sales, Leads, Engagement, dan App",
+  "ringkas": [
+    "Untuk objektif Sales, Leads, Engagement, dan App promotion, pengiklan tidak lagi memilih placement manual di ad set.",
+    "Awareness dan Traffic masih bisa memakai placement manual.",
+    "Pengganti: kustomisasi media per placement, placement value rules, dan pengecualian placement di level akun."
+  ],
+  "slides": [
+    {
+      "judul": "Apa yang berubah",
+      "isi": "Untuk objektif Sales, Leads, Engagement, dan App promotion, pengiklan tidak lagi memilih placement secara manual di level ad set."
+    },
+    {
+      "judul": "Yang tidak berubah",
+      "isi": "Objektif Awareness dan Traffic masih bisa memakai placement manual."
+    },
+    {
+      "judul": "Penggantinya",
+      "isi": "Kustomisasi media per placement, placement value rules (naikkan atau turunkan bid per placement), dan pengecualian placement di level akun per objektif."
+    }
+  ],
+  "sumber": "Social Media Today & Relevant Audience",
+  "tanggal": "12 Okt 2026",
+  "status": "Bertahap, belum tentu tampil di semua akun",
+  "caption": "Meta menghapus pilihan placement manual di level ad set untuk kampanye Sales, Leads, Engagement, dan App promotion.\n\n• Untuk objektif tersebut, pengiklan tidak lagi memilih placement secara manual di ad set. Awareness dan Traffic masih bisa.\n• Penggantinya: kustomisasi media per placement, placement value rules (menaikkan atau menurunkan bid per placement), dan pengecualian placement di level akun per objektif.\n• Artinya bagi pengiklan: kontrol penempatan kini diatur lewat pengaturan akun, value rules, dan kustomisasi media.\n\nStatus: diluncurkan bertahap, belum tentu tampil di semua akun; belum ada konfirmasi di halaman resmi yang kami buka sendiri.\n\nSumber: Social Media Today — https://www.socialmediatoday.com/news/meta-offers-updated-ad-placement-control-guidance/832791/; Relevant Audience — https://www.relevantaudience.com/meta/meta-placement-controls-alternatives-documented/. Dilaporkan Social Media Today dan Relevant Audience, keduanya merujuk halaman Pusat Bantuan Meta.\n\nIkuti Brainwork.id untuk kabar marketing dan AI tiap hari.\n#MetaAds #IklanDigital"
+}

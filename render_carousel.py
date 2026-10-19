@@ -52,7 +52,12 @@ def tokens(text):
     """Pecah teks jadi [(kata, emas?)] berdasar **...**"""
     out = []
     for i, part in enumerate(re.split(r"\*\*", text or "")):
-        for w in part.split():
+        words = part.split()
+        # tanda baca yang menempel setelah kata emas (mis. **kata**: ...) ikut kata itu, bukan jadi token terpisah
+        if i % 2 == 0 and i > 0 and words and out and part and not part[0].isspace():
+            w0, g0 = out[-1]
+            out[-1] = (w0 + words.pop(0), g0)
+        for w in words:
             out.append((w, i % 2 == 1))
     return out
 
