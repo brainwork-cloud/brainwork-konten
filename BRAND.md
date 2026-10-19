@@ -100,6 +100,7 @@ Aturan agen:
 - Alasan: di rekaman HP wajah sering keluar frame. Editor tidak melacak wajah, jadi bagian tengah ditutup grafis.
 - Jenis scene: icon (ilustrasi besar), flow (alur ikon), steps (langkah bernomor), vs (ya/tidak), stat (angka bersumber), points, statement. Variasikan, jangan tiga scene sama berturut-turut.
 - Isi grafis hanya hal yang diucapkan Naufal atau sumber resmi yang dibuka agen; tanpa logo atau tampilan resmi merek; tanpa angka karangan.
+- Scene `ui` (permintaan Naufal 19 Okt 2026, "lebih realistis agar orang kebayang dashboardnya"): jendela aplikasi/dashboard buatan sendiri dengan kursor, klik, toggle, ketikan, angka naik, dan zoom kamera. Layout form (pengaturan iklan), library (pencarian iklan), chat (asisten AI), table (hasil iklan). Dipakai untuk setiap pembahasan tool, menu, atau dashboard. Aturan tetap: generik (bukan tangkapan layar), tanpa logo atau tampilan resmi merek, selalu berlabel "Ilustrasi · data contoh", angka di dalamnya contoh dan tidak boleh disiratkan sebagai hasil nyata.
 
 ## 13. Portal Brainwork.id (keputusan Naufal 19 Okt 2026)
 - Media portal "homeless media" di Facebook Page `brainwork.id` (Instagram menyusul). Produksi SENDIRI, bukan mirror @nopal.brainwork. Hanya berita.

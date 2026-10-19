@@ -314,6 +314,8 @@ SCENES = {"hook": sc_hook, "stat": sc_stat, "points": sc_points, "statement": sc
 # scene tambahan (icon, flow, steps, vs) untuk B-roll penuh
 import scenes_extra
 scenes_extra.register(sys.modules[__name__])
+import scenes_ui
+scenes_ui.register(sys.modules[__name__])
 
 
 def render_clip(scenes, path):

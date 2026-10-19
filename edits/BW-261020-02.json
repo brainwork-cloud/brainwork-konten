@@ -1,142 +1,203 @@
 {
-  "id": "BW-261020-02",
-  "mode": "talking_head",
-  "camera": "rekaman/BW-261020-02/kamera.mp4",
-  "hook": "Foto produk jadi video iklan",
-  "highlight_words": [
-    "video",
-    "iklan",
-    "tanpa"
-  ],
-  "cut_silence": true,
-  "outro": "Follow @nopal.brainwork buat tips iklan & AI",
-  "sources": {
-    "rekaman/BW-261020-02/kamera.mp4": "1vtzm17vxGsWOZA6I4MYqTZuYYfBebYar"
+ "id": "BW-261020-02",
+ "mode": "talking_head",
+ "camera": "rekaman/BW-261020-02/kamera.mp4",
+ "hook": "Foto produk jadi video iklan",
+ "highlight_words": [
+  "video",
+  "iklan",
+  "tanpa"
+ ],
+ "cut_silence": true,
+ "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+ "sources": {
+  "rekaman/BW-261020-02/kamera.mp4": "1vtzm17vxGsWOZA6I4MYqTZuYYfBebYar"
+ },
+ "whisper_prompt": false,
+ "fix": {
+  "fotoproduk": "foto produk",
+  "fotoprodukmu": "foto produkmu",
+  "gambar status": "gambar statis",
+  "perating jauhnya": "pratinjaunya",
+  "stock": "stok"
+ },
+ "cover": [
+  {
+   "from_word": "editor",
+   "scene": {
+    "type": "flow",
+    "kicker": "Advantage+ creative",
+    "title": "Foto statis jadi **video iklan**",
+    "items": [
+     {
+      "icon": "image",
+      "label": "Foto produkmu"
+     },
+     {
+      "icon": "video",
+      "label": "Video iklan"
+     }
+    ]
+   }
   },
-  "whisper_prompt": false,
-  "fix": {
-    "fotoproduk": "foto produk",
-    "fotoprodukmu": "foto produkmu",
-    "gambar status": "gambar statis",
-    "perating jauhnya": "pratinjaunya",
-    "stock": "stok"
+  {
+   "from_word": "bisa#2",
+   "scene": {
+    "type": "icon",
+    "icon": "image",
+    "kicker": "Dari fotomu",
+    "text": "Gambar statis yang **sudah kamu punya**"
+   }
   },
-  "cover": [
-    {
-      "from_word": "editor",
-      "scene": {
-        "type": "flow",
-        "kicker": "Advantage+ creative",
-        "title": "Foto statis jadi **video iklan**",
-        "items": [
-          {
-            "icon": "image",
-            "label": "Foto produkmu"
-          },
-          {
-            "icon": "video",
-            "label": "Video iklan"
-          }
-        ]
-      }
+  {
+   "from_word": "punya#2",
+   "scene": {
+    "type": "icon",
+    "icon": "check",
+    "kicker": "Statusnya",
+    "text": "Sudah **tersedia umum**"
+   }
+  },
+  {
+   "from_word": "umum",
+   "scene": {
+    "type": "icon",
+    "icon": "target",
+    "kicker": "Cocok buat",
+    "text": "Kamu yang **jualan**, belum punya stok **video produk**"
+   }
+  },
+  {
+   "from_word": "video produk",
+   "scene": {
+    "type": "ui",
+    "layout": "form",
+    "heading": "Buat iklan",
+    "section": "Kreatif iklan",
+    "kicker": "Di Ads Manager",
+    "title": "Bikin iklan pakai **foto produkmu**",
+    "rows": [
+     {
+      "label": "Media iklan",
+      "sub": "Foto produk dari galeri",
+      "on": true
+     },
+     {
+      "label": "Teks utama",
+      "sub": "Tulis penawaran singkat",
+      "on": true
+     }
+    ],
+    "preview": "image"
+   }
+  },
+  {
+   "from_word": "produkmu",
+   "scene": {
+    "type": "ui",
+    "layout": "form",
+    "heading": "Buat iklan",
+    "section": "Kreatif iklan",
+    "kicker": "Lalu",
+    "title": "Buka **Advantage+ creative**",
+    "rows": [
+     {
+      "label": "Advantage+ creative",
+      "sub": "Penyempurnaan kreatif otomatis",
+      "on": true
+     },
+     {
+      "label": "Ubah gambar jadi video",
+      "sub": "Foto produk diberi gerakan otomatis",
+      "on": false,
+      "toggle": true
+     }
+    ],
+    "preview": "follow",
+    "tag": "Aktifkan ini"
+   }
+  },
+  {
+   "from_word": "jadi video",
+   "scene": {
+    "type": "icon",
+    "icon": "warning",
+    "kicker": "Catatan",
+    "text": "Nama opsi bisa **sedikit beda** di akunmu"
+   }
+  },
+  {
+   "from_word": "akunmu",
+   "scene": {
+    "type": "ui",
+    "layout": "form",
+    "heading": "Buat iklan",
+    "section": "Kreatif iklan",
+    "kicker": "Sebelum publish",
+    "title": "Cek **pratinjaunya**",
+    "rows": [
+     {
+      "label": "Advantage+ creative",
+      "sub": "Penyempurnaan kreatif otomatis",
+      "on": true
+     },
+     {
+      "label": "Ubah gambar jadi video",
+      "sub": "Foto produk diberi gerakan otomatis",
+      "on": true
+     }
+    ],
+    "preview": "video"
+   }
+  },
+  {
+   "from_word": "pratinjaunya",
+   "scene": {
+    "type": "ui",
+    "layout": "form",
+    "heading": "Buat iklan",
+    "section": "Kreatif iklan",
+    "kicker": "Gerakan aneh atau pesan gak jelas?",
+    "title": "**Matiin** lagi aja",
+    "rows": [
+     {
+      "label": "Advantage+ creative",
+      "sub": "Penyempurnaan kreatif otomatis",
+      "on": true
+     },
+     {
+      "label": "Ubah gambar jadi video",
+      "sub": "Foto produk diberi gerakan otomatis",
+      "on": true,
+      "toggle": true
+     }
+    ],
+    "preview": "follow",
+    "tag": "Matikan"
+   }
+  },
+  {
+   "from_word": "lagi aja",
+   "scene": {
+    "type": "vs",
+    "kicker": "Saranku",
+    "yes": {
+     "title": "Bahan **tes** di samping materi lain"
     },
-    {
-      "from_word": "bisa#2",
-      "scene": {
-        "type": "icon",
-        "icon": "image",
-        "kicker": "Dari fotomu",
-        "text": "Gambar statis yang **sudah kamu punya**"
-      }
-    },
-    {
-      "from_word": "punya#2",
-      "scene": {
-        "type": "icon",
-        "icon": "check",
-        "kicker": "Statusnya",
-        "text": "Sudah **tersedia umum**"
-      }
-    },
-    {
-      "from_word": "umum",
-      "scene": {
-        "type": "icon",
-        "icon": "target",
-        "kicker": "Cocok buat",
-        "text": "Kamu yang **jualan**, belum punya stok **video produk**"
-      }
-    },
-    {
-      "from_word": "video produk",
-      "scene": {
-        "type": "icon",
-        "icon": "cursor",
-        "kicker": "Di Ads Manager",
-        "text": "Bikin iklan pakai **foto produkmu**"
-      }
-    },
-    {
-      "from_word": "produkmu",
-      "scene": {
-        "type": "steps",
-        "kicker": "Lalu",
-        "title": "Buka **Advantage+ creative**",
-        "items": [
-          "Cari bagian Advantage+ creative",
-          "Pilih opsi ubah gambar jadi video"
-        ]
-      }
-    },
-    {
-      "from_word": "jadi video",
-      "scene": {
-        "type": "icon",
-        "icon": "warning",
-        "kicker": "Catatan",
-        "text": "Nama opsi bisa **sedikit beda** di akunmu"
-      }
-    },
-    {
-      "from_word": "akunmu",
-      "scene": {
-        "type": "icon",
-        "icon": "search",
-        "kicker": "Sebelum publish",
-        "text": "Cek **pratinjaunya**"
-      }
-    },
-    {
-      "from_word": "pratinjaunya",
-      "scene": {
-        "type": "icon",
-        "icon": "cross",
-        "kicker": "Gerakan aneh atau pesan gak jelas?",
-        "text": "**Matiin** lagi aja"
-      }
-    },
-    {
-      "from_word": "lagi aja",
-      "scene": {
-        "type": "vs",
-        "kicker": "Saranku",
-        "yes": {
-          "title": "Bahan **tes** di samping materi lain"
-        },
-        "no": {
-          "title": "Pengganti video aslimu"
-        }
-      }
-    },
-    {
-      "from_word": "aslimu",
-      "scene": {
-        "type": "icon",
-        "icon": "clock",
-        "kicker": "Belum muncul?",
-        "text": "Wajar. **Cek lagi** beberapa hari ke depan"
-      }
+    "no": {
+     "title": "Pengganti video aslimu"
     }
-  ],
-  "close_from_word": "ke depan"
+   }
+  },
+  {
+   "from_word": "aslimu",
+   "scene": {
+    "type": "icon",
+    "icon": "clock",
+    "kicker": "Belum muncul?",
+    "text": "Wajar. **Cek lagi** beberapa hari ke depan"
+   }
+  }
+ ],
+ "close_from_word": "ke depan"
 }
