@@ -1,6 +1,0 @@
-b-roll BW-261020-02 b1 motion
-b-roll BW-261020-02 b2 motion
-b-roll BW-261020-02 b3 motion
-b-roll BW-261022-02 b1 motion
-b-roll BW-261022-02 b2 motion
-b-roll BW-261022-02 b3 motion
