@@ -8,7 +8,7 @@ ilustrasi (portal_art.py), jadi render tidak pernah gagal karena foto.
 spec["foto"] = {"url": "https://.../gambar.jpg", "kredit": "TechCrunch"}      # diunduh saat render (Actions punya internet)
                {"file": "preview/contoh.jpg", "kredit": "..."}                 # berkas lokal (uji)
 Syarat lolos: kredit terisi, bisa dibuka sebagai gambar, sisi terpendek >= 560 px, sisi terpanjang >= 900 px,
-bukan gambar hampir polos (logo/latar rata), dan pembesaran ke area kartu <= 2,1x (kalau lebih, hasilnya terlalu buram).
+bukan gambar hampir polos (logo/latar rata) atau tangkapan layar/grafik antarmuka (>30% piksel hampir putih), dan pembesaran ke area kartu <= 2,1x (kalau lebih, hasilnya terlalu buram).
 """
 import io, os
 import numpy as np
@@ -43,7 +43,12 @@ def ambil(f, tw, th):
             return None, "tidak ada url atau file"
         im = Image.open(io.BytesIO(data))
         im.load()
-        im = ImageOps.exif_transpose(im).convert("RGB")
+        im = ImageOps.exif_transpose(im)
+        if im.mode in ("P", "LA", "RGBA", "PA"):       # transparansi: letakkan di atas latar gelap, bukan hitam/putih acak
+            im = im.convert("RGBA")
+            bg = Image.new("RGBA", im.size, BG + (255,))
+            im = Image.alpha_composite(bg, im)
+        im = im.convert("RGB")
     except Exception as e:  # unduhan gagal, bukan gambar, format tak didukung, dsb.
         return None, f"gagal memuat: {type(e).__name__}: {str(e)[:120]}"
     w, h = im.size
@@ -52,6 +57,9 @@ def ambil(f, tw, th):
     small = np.asarray(im.convert("L").resize((64, 64)), dtype=float)
     if small.std() < 12:
         return None, "hampir polos (kemungkinan logo atau latar rata)"
+    g = np.asarray(im.convert("L").resize((96, 96)), dtype=float)
+    if (g > 235).mean() > 0.30:
+        return None, "tampak tangkapan layar/grafik antarmuka (banyak area putih), bukan foto berita"
     up = max(tw / w, th / h)
     if up > 2.1:
         return None, f"pembesaran {up:.1f}x terlalu besar untuk {w}x{h}"

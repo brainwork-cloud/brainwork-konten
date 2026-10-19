@@ -21,6 +21,7 @@ jobs:
         run: |
           mkdir -p preview/out
           for f in preview/*.json; do
+            [ -e "$f" ] || continue
             id=$(basename "$f" .json)
             rm -rf "preview/out/$id"
             python render_portal.py "$f" "preview/out/$id" > "preview/out/$id.log" 2>&1 || echo "RENDER GAGAL" >> "preview/out/$id.log"
