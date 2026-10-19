@@ -1,4 +1,4 @@
-name: Render Portal (kartu berita Brainwork.id)
+name: Render Portal (kartu, carousel, Reels Motion Brainwork.id)
 on:
   push:
     paths: ["portal/**.json"]
@@ -14,16 +14,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install pillow
+      # ffmpeg + numpy hanya dibutuhkan format motion; dipasang selalu supaya satu workflow melayani tiga format
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install pillow numpy
       - run: bash setup/fonts.sh
-      - name: Render kartu baru / yang berubah
+      - name: Render konten baru / yang berubah (single, carousel, motion; revisi = md5 spec beda dari aset/<ID>/.spec.md5)
         run: |
           for f in portal/*.json; do
             [ -e "$f" ] || continue
             id=$(basename "$f" .json)
-            if [ ! -f "aset/$id/$id.jpg" ] || [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$(md5sum "$f" | cut -c1-32)" ]; then
+            h=$(md5sum "$f" | cut -c1-32)
+            if [ ! -f "aset/$id/$id.jpg" ] || [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$h" ]; then
               rm -rf "aset/$id"; echo "== $id"
-              python render_portal.py "$f" "aset/$id" && md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"
+              if python render_portal.py "$f" "aset/$id"; then echo "$h" > "aset/$id/.spec.md5"; else rm -rf "aset/$id"; echo "$id $(date -u +%FT%TZ)" >> portal_gagal.txt; fi
             fi
           done
       - name: Simpan hasil
@@ -31,6 +34,7 @@ jobs:
           git config user.name "brainwork-bot"
           git config user.email "bot@users.noreply.github.com"
           git add aset
+          [ -f portal_gagal.txt ] && git add portal_gagal.txt || true
           files=$(git diff --cached --name-only -- aset)
-          git diff --cached --quiet || (git commit -m "render: kartu portal" && git pull --rebase && git push)
+          git diff --cached --quiet || (git commit -m "render: konten portal" && git pull --rebase && git push)
           bash setup/purge_cdn.sh $files

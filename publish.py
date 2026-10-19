@@ -16,11 +16,15 @@ Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berst
   "message": "caption",
   "image_urls": ["https://raw.githubusercontent.com/.../_01.jpg", ...],   # carousel -> post multi-foto
   "video_url": "https://raw.githubusercontent.com/.../<ID>.mp4",          # reels -> Facebook Reels
-  # facebook_portal (portal berita Brainwork.id, produksi sendiri, BUKAN mirror; halaman Facebook terpisah)
+  # facebook_portal (portal berita Brainwork.id, produksi sendiri, BUKAN mirror; halaman Facebook terpisah).
+  # Tiga format bergilir; pilih SATU jenis media per file antrian:
   "message": "caption (wajib memuat kata 'Sumber' dan tautan http)",
-  "image_url": "https://raw.githubusercontent.com/.../aset/<ID>/<ID>.jpg"     # kartu berita (atau "image_urls": [...])
-  # instagram_portal (mirror kartu portal yang sama ke @brainwork.id lewat Graph API; akun IG dicari dari halaman portal)
-  "message": "caption (wajib memuat 'Sumber' dan tautan http, maks 2200 karakter)", "image_url": "<kartu berita yang sama, tepat 1 gambar>"
+  "image_url": "https://raw.githubusercontent.com/.../aset/<ID>/<ID>.jpg"          # single post (kartu berita 1 gambar)
+  "image_urls": ["https://.../aset/<ID>/<ID>_01.jpg", ... "_NN.jpg"]               # carousel (2-10 gambar) -> post multi-foto
+  "video_url": "https://raw.githubusercontent.com/.../aset/<ID>/<ID>.mp4"          # Reels Motion -> Facebook Reels
+  # instagram_portal (mirror konten portal yang sama ke @brainwork.id lewat Graph API; akun IG dicari dari halaman portal)
+  "message": "caption (wajib memuat 'Sumber' dan tautan http, maks 2200 karakter)", dan media yang SAMA persis dengan Facebook:
+  "image_url" (1 gambar) | "image_urls" (carousel 2-10 gambar: container anak lalu container induk CAROUSEL) | "video_url" (REELS, share_to_feed)
   # youtube
   "video_path": "aset/BW-261014-01/BW-261014-01.mp4",
   "title": "...", "description": "...", "tags": ["..."]
@@ -32,7 +36,8 @@ Secrets (GitHub Actions): THREADS_ACCESS_TOKEN, THREADS_USER_ID, FB_PAGE_TOKEN, 
 Pengaman (dua halaman Facebook tidak boleh tertukar):
 - "facebook" (mirror @nopal.brainwork): nama halaman FB_PAGE_ID harus mengandung "brainwork" DAN halamannya bukan brainwork.id.
 - "facebook_portal": username halaman PORTAL_FB_PAGE_ID harus "brainwork.id", id-nya beda dari FB_PAGE_ID, caption wajib memuat
-  "Sumber" + tautan, hanya gambar (tanpa video). Gambar belum ada (404) = ditunda, tetap approved, dicoba lagi 30 menit kemudian.
+  "Sumber" + tautan, tepat satu jenis media (gambar / carousel / video). Media belum ada (404) = ditunda, tetap approved,
+  dicoba lagi 30 menit kemudian.
 - "instagram_portal": lolos pengaman halaman portal di atas, lalu akun IG yang tertaut ke halaman itu harus berusername "brainwork.id".
   Token yang sama (PORTAL_FB_PAGE_TOKEN), tanpa secret baru. Kegagalan IG tidak memengaruhi posting Facebook (file antrian terpisah).
 """
@@ -156,24 +161,48 @@ def facebook_post(item, portal=False):
     return {"id": post_id, "url": f"https://www.facebook.com/{post_id}"}
 
 
-def facebook_portal(item):
-    """Portal Brainwork.id: berita bersumber, kartu gambar saja, ke halaman portal saja."""
-    text = item.get("message") or ""
-    if "sumber" not in text.lower() or "http" not in text.lower():
-        raise ValueError("portal: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
-    if item.get("video_url"):
-        raise ValueError("portal: video belum didukung")
+def _cek_url(u):
+    """Media harus sudah bisa dibuka publik (hasil render sudah ter-push). Belum bisa = Tunda (tetap approved)."""
+    try:
+        ok = requests.head(u, allow_redirects=True, timeout=30).status_code == 200
+    except requests.RequestException:
+        ok = False
+    if not ok:
+        raise Tunda(f"media belum tersedia: {u}")
+
+
+def _portal_media(item, label):
+    """Validasi media portal: tepat satu jenis. Mengembalikan ("video", url) atau ("images", [url, ...])."""
+    video = item.get("video_url")
     urls = item.get("image_urls") or ([item["image_url"]] if item.get("image_url") else [])
-    if not urls:
-        raise ValueError("portal: butuh image_url (kartu berita)")
-    for u in urls:
-        try:
-            ok = requests.head(u, allow_redirects=True, timeout=30).status_code == 200
-        except requests.RequestException:
-            ok = False
-        if not ok:
-            raise Tunda(f"gambar belum tersedia: {u}")
-    return facebook_post(item, portal=True)
+    if video and urls:
+        raise ValueError(f"{label}: pilih salah satu, gambar (image_url/image_urls) atau video_url, bukan keduanya")
+    if not video and not urls:
+        raise ValueError(f"{label}: butuh image_url (single), image_urls (carousel) atau video_url (Reels Motion)")
+    if len(urls) > 10:
+        raise ValueError(f"{label}: maksimal 10 gambar per carousel")
+    for u in ([video] if video else urls):
+        _cek_url(u)
+    return ("video", video) if video else ("images", urls)
+
+
+def _cek_caption(text, label):
+    if "sumber" not in text.lower() or "http" not in text.lower():
+        raise ValueError(f"{label}: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
+
+
+def facebook_portal(item):
+    """Portal Brainwork.id: berita bersumber ke halaman portal saja. Format: 1 gambar, carousel (multi-foto) atau Reels."""
+    text = item.get("message") or ""
+    _cek_caption(text, "portal")
+    kind, media = _portal_media(item, "portal")
+    if kind == "video":
+        it = dict(item, image_url=None, image_urls=None)
+    elif len(media) == 1:  # satu gambar = post foto biasa
+        it = dict(item, image_url=media[0], image_urls=None, video_url=None)
+    else:  # carousel = post multi-foto
+        it = dict(item, image_url=None, image_urls=media, video_url=None)
+    return facebook_post(it, portal=True)
 
 
 def ig_portal_account():
@@ -188,37 +217,46 @@ def ig_portal_account():
     return ig["id"], tok
 
 
+def _ig_wait(cid, tok, tries, jeda):
+    """Tunggu container Instagram FINISHED (gambar cepat, video lebih lama)."""
+    for _ in range(tries):
+        j = requests.get(f"{FB}/{cid}", params={"fields": "status_code,status", "access_token": tok}, timeout=30).json()
+        st = j.get("status_code")
+        if st == "FINISHED":
+            return
+        if st in ("ERROR", "EXPIRED"):
+            raise RuntimeError(f"container Instagram {st}: {str(j.get('status'))[:300]}")
+        time.sleep(jeda)
+    raise TimeoutError(f"container Instagram belum FINISHED setelah {tries * jeda} detik")
+
+
 def instagram_portal(item):
-    """Portal Brainwork.id di Instagram: kartu berita yang sama dengan Facebook, satu gambar, ke @brainwork.id saja (Graph API)."""
+    """Portal Brainwork.id di Instagram (@brainwork.id saja, Graph API), media sama dengan Facebook:
+    1 gambar (IMAGE), 2-10 gambar (CAROUSEL: container anak lalu induk), atau video (REELS, tampil juga di feed)."""
     text = item.get("message") or ""
-    if "sumber" not in text.lower() or "http" not in text.lower():
-        raise ValueError("portal IG: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
-    if item.get("video_url"):
-        raise ValueError("portal IG: video belum didukung")
-    urls = item.get("image_urls") or ([item["image_url"]] if item.get("image_url") else [])
-    if len(urls) != 1:
-        raise ValueError("portal IG: butuh tepat 1 image_url (kartu berita)")
+    _cek_caption(text, "portal IG")
     if len(text) > 2200:
         raise ValueError(f"portal IG: caption {len(text)} karakter, batas Instagram 2200")
-    try:
-        ok = requests.head(urls[0], allow_redirects=True, timeout=30).status_code == 200
-    except requests.RequestException:
-        ok = False
-    if not ok:
-        raise Tunda(f"gambar belum tersedia: {urls[0]}")
+    kind, media = _portal_media(item, "portal IG")
     ig, tok = ig_portal_account()
-    c = requests.post(f"{FB}/{ig}/media", data={"image_url": urls[0], "caption": text, "access_token": tok}, timeout=120)
-    c.raise_for_status()
-    cid = c.json()["id"]
-    for _ in range(30):
-        st = requests.get(f"{FB}/{cid}", params={"fields": "status_code", "access_token": tok}, timeout=30).json().get("status_code")
-        if st == "FINISHED":
-            break
-        if st in ("ERROR", "EXPIRED"):
-            raise RuntimeError(f"container Instagram {st}")
-        time.sleep(5)
+
+    def buat(data):
+        c = requests.post(f"{FB}/{ig}/media", data={**data, "access_token": tok}, timeout=120)
+        c.raise_for_status()
+        return c.json()["id"]
+
+    if kind == "video":
+        cid = buat({"media_type": "REELS", "video_url": media, "caption": text, "share_to_feed": "true"})
+        _ig_wait(cid, tok, 60, 10)  # video: sampai 10 menit
+    elif len(media) == 1:
+        cid = buat({"image_url": media[0], "caption": text})
+        _ig_wait(cid, tok, 30, 5)
     else:
-        raise TimeoutError("container Instagram belum FINISHED setelah 150 detik")
+        anak = [buat({"image_url": u, "is_carousel_item": "true"}) for u in media]
+        for k in anak:
+            _ig_wait(k, tok, 30, 5)
+        cid = buat({"media_type": "CAROUSEL", "children": ",".join(anak), "caption": text})
+        _ig_wait(cid, tok, 30, 5)
     p = requests.post(f"{FB}/{ig}/media_publish", data={"creation_id": cid, "access_token": tok}, timeout=120)
     p.raise_for_status()
     mid = p.json()["id"]
