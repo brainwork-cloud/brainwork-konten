@@ -2,7 +2,7 @@
   "id": "PT-261019-02",
   "platform": "facebook_portal",
   "publish_at": "2026-10-19T21:30:00+07:00",
-  "status": "approved",
+  "status": "cancelled",
   "message": "Meta menghapus pilihan placement manual di level ad set untuk kampanye Sales, Leads, Engagement, dan App promotion.\n\n• Untuk objektif tersebut, pengiklan tidak lagi memilih placement secara manual di ad set. Awareness dan Traffic masih bisa.\n• Penggantinya: kustomisasi media per placement, placement value rules (menaikkan atau menurunkan bid per placement), dan pengecualian placement di level akun per objektif.\n• Artinya bagi pengiklan: kontrol penempatan kini diatur lewat pengaturan akun, value rules, dan kustomisasi media.\n\nStatus: diluncurkan bertahap, belum tentu tampil di semua akun; belum ada konfirmasi di halaman resmi yang kami buka sendiri.\n\nSumber: Social Media Today — https://www.socialmediatoday.com/news/meta-offers-updated-ad-placement-control-guidance/832791/; Relevant Audience — https://www.relevantaudience.com/meta/meta-placement-controls-alternatives-documented/. Dilaporkan Social Media Today dan Relevant Audience, keduanya merujuk halaman Pusat Bantuan Meta.\n\nIkuti Brainwork.id untuk kabar marketing dan AI tiap hari.\n#MetaAds #IklanDigital",
   "image_urls": [
     "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261019-02/PT-261019-02_01.jpg",
@@ -10,5 +10,6 @@
     "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261019-02/PT-261019-02_03.jpg",
     "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261019-02/PT-261019-02_04.jpg",
     "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261019-02/PT-261019-02_05.jpg"
-  ]
+  ],
+  "catatan": "Ditahan 19 Okt 2026 20.20 WIB atas permintaan Naufal: tambah gambar/foto/ilustrasi realistis sebelum tayang. Diantrikan ulang (approved) setelah gambar siap."
 }
