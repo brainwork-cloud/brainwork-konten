@@ -2,12 +2,22 @@
   "id": "BW-261020-01",
   "platform": "threads",
   "publish_at": "2026-10-20T08:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "posts": [
     "Meta baru umumin banyak fitur iklan AI di Advertising Week New York. Tapi nggak semuanya bisa kamu pakai sekarang. Ini yang menurut Meta sudah live, dan mana yang masih tes.",
     "Yang sudah tersedia untuk semua pengiklan:\n1. Advantage+ creative bisa bikin video dari gambar statis yang sudah kamu punya.\n2. Customer Lifecycle Strategy, buat ngarahin campaign ke pelanggan baru, bukan yang sudah beli.",
     "Yang masih tes atau dibuka bertahap: asisten AI yang bisa bikin campaign dan ubah budget lewat chat, laporan otomatis terjadwal, Ads Creative Studio, dan checkout langsung di chat. Belum tentu muncul di akunmu.",
     "Jadi nggak usah panik ketinggalan. Yang bisa dicoba sekarang baru dua itu, dan tetap cek dulu di Ads Manager-mu. Kalau sudah muncul, kamu mau coba yang mana duluan?"
   ],
-  "image_url": null
+  "image_url": null,
+  "result": {
+    "ids": [
+      "18137781517653245",
+      "18136962523639512",
+      "18056818499813241",
+      "18119257921755076"
+    ],
+    "url": "https://www.threads.com/@nopal.brainwork/post/DesqSYYDPLJ"
+  },
+  "posted_at": "2026-10-20T01:33:39.385903+00:00"
 }
