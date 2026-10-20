@@ -1,2 +1,3 @@
+daftar embedded gagal: FileURLRetrievalError("Failed to retrieve file url:\n\n\tCannot retrieve the public link of the file. You may need to change\n\tthe permission to 'Anyone with the link', or have had many accesses.\n\tCheck FAQ in https://github.com/wkentaro/gdown?tab=readme-ov-file#faq.\n\nYou may still be able to a
 2 file di inbox
 selesai: 0 file diimpor, 0 gagal
