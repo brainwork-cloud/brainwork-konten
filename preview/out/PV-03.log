@@ -1,25 +1,3 @@
 foto: ok 1800x1013, pembesaran 1.15x
-Traceback (most recent call last):
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_portal.py", line 584, in <module>
-    main()
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_portal.py", line 575, in main
-    files = render_motion(spec, out, frames)
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_portal.py", line 543, in render_motion
-    rm.main()
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_motion.py", line 426, in main
-    pr.stdin.write(render_frame(spec, i / FPS).tobytes())
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_motion.py", line 338, in render_frame
-    SCENES[s["type"]](fr, s, T - t0, s["dur"])
-  File "/home/runner/work/brainwork-konten/brainwork-konten/render_portal.py", line 476, in sc_hook_foto
-    fr.img.paste(portal_foto.latar(FOTO, rm.W, ph, (0.5, 0.42), 1.0 + 0.08 * k, 0.35), (0, 0))
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/brainwork-konten/brainwork-konten/portal_foto.py", line 78, in latar
-    out = im.resize((int(w), int(h)), Image.LANCZOS, box=(cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2))
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/PIL/Image.py", line 2440, in resize
-    return self._new(self.im.resize(size, resample, box))
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: box offset can't be negative
-RENDER GAGAL
+{"files": ["preview/out/PV-03/PV-03.mp4", "PV-03_tiktok.mp4", "PV-03_cover.jpg"], "duration": 29.7}
+{"format": "motion", "file": "preview/out/PV-03/PV-03.mp4", "files": ["preview/out/PV-03/PV-03.mp4"]}
