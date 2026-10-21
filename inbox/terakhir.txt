@@ -1,3 +1,2 @@
 1 file di inbox
-masuk: queue__BW-261015-01__threads__202610211638.json -> queue/BW-261015-01__threads.json
-selesai: 1 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
