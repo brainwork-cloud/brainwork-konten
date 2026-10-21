@@ -18,6 +18,7 @@ Hasil di folder performa/ (dibaca dashboard lewat konektor GitHub):
 Gagal di satu sumber tidak menghentikan sumber lain; angka lama dipertahankan bila sumbernya gagal.
 """
 import datetime as dt
+import glob
 import json
 import os
 import re
@@ -321,8 +322,9 @@ def ig_harian(kode, ig_id, tok):
             continue  # angka hari lama sudah tetap
         mulai = dt.datetime.combine(tgl, dt.time(0), PT)
         try:
+            # Meta mengambil hari yang end_time-nya ada di [since, until]: +1 detik supaya hari sebelumnya tidak ikut
             j = get(f"{FB}/{ig_id}/insights", {"metric": "views", "period": "day", "metric_type": "total_value",
-                                               "since": int(mulai.timestamp()), "until": int((mulai + dt.timedelta(days=1)).timestamp()),
+                                               "since": int(mulai.timestamp()) + 1, "until": int((mulai + dt.timedelta(days=1)).timestamp()),
                                                "access_token": tok}, tries=2)
         except ApiError as e:
             catatan.append(f"views harian: {e.msg[:80]}")
@@ -330,7 +332,9 @@ def ig_harian(kode, ig_id, tok):
         v = None
         for d in j.get("data", []):
             v = nilai_insight(d)
-        HARIAN.setdefault((kode, tgl.isoformat()), {"kode": kode, "akun": INFO[kode][3], "tanggal": tgl.isoformat()})["views"] = v
+        baris_h = HARIAN.setdefault((kode, tgl.isoformat()), {"kode": kode, "akun": INFO[kode][3], "tanggal": tgl.isoformat()})
+        baris_h["views"] = v
+        baris_h["vv"] = 2
     return catatan
 
 
@@ -412,7 +416,42 @@ def norm_link(u):
     return (u or "").split("?")[0].rstrip("/").lower()
 
 
-def fb_halaman(kode, pid, tok):
+FB_POST_FIELDS = ("id,created_time,message,permalink_url,status_type,shares,"
+                  "reactions.limit(0).summary(total_count),comments.limit(0).summary(total_count)")
+
+
+def fb_dari_antrian(platform_antrian):
+    """Posting Facebook yang pernah diterbitkan mesin ini (folder queue/), untuk dibaca satu per satu lewat ID-nya."""
+    out = []
+    for p in sorted(glob.glob(os.path.join("queue", f"*__{platform_antrian}.json"))):
+        try:
+            with open(p, encoding="utf-8") as f:
+                d = json.load(f)
+        except (OSError, ValueError):
+            continue
+        res = d.get("result") or {}
+        if d.get("status") == "posted" and res.get("id"):
+            out.append({"id": str(res["id"]), "url": res.get("url") or "", "waktu": d.get("posted_at") or d.get("publish_at"),
+                        "teks": d.get("message") or ""})
+    return out
+
+
+def fb_baris_reel(kode, v, tok, reel_link):
+    t = waktu(v.get("created_time"))
+    if not t or t < batas_konten():
+        return None
+    link = v.get("permalink_url") or ""
+    if link.startswith("/"):
+        link = "https://www.facebook.com" + link
+    reel_link.add(norm_link(link))
+    reel_link.add(str(v["id"]))
+    met = {"sumber": "API Facebook"}
+    met.update(fb_insight(v["id"], tok, "reel", [("views", ["blue_reels_play_count", "post_video_views"]),
+                                                  ("reach", ["post_impressions_unique"])]))
+    return baris(kode, v["id"], t, "Reels", v.get("description"), link, **met)
+
+
+def fb_halaman(kode, pid, tok, platform_antrian):
     info = get(f"{FB}/{pid}", {"fields": "id,name,username,followers_count,fan_count", "access_token": tok})
     status(kode, followers=angka(info.get("followers_count") or info.get("fan_count")))
     catat_followers(kode, info.get("followers_count") or info.get("fan_count"))
@@ -422,23 +461,38 @@ def fb_halaman(kode, pid, tok):
                       batas_konten(), "created_time")
     except ApiError as e:
         reels = []
-        catatan.append(f"Reels: {e.msg[:80]}")
+        log(f"{kode}: daftar Reels tidak terbaca ({e.msg[:80]})")
     for v in reels:
-        t = waktu(v.get("created_time"))
-        if not t or t < batas_konten():
-            continue
-        link = v.get("permalink_url") or ""
-        if link.startswith("/"):
-            link = "https://www.facebook.com" + link
-        reel_link.add(norm_link(link))
-        reel_link.add(str(v["id"]))
-        met = {"sumber": "API Facebook"}
-        met.update(fb_insight(v["id"], tok, "reel", [("views", ["blue_reels_play_count", "post_video_views"]),
-                                                      ("reach", ["post_impressions_unique"])]))
-        rows.append(baris(kode, v["id"], t, "Reels", v.get("description"), link, **met))
-    posts = semua(f"{FB}/{pid}/posts", {"fields": "id,created_time,message,permalink_url,status_type,shares,"
-                                                  "reactions.limit(0).summary(total_count),comments.limit(0).summary(total_count)",
-                                        "limit": 50, "access_token": tok}, batas_konten(), "created_time")
+        r = fb_baris_reel(kode, v, tok, reel_link)
+        if r:
+            rows.append(r)
+    posts = None
+    for edge in ("posts", "published_posts"):
+        try:
+            posts = semua(f"{FB}/{pid}/{edge}", {"fields": FB_POST_FIELDS, "limit": 50, "access_token": tok}, batas_konten(), "created_time")
+            break
+        except ApiError as e:
+            log(f"{kode}: /{edge} tidak terbaca ({e.msg[:80]})")
+    if posts is None:
+        # token tidak boleh membaca daftar posting Page: baca posting yang diterbitkan mesin ini satu per satu
+        catatan.append("hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content)")
+        posts = []
+        for q in fb_dari_antrian(platform_antrian):
+            if norm_link(q["url"]) in reel_link or q["id"] in reel_link:
+                continue
+            if "/reel/" in q["url"] or "/videos/" in q["url"]:
+                try:
+                    v = get(f"{FB}/{q['id']}", {"fields": "id,description,created_time,permalink_url", "access_token": tok}, tries=2)
+                except ApiError:
+                    v = {"id": q["id"], "description": q["teks"], "created_time": q["waktu"], "permalink_url": q["url"]}
+                r = fb_baris_reel(kode, v, tok, reel_link)
+                if r:
+                    rows.append(r)
+                continue
+            try:
+                posts.append(get(f"{FB}/{q['id']}", {"fields": FB_POST_FIELDS, "access_token": tok}, tries=2))
+            except ApiError:
+                posts.append({"id": q["id"], "created_time": q["waktu"], "message": q["teks"], "permalink_url": q["url"]})
     for p in posts:
         t = waktu(p.get("created_time"))
         if not t or t < batas_konten():
@@ -609,11 +663,16 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     LAMA_KONTEN.update({r["kunci"]: r for r in baca("konten.json") if r.get("kunci")})
     LAMA_AKUN.update({r["kode"]: r for r in baca("akun.json") if r.get("kode")})
-    HARIAN.update({(r["kode"], r["tanggal"]): r for r in baca("harian.json") if r.get("kode") and r.get("tanggal")})
+    for r in baca("harian.json"):
+        if r.get("kode") and r.get("tanggal"):
+            if r.get("vv") != 2:
+                r.pop("views", None)  # views versi awal terhitung 2 hari; ambil ulang
+            HARIAN[(r["kode"], r["tanggal"])] = r
     FOLLOWERS.update({(r["kode"], r["tanggal"]): r for r in baca("followers.json") if r.get("kode") and r.get("tanggal")})
     log(f"Mulai {NOW.astimezone(WIB):%Y-%m-%d %H:%M} WIB (Senin = segarkan semua insight: {SENIN})")
 
-    for awalan, kode_fb, kode_ig, harap in (("", "nopal-fb", "nopal-ig", "nopal.brainwork"), ("PORTAL_", "portal-fb", "portal-ig", "brainwork.id")):
+    for awalan, kode_fb, kode_ig, harap, antrian in (("", "nopal-fb", "nopal-ig", "nopal.brainwork", "facebook"),
+                                                     ("PORTAL_", "portal-fb", "portal-ig", "brainwork.id", "facebook_portal")):
         tok, pid = os.environ.get(awalan + "FB_PAGE_TOKEN"), os.environ.get(awalan + "FB_PAGE_ID")
         if not tok or not pid:
             for k in (kode_fb, kode_ig):
@@ -621,7 +680,7 @@ def main():
                 pakai_lama(k)
             continue
         jalan([kode_ig], ig_tertaut, kode_ig, pid, tok, harap)
-        jalan([kode_fb], fb_halaman, kode_fb, pid, tok)
+        jalan([kode_fb], fb_halaman, kode_fb, pid, tok, antrian)
     jalan(["nopal-threads"], threads_akun, "nopal-threads")
     for kode, handle, contoh in YOUTUBE:
         jalan([kode], youtube_kanal, kode, handle, contoh)
