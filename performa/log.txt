@@ -1,12 +1,16 @@
-Mulai 2026-10-21 15:07 WIB (Senin = segarkan semua insight: False)
+Mulai 2026-10-21 15:17 WIB (Senin = segarkan semua insight: False)
 nopal-ig: 85 posting, followers 210563 | 
-GAGAL nopal-fb: ApiError: [10] (#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature. Refer to https://developers.facebook.com/docs/apps/review/login-permissions#mana
+nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
+nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
+nopal-fb: 63 posting (Reels 100), followers 44288 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 61 posting tidak tersedia
 portal-ig: 18 posting, followers 4306 | 
-GAGAL portal-fb: ApiError: [10] (#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature. Refer to https://developers.facebook.com/docs/apps/review/login-permissions#mana
+portal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
+portal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
+portal-fb: 5 posting (Reels 2), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 1 posting tidak tersedia
 nopal-threads: 130 posting | 
 nopal-yt: 15 video dari feed (Nopal • Spesialis Bangun Sosial Media)
 sk-id-yt: 7 video dari feed (Skalarium)
 sk-en-yt: 6 video dari feed (skalarium english)
 sk-id-ig: 7 posting publik, followers 1
 sk-en-ig: 7 posting publik, followers 1
-Selesai: 275 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=GAGAL, portal-fb=GAGAL, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA
+Selesai: 343 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA

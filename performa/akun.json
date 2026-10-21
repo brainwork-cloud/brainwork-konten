@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-10-21 15:07 WIB",
+"diperbarui": "2026-10-21 15:17 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9533,
+"followers": 9534,
 "posting_total": null,
 "konten_tercatat": 130,
 "status": "OK",
@@ -66,9 +66,9 @@
 "plan": "Tab Antrian",
 "followers": 44288,
 "posting_total": null,
-"konten_tercatat": 0,
-"status": "GAGAL",
-"catatan": "[10] (#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature. Refer to https://developers.facebook.com/docs/apps/review/login-permissions#mana",
+"konten_tercatat": 63,
+"status": "SEBAGIAN",
+"catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 61 posting tidak tersedia",
 "id_kanal": ""
 },
 {
@@ -80,9 +80,9 @@
 "plan": "Tab Portal",
 "followers": 0,
 "posting_total": null,
-"konten_tercatat": 0,
-"status": "GAGAL",
-"catatan": "[10] (#10) This endpoint requires the 'pages_read_user_content' permission or the 'Page Public Content Access' feature. Refer to https://developers.facebook.com/docs/apps/review/login-permissions#mana",
+"konten_tercatat": 5,
+"status": "SEBAGIAN",
+"catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 1 posting tidak tersedia",
 "id_kanal": ""
 },
 {
