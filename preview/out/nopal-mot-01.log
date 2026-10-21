@@ -1,0 +1,5 @@
+foto: ok 1800x1200, pembesaran 1.60x
+foto: ok 1800x1013, pembesaran 1.90x
+foto: ok 1800x1013, pembesaran 1.90x
+foto: gagal memuat: HTTPError: 404 Client Error: Not Found for url: https://images.unsplash.com/photo-0000000000000-tidakada?fm=jpg&q=80&w=1800
+{"files": ["preview/out/nopal-mot-01/nopal-mot-01.mp4", "nopal-mot-01_tiktok.mp4", "nopal-mot-01_cover.jpg"], "duration": 20.5}
