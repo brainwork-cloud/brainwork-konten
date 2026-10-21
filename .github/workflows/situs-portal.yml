@@ -1,0 +1,38 @@
+name: Bangun situs Brainwork.id
+# Membangun situs berita statis di brainwork-id/ dari data portal repo ini (portal/*.json, queue/*, aset/<ID>/).
+# Tayang lewat GitHub Pages repo ini: https://brainwork-cloud.github.io/brainwork-konten/brainwork-id/
+# Berjalan tiap 30 menit (cukup untuk 1 berita per hari), manual, dan saat generator diubah. Tanpa secret.
+on:
+  schedule:
+    - cron: "11,41 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["situs-portal/**", ".github/workflows/situs-portal.yml"]
+concurrency:
+  group: situs-portal
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  bangun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - name: Bangun situs
+        run: >
+          python3 situs-portal/build.py --konten . --out brainwork-id
+          --origin https://brainwork-cloud.github.io --base /brainwork-konten/brainwork-id/ --aset-base /brainwork-konten/aset/
+      - name: Simpan bila ada perubahan
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add brainwork-id
+          if ! git diff --cached --quiet; then
+            git commit -m "situs: perbarui Brainwork.id"
+            for i in 1 2 3; do git pull --rebase && git push && break; sleep 8; done
+          fi
