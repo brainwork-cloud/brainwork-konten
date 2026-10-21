@@ -1,3 +1,0 @@
-dipakai
-3 dari 4 foto tampil. dipakai: Yazid N / Unsplash (ok 1800x1200, pembesaran 1.60x); dipakai: Vitaly Gariev / Unsplash (ok 1800x1013, pembesaran 1.90x); dipakai: 1981 Digital / Unsplash (ok 1800x1013, pembesaran 1.90x); gagal: Uji Gagal / Unsplash (gagal memuat: HTTPError: 404 Client Error: Not Found for url: https://images.unsplash.com/photo-0000000000000-tidakada?fm=jpg&q=80&w=1800)
-kredit: Foto ilustrasi: Yazid N / Unsplash, Vitaly Gariev / Unsplash, 1981 Digital / Unsplash
