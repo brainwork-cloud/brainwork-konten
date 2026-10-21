@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - run: pip install pillow numpy
+      - run: pip install pillow numpy requests
       - run: bash setup/fonts.sh
       - name: Render spec baru / yang berubah (REVISI = md5 spec beda dari aset/<ID>/.spec.md5)
         run: |

@@ -541,6 +541,11 @@ def finish(spec, subbed, out_dir, tmp, nwords):
     cover = os.path.join(out_dir, f"{spec['id']}_cover.jpg")
     run(["ffmpeg", "-y", "-ss", "0.8", "-i", final, "-frames:v", "1", "-q:v", "3", cover])
     size_mb = os.path.getsize(final) / 1e6
+    try:   # catatan foto latar cover (standar foto 21 Okt 2026): aset/<ID>/.foto.txt, dibaca publisher dan Produser
+        import foto_umum
+        foto_umum.tulis_log(os.path.join(out_dir, ".foto.txt"))
+    except Exception as e:
+        print("peringatan: log foto gagal:", e)
     shutil.rmtree(tmp, ignore_errors=True)
     print(json.dumps({"video": final, "cover": cover, "duration": round(duration(final), 2),
                       "size_mb": round(size_mb, 1), "words": nwords}))

@@ -15,7 +15,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: pip install faster-whisper pillow gdown numpy playwright
+      - run: pip install faster-whisper pillow gdown numpy requests playwright
       - run: python -m playwright install --with-deps chromium
       - run: bash setup/fonts.sh
       - uses: actions/cache@v4

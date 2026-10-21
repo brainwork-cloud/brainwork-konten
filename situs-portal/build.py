@@ -8,7 +8,7 @@ Membaca data portal dari klon repo publik brainwork-cloud/brainwork-konten:
 
 Hanya konten yang SUDAH tayang (status "posted" di Facebook atau Instagram) yang masuk situs.
 Keluaran (semua di folder --out, mis. brainwork-id/): index.html, berita/<slug>/, kategori/<slug>/, arsip/, tentang/,
-feed.xml, sitemap.xml, media/<ID>/ (salinan kartu, slide, video, thumb). Keluaran deterministik: tanpa cap waktu build,
+kerja-sama/, feed.xml, sitemap.xml, media/<ID>/ (salinan kartu, slide, video, thumb). Keluaran deterministik: tanpa cap waktu build,
 jadi bila data sama tidak ada perubahan berkas.
 
 Pakai:  python3 situs-portal/build.py --konten /path/brainwork-konten --out brainwork-id
@@ -24,6 +24,7 @@ import re
 import shutil
 import subprocess
 import unicodedata
+import urllib.parse
 from pathlib import Path
 
 try:
@@ -38,6 +39,17 @@ BULAN_PENUH = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "
 FB_URL = "https://www.facebook.com/brainwork.id"
 IG_URL = "https://www.instagram.com/brainwork.id/"
 NAMA = "Brainwork.id"
+# Kerja sama / endorsement (permintaan Naufal 21 Okt 2026): ke profil Nopal Brainwork dan WhatsApp CS Nazwa (nomor sama dengan landing page publik)
+NOPAL_URL = "https://brainwork-cloud.github.io/"
+NOPAL_IG = "https://www.instagram.com/nopal.brainwork/"
+WA_NOMOR = "6285158666066"
+WA_TAMPIL = "+62 851-5866-6066"
+WA_PESAN = "Halo Kak Nazwa, saya tertarik kerja sama/endorsement lewat Brainwork.id.\n\nNama brand:\nJenis kerja sama:\nTimeline:"
+WA_URL = f"https://wa.me/{WA_NOMOR}?text=" + urllib.parse.quote(WA_PESAN, safe="")
+IKON_WA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
+           'stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 10h8M8 13h5"/></svg>')
+IKON_PANAH = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
+              'stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>')
 TAGLINE = "Kabar marketing dan AI untuk advertiser dan pelaku usaha di Indonesia"
 
 # nilai kategori di spec (termasuk nilai lama sebelum 21 Okt 2026) -> (label tampil, slug)
@@ -291,14 +303,16 @@ class Situs:
 
     def kepala_nav(self, aktif=None):
         cur0 = ' aria-current="page"' if aktif == "semua" else ""
+        cur_k = ' aria-current="page"' if aktif == "kerja-sama" else ""
         li = [f'<li><a href="{self.u()}"{cur0}>Semua</a></li>']
         for k in self.kat_ada:
             cur = ' aria-current="page"' if aktif == k else ""
             li.append(f'<li><a href="{self.u(f"kategori/{k}/")}"{cur}>{esc(self.kat_label[k])}</a></li>')
         return ('<header class="kepala"><div class="wrap">'
                 f'<a class="merek" href="{self.u()}" aria-label="{NAMA}, beranda">{MARK}<span>Brainwork<b>.id</b></span></a>'
-                f'<nav class="ikuti" aria-label="Ikuti kami"><a href="{FB_URL}" rel="noopener">Facebook</a>'
-                f'<a href="{IG_URL}" rel="noopener">Instagram</a></nav></div></header>'
+                f'<nav class="ikuti" aria-label="Menu lain"><a class="kerja" href="{self.u("kerja-sama/")}"{cur_k}>Kerja sama</a>'
+                f'<a class="sosial" href="{FB_URL}" rel="noopener">Facebook</a>'
+                f'<a class="sosial" href="{IG_URL}" rel="noopener">Instagram</a></nav></div></header>'
                 f'<nav class="rubrik" aria-label="Rubrik"><ul>{"".join(li)}</ul></nav>')
 
     def kaki(self):
@@ -306,6 +320,8 @@ class Situs:
                 f'<p>{NAMA}: kabar marketing dan AI untuk advertiser dan pelaku usaha di Indonesia. Satu berita per hari, dengan sumber yang bisa dibuka.</p>'
                 f'<ul><li><a href="{self.u("tentang/")}">Tentang dan cara kami memeriksa</a></li>'
                 f'<li><a href="{self.u("arsip/")}">Arsip</a></li><li><a href="{self.u("feed.xml")}">RSS</a></li>'
+                f'<li><a href="{self.u("kerja-sama/")}">Kerja sama</a></li>'
+                f'<li><a href="{WA_URL}" rel="noopener" target="_blank">Hubungi CS Nazwa</a></li>'
                 f'<li><a href="{FB_URL}" rel="noopener">Facebook</a></li><li><a href="{IG_URL}" rel="noopener">Instagram</a></li></ul>'
                 '</div></footer>')
 
@@ -355,6 +371,53 @@ class Situs:
 """
 
     # ------------------------------------------------------------ komponen
+    def kontak(self):
+        return (f'<div class="kontak-daftar">'
+                f'<a class="kontak wa" href="{WA_URL}" rel="noopener" target="_blank">'
+                f'<span><b>Chat CS Nazwa</b><small>WhatsApp {WA_TAMPIL}</small></span>{IKON_WA}</a>'
+                f'<a class="kontak" href="{NOPAL_URL}" rel="noopener" target="_blank">'
+                f'<span><b>Kunjungi Nopal Brainwork</b><small>Profil, produk, dan kerja sama</small></span>{IKON_PANAH}</a>'
+                f'<p class="catatan-k">Pesan pembuka WhatsApp sudah disiapkan. Tinggal isi nama brand, jenis kerja sama, dan timeline.</p>'
+                f'</div>')
+
+    def kerjasama(self, penuh=True):
+        """Blok promosi kerja sama (gaya situs Skalarium): kunjungi Nopal Brainwork atau chat CS Nazwa. Dipakai di beranda,
+        halaman berita (ringkas), dan halaman Kerja sama."""
+        if penuh:
+            teks = ('<h2 id="judul-kerjasama">Mau kolaborasi, endorsement, atau bikin konten bareng?</h2>'
+                    f'<p class="lede-k">{NAMA} adalah bagian dari Nopal Brainwork. Kalau brand atau bisnismu ingin tampil bareng kami, '
+                    'kunjungi Nopal untuk melihat profil dan produknya, atau chat langsung CS Nazwa di WhatsApp.</p>'
+                    '<ul class="pilihan"><li>Endorsement dan paid promote</li><li>Kolaborasi konten</li><li>Event dan partnership</li></ul>')
+        else:
+            teks = ('<h2 id="judul-kerjasama">Mau bikin konten bareng atau endorsement?</h2>'
+                    '<p class="lede-k">Kunjungi Nopal Brainwork atau chat CS Nazwa di WhatsApp.</p>')
+        return (f'<section class="kerjasama{"" if penuh else " ringkas"}" aria-labelledby="judul-kerjasama">'
+                f'<div class="kerjasama-teks">{teks}</div>{self.kontak()}</section>')
+
+    def halaman_kerjasama(self):
+        isi = (f'<div class="halaman-k"><h1>Kerja sama dan endorsement</h1>'
+               f'<p class="lede-k">{NAMA} adalah bagian dari Nopal Brainwork, kreator konten digital marketing dan AI. '
+               'Kalau kamu ingin brand atau bisnismu tampil bareng kami, mulai dari salah satu jalur di bawah.</p></div>'
+               + f'<div class="halaman-k kontak-halaman">{self.kontak()}</div>' +
+               '<div class="teks halaman-k">'
+               '<h2>Yang bisa dikerjakan bareng</h2>'
+               '<ul><li>Endorsement dan paid promote di akun Nopal Brainwork.</li>'
+               '<li>Kolaborasi konten: konten edukasi atau tutorial bareng brand-mu.</li>'
+               '<li>Event dan partnership.</li></ul>'
+               '<h2>Cara mulai</h2>'
+               '<ol><li>Klik <b>Chat CS Nazwa</b>. Pesan pembukanya sudah disiapkan.</li>'
+               '<li>Isi nama brand, jenis kerja sama, dan timeline yang kamu mau.</li>'
+               '<li>Kirim. CS Nazwa akan membalas lewat WhatsApp.</li></ol>'
+               '<h2>Berita tetap berita</h2>'
+               f'<p>Kerja sama tidak memengaruhi isi berita di {NAMA}. Konten kerja sama selalu diberi label dan dipisah dari berita.</p>'
+               '<h2>Pernah berkolaborasi dengan</h2>'
+               '<p>Chandra Asri, Bluebird, Aoklandz, ZenitLand, Purwadhika, Kemenag, FYP Management, Kelas.work, dan Slice.</p>'
+               f'<p>Mau kenal Nopal lebih dulu? <a href="{NOPAL_URL}" rel="noopener" target="_blank">Buka profil Nopal Brainwork</a> '
+               f'atau lihat akunnya di <a href="{NOPAL_IG}" rel="noopener" target="_blank">Instagram</a>.</p></div>')
+        return self.halaman("kerja-sama/", "Kerja sama dan endorsement",
+                            f"Mau kolaborasi, endorsement, atau bikin konten bareng {NAMA} dan Nopal Brainwork? Kunjungi Nopal atau chat CS Nazwa di WhatsApp.",
+                            isi, aktif="kerja-sama")
+
     def jalur(self, it):
         if not it["status"]:
             return ""
@@ -407,7 +470,7 @@ class Situs:
         isi = (f'{sorot}<div class="dua"><section aria-label="Berita terbaru"><h2 class="bagian">Terbaru</h2>'
                f'<ul class="daftar">{daftar}</ul>'
                + (f'<p><a href="{self.u("arsip/")}">Lihat semua berita</a></p>' if len(its) > 11 else "")
-               + f'</section>{samping}</div>')
+               + f'</section>{samping}</div>' + self.kerjasama(True))
         ld = {"@context": "https://schema.org", "@type": "WebSite", "name": NAMA, "url": self.abs(),
               "inLanguage": "id", "description": TAGLINE}
         return self.halaman("", NAMA, TAGLINE, isi, aktif="semua", og_img=a["foto_url"], jsonld=ld)
@@ -465,6 +528,7 @@ class Situs:
                f'<div class="artikel-media">{media}</div>'
                f'<div class="artikel-badan"><div class="isi"><h2>Poin utama</h2><ul class="poin">{poin}</ul>{lain}{artinya}</div>'
                f'{sumber}{asal}</div></article>')
+        isi += self.kerjasama(False)
         # terkait
         lain_it = [i for i in self.items if i["id"] != it["id"]]
         serupa = [i for i in lain_it if i["kslug"] == it["kslug"]][:3]
@@ -517,6 +581,8 @@ class Situs:
 <p>{NAMA} dikelola lewat alur otomatis berbantuan AI: mencari berita, menulis ringkasan, memeriksa fakta, lalu menerbitkannya di situs ini serta di Facebook dan Instagram. Redaksi meninjau hasilnya setiap pekan.</p>
 <h2>Gambar</h2>
 <p>Ilustrasi pada kartu dibuat otomatis dan ditandai "ILUSTRASI"; itu bukan tangkapan layar produk. Bila memakai foto, kreditnya kami cantumkan.</p>
+<h2>Kerja sama dan endorsement</h2>
+<p>{NAMA} adalah bagian dari Nopal Brainwork. Untuk kolaborasi, endorsement, atau bikin konten bareng, lihat halaman <a href="{self.u("kerja-sama/")}">Kerja sama</a>. Kerja sama tidak memengaruhi isi berita, dan konten kerja sama selalu diberi label.</p>
 <h2>Menemukan kesalahan?</h2>
 <p>Kirim pesan lewat <a href="{FB_URL}" rel="noopener">Facebook</a> atau <a href="{IG_URL}" rel="noopener">Instagram</a> {NAMA}. Laporan koreksi ditinjau dalam review mingguan.</p>
 </div>"""
@@ -538,7 +604,7 @@ class Situs:
 
     def sitemap(self):
         urls = [(self.abs(), self.items[0]["waktu"].date().isoformat() if self.items else None),
-                (self.abs("tentang/"), None), (self.abs("arsip/"), self.items[0]["waktu"].date().isoformat() if self.items else None)]
+                (self.abs("tentang/"), None), (self.abs("kerja-sama/"), None), (self.abs("arsip/"), self.items[0]["waktu"].date().isoformat() if self.items else None)]
         for k in self.kat_ada:
             urls.append((self.abs(f"kategori/{k}/"), None))
         for it in self.items:
@@ -566,7 +632,7 @@ def main():
     out = Path(a.out)
     here = Path(__file__).resolve().parent
     items = muat_item(a.konten, out)
-    for d in ("berita", "kategori", "arsip", "tentang"):
+    for d in ("berita", "kategori", "arsip", "tentang", "kerja-sama"):
         shutil.rmtree(out / d, ignore_errors=True)
     out.mkdir(parents=True, exist_ok=True)
     salin_media(items, out, a.aset_base or None)
@@ -584,6 +650,7 @@ def main():
         tulis(out / "kategori" / k / "index.html", s.kategori(k))
     tulis(out / "arsip" / "index.html", s.arsip())
     tulis(out / "tentang" / "index.html", s.tentang())
+    tulis(out / "kerja-sama" / "index.html", s.halaman_kerjasama())
     tulis(out / "feed.xml", s.feed())
     tulis(out / "sitemap.xml", s.sitemap())
     css = (here / "situs.css").read_text("utf-8")

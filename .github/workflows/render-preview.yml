@@ -1,4 +1,4 @@
-name: Render Pratinjau Portal (uji foto/ilustrasi, tidak diposting)
+name: Render Pratinjau (uji foto/ilustrasi portal dan nopal-car-*/nopal-mot-*, tidak diposting)
 on:
   push:
     paths: ["preview/*.json"]
@@ -24,7 +24,11 @@ jobs:
             [ -e "$f" ] || continue
             id=$(basename "$f" .json)
             rm -rf "preview/out/$id"
-            python render_portal.py "$f" "preview/out/$id" > "preview/out/$id.log" 2>&1 || echo "RENDER GAGAL" >> "preview/out/$id.log"
+            case "$id" in
+              nopal-car-*) python render_carousel.py "$f" "preview/out/$id" > "preview/out/$id.log" 2>&1 || echo "RENDER GAGAL" >> "preview/out/$id.log" ;;
+              nopal-mot-*) python render_motion.py "$f" "preview/out/$id" > "preview/out/$id.log" 2>&1 || echo "RENDER GAGAL" >> "preview/out/$id.log" ;;
+              *) python render_portal.py "$f" "preview/out/$id" > "preview/out/$id.log" 2>&1 || echo "RENDER GAGAL" >> "preview/out/$id.log" ;;
+            esac
           done
       - name: Simpan hasil
         run: |

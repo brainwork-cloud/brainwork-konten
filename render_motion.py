@@ -18,6 +18,10 @@ Format motion/<ID>.json:
   ]
 }
 Aturan: 3-6 scene, total 15-30 detik, scene terakhir "end" (>= 3 dtk). Teks di antara **...** berwarna emas.
+Foto latar (standar foto 21 Okt 2026, lihat foto_umum.py): scene hook/stat/points/statement/icon/flow/steps/vs boleh punya
+  "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "Nama / Unsplash", "jenis": "stok"}
+  Foto dimuat saat render (butuh internet; di sandbox tanpa akses hasilnya tampilan polos), diredupkan, zoom pelan, kredit tercetak.
+  Hasil dicatat di <folder output>/.foto.txt. Foto gagal/tidak lolos = scene tampil polos seperti biasa.
 Area aman Reels/TikTok: teks berada di x 90-960, y 250-1500.
 """
 import sys, os, json, re, math, subprocess, wave
@@ -25,6 +29,12 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
+try:   # foto latar opsional; tanpa numpy/requests render tetap jalan tanpa foto
+    import foto_umum
+except Exception:
+    foto_umum = None
 FONT_DIR = os.path.join(HERE, "fonts")
 W, H, FPS = 1080, 1920, 30
 X0, XW = 90, 880
@@ -345,6 +355,8 @@ def render_frame(spec, T):
     for s in spec["scenes"]:
         if T < t0 + s["dur"] or s is spec["scenes"][-1]:
             fr = Frame(T)
+            if s.get("foto") and foto_umum is not None:
+                foto_umum.latar_video(fr.img, s["foto"], T - t0, s["dur"], s["type"])   # gagal = tetap tampilan polos
             SCENES[s["type"]](fr, s, T - t0, s["dur"])
             return fr.img
         t0 += s["dur"]
@@ -441,6 +453,8 @@ def main():
                     "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", os.path.join(out, f"{sid}_tiktok.mp4")], check=True)
     cover_t = min(sc[0]["dur"] - 0.2, 2.6)
     render_frame(spec, cover_t).save(os.path.join(out, f"{sid}_cover.jpg"), quality=90)
+    if foto_umum is not None:
+        foto_umum.tulis_log(os.path.join(out, ".foto.txt"))
     print(json.dumps({"files": [mp4, f"{sid}_tiktok.mp4", f"{sid}_cover.jpg"], "duration": total}))
 
 

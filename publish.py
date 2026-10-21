@@ -118,7 +118,7 @@ def _fb_wait(vid, tok, phase, tries=90):
 
 def facebook_post(item, portal=False):
     pid, tok = fb_page(portal)
-    text = item.get("message", "") or ""
+    text = _sesuaikan_kredit_foto(item, item.get("message", "") or "")
     if item.get("video_url"):  # Facebook Reels dari file publik (raw.githubusercontent)
         s = requests.post(f"{FB}/{pid}/video_reels", data={"upload_phase": "start", "access_token": tok}, timeout=60)
         s.raise_for_status()
@@ -197,6 +197,20 @@ def _sesuaikan_kredit_foto(item, text):
     if baris and baris[0].strip().startswith("diganti"):
         sisa = [l for l in text.split("\n") if not re.match(r"^\s*Foto( ilustrasi)?\s*:", l)]
         text = re.sub(r"\n{3,}", "\n\n", "\n".join(sisa)).strip()
+    else:
+        # konten @nopal.brainwork bisa memakai beberapa foto: baris 3 ".foto.txt" ("kredit: ...") memuat kredit foto yang benar-benar tampil;
+        # baris kredit di caption diganti dengan itu (baris kredit pertama diganti, sisanya dibuang). Portal tidak punya baris itu.
+        kr = next((l.split(":", 1)[1].strip() for l in baris[1:] if l.lower().startswith("kredit:")), "")
+        if kr:
+            hasil, taruh = [], False
+            for l in text.split("\n"):
+                if re.match(r"^\s*Foto( ilustrasi)?\s*:", l):
+                    if not taruh:
+                        hasil.append(kr)
+                        taruh = True
+                    continue
+                hasil.append(l)
+            text = "\n".join(hasil)
     return text
 
 
@@ -289,7 +303,7 @@ def youtube_post(item):
                         scopes=["https://www.googleapis.com/auth/youtube.upload"])
     yt = build("youtube", "v3", credentials=creds)
     title = item["title"][:100]
-    desc = item.get("description", "")
+    desc = _sesuaikan_kredit_foto(item, item.get("description", ""))
     if "#shorts" not in (title + desc).lower():
         desc += "\n#shorts"
     body = {"snippet": {"title": title, "description": desc, "tags": item.get("tags", []), "categoryId": "27",

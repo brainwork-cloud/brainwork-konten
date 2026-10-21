@@ -17,11 +17,21 @@ Format spec.json:
   ]
 }
 Teks di antara **...** dicetak warna emas.
+Foto latar (standar foto 21 Okt 2026, lihat foto_umum.py): slide cover/point/list/statement/cta boleh punya
+  "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "Nama / Unsplash", "jenis": "stok"}
+  Foto dimuat saat render (butuh internet), diredupkan sebagai latar, kredit tercetak di atas footer. Slide "visual" tidak berfoto.
+  Foto gagal/tidak lolos = slide tampil dengan latar grid biasa. Hasil dicatat di <folder output>/.foto.txt.
 """
 import sys, os, json, re
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+if HERE not in sys.path:
+    sys.path.insert(0, HERE)
+try:   # foto latar opsional; tanpa numpy/requests render tetap jalan tanpa foto
+    import foto_umum
+except Exception:
+    foto_umum = None
 FONT_DIR = os.path.join(HERE, "fonts")
 W, H = 1080, 1350
 M = 84  # margin
@@ -98,19 +108,31 @@ def fit(d, text, weight, sizes, maxw, max_lines):
     return font(weight, sizes[-1])
 
 
+FOTO_SLIDE = None   # spec["foto"] slide yang sedang dirender (diset main); base() memakainya sebagai latar
+
+
 def base(idx, total):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    # gradien halus atas
-    for yy in range(0, 700):
-        a = 1 - yy / 700
-        c = tuple(int(BG[i] + (BG2[i] - BG[i]) * a) for i in range(3))
-        d.line([(0, yy), (W, yy)], fill=c)
-    # grid
-    for gx in range(0, W, 90):
-        d.line([(gx, 0), (gx, H - 130)], fill=GRID, width=1)
-    for gy in range(0, H - 130, 90):
-        d.line([(0, gy), (W, gy)], fill=GRID, width=1)
+    kredit = None
+    if FOTO_SLIDE and foto_umum is not None:
+        kredit = foto_umum.latar_slide(img, FOTO_SLIDE, H - 130)
+    if kredit is None:
+        # gradien halus atas
+        for yy in range(0, 700):
+            a = 1 - yy / 700
+            c = tuple(int(BG[i] + (BG2[i] - BG[i]) * a) for i in range(3))
+            d.line([(0, yy), (W, yy)], fill=c)
+        # grid
+        for gx in range(0, W, 90):
+            d.line([(gx, 0), (gx, H - 130)], fill=GRID, width=1)
+        for gy in range(0, H - 130, 90):
+            d.line([(0, gy), (W, gy)], fill=GRID, width=1)
+    else:   # kredit foto kecil, rata kanan di atas footer
+        kf = font("reg", 24)
+        while kf.size > 17 and d.textlength(kredit, font=kf) > W - 2 * M:
+            kf = font("reg", kf.size - 1)
+        d.text((W - M, H - 130 - 18), kredit, font=kf, fill=(196, 188, 214), anchor="rd")
     # footer
     d.rectangle([0, H - 130, W, H], fill=(8, 6, 16))
     d.text((M, H - 88), HANDLE, font=font("semi", 30), fill=PURPLE_L)
@@ -363,11 +385,15 @@ def main():
     if not 2 <= len(slides) <= 10:
         sys.exit("Carousel IG wajib 2-10 slide")
     files = []
+    global FOTO_SLIDE
     for i, s in enumerate(slides, 1):
+        FOTO_SLIDE = s.get("foto") if s["type"] != "visual" else None
         img = RENDER[s["type"]](s, spec.get("kicker"), i, len(slides))
         p = os.path.join(out, f"{spec['id']}_{i:02d}.jpg")
         img.save(p, "JPEG", quality=90, optimize=True)
         files.append(p)
+    if foto_umum is not None:
+        foto_umum.tulis_log(os.path.join(out, ".foto.txt"))
     print(json.dumps({"files": files}))
 
 
