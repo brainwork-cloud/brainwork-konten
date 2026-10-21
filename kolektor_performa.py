@@ -630,6 +630,87 @@ def ig_publik(kode, username):
     log(f"{kode}: {len(rows)} posting publik, followers {ST[kode].get('followers')}")
 
 
+# ---------- salinan untuk dashboard (komentar issue) ----------
+# Konektor GitHub di dashboard hanya meneruskan teks jawaban, bukan isi file. Jadi data juga ditulis sebagai komentar
+# di satu issue (JSON utuh per komentar, dipecah per baris supaya tiap komentar < 60 rb karakter). Dashboard membaca
+# semua komentar dengan satu panggilan issue_read get_comments.
+JUDUL_ISSUE = "Data dashboard performa (otomatis, jangan diedit)"
+PENULIS_BOT = "github-actions[bot]"  # akun yang dipakai GITHUB_TOKEN
+GH = "https://api.github.com"
+
+
+def gh(metode, jalur, **kw):
+    tok, repo = os.environ.get("GITHUB_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
+    r = SES.request(metode, f"{GH}/repos/{repo}{jalur}", timeout=45,
+                    headers={"Authorization": f"Bearer {tok}", "Accept": "application/vnd.github+json",
+                             "X-GitHub-Api-Version": "2022-11-28"}, **kw)
+    if r.status_code >= 400:
+        raise ApiError(r.status_code, bersih(r.text[:200]))
+    return r.json() if r.text.strip() else {}
+
+
+def bagian_data(nama, rows, batas=60000):
+    """Pecah rows jadi beberapa JSON utuh (tiap bagian < batas karakter)."""
+    paket, isi = [], []
+    for r in rows:
+        isi.append(r)
+        if len(json.dumps(isi, ensure_ascii=False, separators=(",", ":"))) > batas - 400 and len(isi) > 1:
+            paket.append(isi[:-1])
+            isi = [r]
+    paket.append(isi)
+    waktu_teks = NOW.astimezone(WIB).strftime("%Y-%m-%d %H:%M WIB")
+    out = []
+    for i, p in enumerate(paket, 1):
+        obj = {"file": nama, "part": i, "parts": len(paket), "diperbarui": waktu_teks, "rows": p}
+        badan = (f"performa {nama} {i}/{len(paket)} · {waktu_teks}\n```json\n"
+                 + json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n```")
+        out.append((f"{nama}:{i}", badan))
+    return out
+
+
+def terbitkan_ke_issue(data):
+    if not os.environ.get("GITHUB_TOKEN") or not os.environ.get("GITHUB_REPOSITORY"):
+        log("Issue data dilewati (GITHUB_TOKEN tidak ada; bukan di Actions)")
+        return
+    f_issue = os.path.join(OUT, "issue.txt")
+    nomor = None
+    try:
+        nomor = int(open(f_issue, encoding="utf-8").read().strip())
+    except (OSError, ValueError):
+        for iss in gh("GET", "/issues", params={"state": "all", "per_page": 100, "creator": PENULIS_BOT}):
+            if iss.get("title") == JUDUL_ISSUE and not iss.get("pull_request"):
+                nomor = iss["number"]
+                break
+    if not nomor:
+        iss = gh("POST", "/issues", json={"title": JUDUL_ISSUE, "body": (
+            "Issue ini diisi otomatis oleh workflow **Data performa untuk dashboard** (`performa.yml`) 2x sehari.\n\n"
+            "Tiap komentar berisi sebagian data performa (JSON) yang dibaca dashboard *Pantauan Performa Nopal Brainwork* "
+            "lewat konektor GitHub. Jangan diedit atau dihapus; komentar diperbarui sendiri tiap run.")})
+        nomor = iss["number"]
+        log(f"Issue data dibuat: #{nomor}")
+    with open(f_issue, "w", encoding="utf-8") as f:
+        f.write(f"{nomor}\n")
+    lama = {}
+    for c in gh("GET", f"/issues/{nomor}/comments", params={"per_page": 100}):
+        # hanya komentar milik workflow ini; komentar orang lain diabaikan (dashboard juga menyaring penulis)
+        if (c.get("user") or {}).get("login") != PENULIS_BOT:
+            continue
+        m = re.match(r"performa (\w+) (\d+)/\d+", c.get("body") or "")
+        if m:
+            lama[f"{m.group(1)}:{m.group(2)}"] = c["id"]
+    perlu = []
+    for nama, rows in data:
+        perlu.extend(bagian_data(nama, rows))
+    for kunci, badan in perlu:
+        if kunci in lama:
+            gh("PATCH", f"/issues/comments/{lama.pop(kunci)}", json={"body": badan})
+        else:
+            gh("POST", f"/issues/{nomor}/comments", json={"body": badan})
+    for kunci, cid in lama.items():  # bagian yang tidak dipakai lagi
+        gh("DELETE", f"/issues/comments/{cid}")
+    log(f"Issue data #{nomor}: {len(perlu)} komentar diperbarui")
+
+
 # ---------- simpan ----------
 def baca(nama):
     try:
@@ -719,6 +800,17 @@ def main():
     batas_riwayat = (HARI_INI - dt.timedelta(days=RIWAYAT_MAKS)).isoformat()
     tulis("harian.json", sorted((r for r in HARIAN.values() if r["tanggal"] >= batas_riwayat), key=lambda r: (r["kode"], r["tanggal"])))
     tulis("followers.json", sorted((r for r in FOLLOWERS.values() if r["tanggal"] >= batas_riwayat), key=lambda r: (r["kode"], r["tanggal"])))
+
+    harian_rows = sorted((r for r in HARIAN.values() if r["tanggal"] >= batas_riwayat), key=lambda r: (r["kode"], r["tanggal"]))
+    batas_dash = (HARI_INI - dt.timedelta(days=HARI_HARIAN + 7)).isoformat()
+    try:
+        terbitkan_ke_issue([
+            ("akun", [{k: v for k, v in a.items() if k != "id_kanal"} for a in akun]),
+            ("harian", [{k: r.get(k) for k in ("kode", "tanggal", "views", "reach", "followers_baru")} for r in harian_rows if r["tanggal"] >= batas_dash]),
+            ("konten", [{k: v for k, v in r.items() if k != "sumber"} for r in rows]),
+        ])
+    except Exception as e:  # dashboard memakai data lama bila gagal; file JSON di repo tetap diperbarui
+        log(f"GAGAL memperbarui issue data: {type(e).__name__}: {bersih(e)[:200]}")
 
     ringkas = ", ".join(f"{a['kode']}={a['status']}" for a in akun)
     log(f"Selesai: {len(rows)} konten. {ringkas}")
