@@ -1,0 +1,50 @@
+{
+  "_catatan": "Sumber tunggal daftar proyek untuk EMPAT situs: link bio Nopal Brainwork, NolKaryawan, Skalarium, dan Brainwork.id. Ubah di sini saja. Nopal, NolKaryawan, dan Skalarium membacanya langsung dari Pages lewat ekosistem/ekosistem.js (berubah dalam beberapa menit setelah push, cache Pages maks. 10 menit); Brainwork.id memakainya saat dibangun ulang (maks. 30 menit). Tiap situs menyembunyikan proyek dirinya sendiri (kolom id: nopal, nolkaryawan, skalarium, brainwork-id). URL harus https. 'catatan' dan 'aksi2.hanya_di' tampil hanya di situs yang disebut. Tulis netral tanpa kata 'aku' supaya cocok di semua situs. Urutan di sini = urutan tampil.",
+  "judul": {
+    "bawaan": "Proyek lain dari Nopal Brainwork",
+    "nopal": "Lagi aku bangun"
+  },
+  "proyek": [
+    {
+      "id": "brainwork-id",
+      "nama": "Brainwork.id",
+      "jenis": "Portal berita",
+      "deskripsi": "Kabar marketing dan AI untuk advertiser dan pelaku usaha. Dari cari berita, cek sumber, tulis kartu, sampai posting ke Facebook, Instagram, dan situsnya dikerjakan agen AI tiap hari, lalu ditinjau manusia tiap pekan.",
+      "url": "https://brainwork-cloud.github.io/brainwork-konten/brainwork-id/",
+      "tombol": "Baca Brainwork.id"
+    },
+    {
+      "id": "skalarium",
+      "nama": "Skalarium",
+      "jenis": "Mesin konten AI",
+      "deskripsi": "Channel video edukasi, Indonesia dan English, yang riset, naskah, suara, animasi, sampai postingnya dikerjakan agen AI. Tiap video tinggal disetujui.",
+      "catatan": {
+        "nopal": "Mau punya mesin seperti ini? Masuk daftar tunggunya."
+      },
+      "url": "https://brainwork-cloud.github.io/skalarium/",
+      "tombol": "Lihat Skalarium",
+      "aksi2": {
+        "teks": "Kirim DM “MESIN”",
+        "url": "https://ig.me/m/nopal.brainwork",
+        "label": "dm-mesin",
+        "hanya_di": ["nopal"]
+      }
+    },
+    {
+      "id": "nolkaryawan",
+      "nama": "NolKaryawan",
+      "jenis": "Brand produk dan kelas",
+      "deskripsi": "Brand untuk bisnis yang jalan tanpa karyawan, dengan tim kerja AI: pack prompt untuk UMKM dan kelas offline 1 hari (5 kursi per kelas) untuk membangun perusahaan nol karyawan.",
+      "url": "https://brainwork-cloud.github.io/nolkaryawan/",
+      "tombol": "Lihat NolKaryawan"
+    },
+    {
+      "id": "nopal",
+      "nama": "Nopal Brainwork",
+      "jenis": "Brand personal",
+      "deskripsi": "Konten, produk, dan kontak kerja sama seputar ads dan AI untuk bisnis yang ingin bersaing di media sosial.",
+      "url": "https://brainwork-cloud.github.io/",
+      "tombol": "Buka Nopal Brainwork"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["situs-portal/**", ".github/workflows/situs-portal.yml"]
+    paths: ["situs-portal/**", "ekosistem.json", "ekosistem/**", ".github/workflows/situs-portal.yml"]
 concurrency:
   group: situs-portal
   cancel-in-progress: false

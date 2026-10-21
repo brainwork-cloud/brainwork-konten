@@ -23,9 +23,13 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import unicodedata
 import urllib.parse
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "ekosistem"))
+import blok as ekoblok  # blok 'proyek lain' bersama (ekosistem/blok.py; sumber: ekosistem.json)
 
 try:
     from PIL import Image
@@ -46,6 +50,11 @@ WA_NOMOR = "6285158666066"
 WA_TAMPIL = "+62 851-5866-6066"
 WA_PESAN = "Halo Kak Nazwa, saya tertarik kerja sama/endorsement lewat Brainwork.id.\n\nNama brand:\nJenis kerja sama:\nTimeline:"
 WA_URL = f"https://wa.me/{WA_NOMOR}?text=" + urllib.parse.quote(WA_PESAN, safe="")
+# Sorotan "dibangun otomatis dengan AI, mau juga?" (permintaan Naufal 21 Okt 2026): masuk daftar tunggu mesin lewat CS Nazwa
+WA_AI_PESAN = "Halo Kak Nazwa, saya mau masuk daftar tunggu mesin konten/situs otomatis seperti Brainwork.id.\n\nNama:\nBisnis atau niche:\nYang mau diotomasi:"
+WA_AI_URL = f"https://wa.me/{WA_NOMOR}?text=" + urllib.parse.quote(WA_AI_PESAN, safe="")
+SITUS_ID = "brainwork-id"   # id situs ini di ekosistem.json (proyek ini disembunyikan dari daftar "proyek lain")
+SKALARIUM_MESIN = "https://brainwork-cloud.github.io/skalarium/#mesin"   # penjelasan alur agen AI (contoh mesin yang sama)
 IKON_WA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
            'stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 10h8M8 13h5"/></svg>')
 IKON_PANAH = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" '
@@ -288,10 +297,11 @@ def salin_media(items, out, aset_base=None):
 
 # ---------------------------------------------------------------- kerangka halaman
 class Situs:
-    def __init__(self, origin, base, items):
+    def __init__(self, origin, base, items, eko=None):
         self.origin = origin.rstrip("/")
         self.base = base if base.endswith("/") else base + "/"
         self.items = items
+        self.eko = eko or {"judul": {}, "proyek": []}
         self.kat_ada = [k for k in URUTAN_KAT if any(i["kslug"] == k for i in items)]
         self.kat_label = {s: l for l, s in KATEGORI.values()}
 
@@ -323,7 +333,38 @@ class Situs:
                 f'<li><a href="{self.u("kerja-sama/")}">Kerja sama</a></li>'
                 f'<li><a href="{WA_URL}" rel="noopener" target="_blank">Hubungi CS Nazwa</a></li>'
                 f'<li><a href="{FB_URL}" rel="noopener">Facebook</a></li><li><a href="{IG_URL}" rel="noopener">Instagram</a></li></ul>'
+                + self.kaki_proyek() +
                 '</div></footer>')
+
+    def kaki_proyek(self):
+        ps = ekoblok.daftar(self.eko, SITUS_ID)
+        if not ps:
+            return ""
+        li = "".join(f'<li><a href="{esc(p["url"])}" rel="noopener" target="_blank">{esc(p["nama"])}</a></li>' for p in ps)
+        return f'<ul class="kaki-proyek" aria-label="Proyek lain dari Nopal Brainwork"><li class="lbl">Proyek lain:</li>{li}</ul>'
+
+    def proyek_lain(self):
+        """Blok kartu proyek lain (sama dengan di situs Nopal, NolKaryawan, dan Skalarium; sumber ekosistem.json)."""
+        return ekoblok.html_blok(self.eko, SITUS_ID)
+
+    def otomasi(self, ringkas=False):
+        """Sorotan: situs ini dibangun dan dijalankan otomatis oleh AI, plus ajakan 'mau juga bangun seperti ini?'
+        (permintaan Naufal 21 Okt 2026). Ajakan masuk daftar tunggu lewat CS Nazwa; alur kerja mesin dijelaskan di Skalarium."""
+        if ringkas:
+            teks = ('<h2 id="judul-otomasi">Dibangun dan dijalankan otomatis oleh AI</h2>'
+                    '<p class="lede-o">Agen AI mengerjakan semuanya tiap hari. Manusia meninjau tiap pekan, bukan tiap posting.</p>')
+        else:
+            alur = ["Cari berita", "Periksa sumber", "Buat kartu dan video", "Posting ke Facebook dan Instagram", "Situs ini terisi sendiri"]
+            teks = ('<h2 id="judul-otomasi">Dibangun dan dijalankan otomatis oleh AI</h2>'
+                    f'<p class="lede-o">Dari cari berita sampai situs ini terisi, semuanya dikerjakan agen AI tiap hari. '
+                    'Manusia meninjau tiap pekan, bukan tiap posting.</p>'
+                    f'<ol class="alur" aria-label="Alur kerja otomatis">{"".join(f"<li>{esc(t)}</li>" for t in alur)}</ol>')
+        ajak = ('<h3>Mau juga bangun mesin seperti ini?</h3>'
+                '<p>Dibuat oleh Nopal Brainwork. Masuk daftar tunggu lewat CS Nazwa, atau lihat dulu cara kerja mesinnya di Skalarium.</p>'
+                f'<div class="aksi"><a class="tombol wa" href="{WA_AI_URL}" rel="noopener" target="_blank">Masuk daftar tunggu{IKON_WA}</a>'
+                f'<a class="tombol tipis" href="{SKALARIUM_MESIN}" rel="noopener" target="_blank">Lihat cara kerjanya</a></div>')
+        return (f'<section class="otomasi{" ringkas" if ringkas else ""}" aria-labelledby="judul-otomasi">'
+                f'<div class="otomasi-teks">{teks}</div><div class="otomasi-ajak">{ajak}</div></section>')
 
     def halaman(self, path, title, desc, isi, aktif=None, og_img=None, tipe="website", jsonld=None):
         canon = self.abs(path)
@@ -413,7 +454,8 @@ class Situs:
                '<h2>Pernah berkolaborasi dengan</h2>'
                '<p>Chandra Asri, Bluebird, Aoklandz, ZenitLand, Purwadhika, Kemenag, FYP Management, Kelas.work, dan Slice.</p>'
                f'<p>Mau kenal Nopal lebih dulu? <a href="{NOPAL_URL}" rel="noopener" target="_blank">Buka profil Nopal Brainwork</a> '
-               f'atau lihat akunnya di <a href="{NOPAL_IG}" rel="noopener" target="_blank">Instagram</a>.</p></div>')
+               f'atau lihat akunnya di <a href="{NOPAL_IG}" rel="noopener" target="_blank">Instagram</a>.</p></div>'
+               + self.proyek_lain())
         return self.halaman("kerja-sama/", "Kerja sama dan endorsement",
                             f"Mau kolaborasi, endorsement, atau bikin konten bareng {NAMA} dan Nopal Brainwork? Kunjungi Nopal atau chat CS Nazwa di WhatsApp.",
                             isi, aktif="kerja-sama")
@@ -470,7 +512,7 @@ class Situs:
         isi = (f'{sorot}<div class="dua"><section aria-label="Berita terbaru"><h2 class="bagian">Terbaru</h2>'
                f'<ul class="daftar">{daftar}</ul>'
                + (f'<p><a href="{self.u("arsip/")}">Lihat semua berita</a></p>' if len(its) > 11 else "")
-               + f'</section>{samping}</div>' + self.kerjasama(True))
+               + f'</section>{samping}</div>' + self.otomasi() + self.proyek_lain() + self.kerjasama(True))
         ld = {"@context": "https://schema.org", "@type": "WebSite", "name": NAMA, "url": self.abs(),
               "inLanguage": "id", "description": TAGLINE}
         return self.halaman("", NAMA, TAGLINE, isi, aktif="semua", og_img=a["foto_url"], jsonld=ld)
@@ -581,6 +623,8 @@ class Situs:
 <p>{NAMA} dikelola lewat alur otomatis berbantuan AI: mencari berita, menulis ringkasan, memeriksa fakta, lalu menerbitkannya di situs ini serta di Facebook dan Instagram. Redaksi meninjau hasilnya setiap pekan.</p>
 <h2>Gambar</h2>
 <p>Ilustrasi pada kartu dibuat otomatis dan ditandai "ILUSTRASI"; itu bukan tangkapan layar produk. Bila memakai foto, kreditnya kami cantumkan.</p>
+<h2>Dibangun otomatis dengan AI</h2>
+<p>Dari mencari berita sampai situs ini terisi, semuanya dikerjakan agen AI tiap hari. Manusia meninjau tiap pekan, bukan tiap posting. Mau juga membangun mesin seperti ini? Masuk daftar tunggu lewat <a href="{WA_AI_URL}" rel="noopener" target="_blank">CS Nazwa</a>, atau lihat cara kerjanya di <a href="{SKALARIUM_MESIN}" rel="noopener" target="_blank">Skalarium</a>.</p>
 <h2>Kerja sama dan endorsement</h2>
 <p>{NAMA} adalah bagian dari Nopal Brainwork. Untuk kolaborasi, endorsement, atau bikin konten bareng, lihat halaman <a href="{self.u("kerja-sama/")}">Kerja sama</a>. Kerja sama tidak memengaruhi isi berita, dan konten kerja sama selalu diberi label.</p>
 <h2>Menemukan kesalahan?</h2>
@@ -642,7 +686,8 @@ def main():
         for d in (out / "media").iterdir():
             if d.is_dir() and d.name not in ada:
                 shutil.rmtree(d, ignore_errors=True)
-    s = Situs(a.origin, a.base, items)
+    eko = ekoblok.muat(Path(a.konten) / "ekosistem.json")
+    s = Situs(a.origin, a.base, items, eko)
     tulis(out / "index.html", s.beranda())
     for it in items:
         tulis(out / "berita" / it["slug"] / "index.html", s.artikel(it))
