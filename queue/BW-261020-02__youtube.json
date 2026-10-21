@@ -2,10 +2,21 @@
   "id": "BW-261020-02",
   "platform": "youtube",
   "publish_at": "2026-10-21T19:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "video_path": "aset/BW-261020-02/BW-261020-02.mp4",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261020-02/BW-261020-02.mp4",
   "title": "Foto Produk Jadi Video Iklan Otomatis di Meta Ads #Shorts",
   "description": "Cara pakai fitur Advantage+ creative untuk mengubah gambar statis jadi video iklan. Cek dulu fiturnya di akun iklanmu.",
-  "tags": ["metaads", "iklaninstagram", "advantageplus", "umkm", "digitalmarketing"]
+  "tags": [
+    "metaads",
+    "iklaninstagram",
+    "advantageplus",
+    "umkm",
+    "digitalmarketing"
+  ],
+  "result": {
+    "id": "TI5-m5NECvU",
+    "url": "https://youtube.com/shorts/TI5-m5NECvU"
+  },
+  "posted_at": "2026-10-21T12:02:18.102551+00:00"
 }
