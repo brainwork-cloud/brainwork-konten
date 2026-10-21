@@ -20,6 +20,8 @@ Format portal/<ID>.json:
   "status": "Sudah rilis untuk semua",       # opsional: "Sudah rilis ...", "Bertahap", "Masih uji coba"; tampil di slide/scene terakhir (kartu single mengabaikannya)
   "slides": [{"judul": "Apa yang berubah", "isi": "kalimat fakta"}],   # hanya carousel: 2-4 slide isi (default: dari "ringkas")
   "foto": {"url": "https://situs.com/gambar-utama.jpg", "kredit": "TechCrunch"},   # opsional: foto dari artikel sumber (portal_foto.py), latar penuh gaya referensi; gagal/terlalu kecil -> otomatis pakai "gambar"
+  # foto stok berlisensi bebas (Unsplash/Pexels), tercetak "Foto ilustrasi: <fotografer> / Unsplash":
+  #   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "1981 Digital / Unsplash", "jenis": "stok"}
   "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-iklan | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
   "music": true,                             # hanya motion (default true)
   "caption": "teks postingan"                # dipakai agen redaktur untuk antrian, tidak digambar
@@ -43,14 +45,15 @@ CTA = "Ikuti **Brainwork.id** untuk kabar marketing dan AI tiap hari."
 FORMATS = ("single", "carousel", "motion")
 FOTO = None          # PIL.Image foto latar bila spec["foto"] ada dan lolos pemeriksaan (portal_foto.ambil), selain itu None
 FOTO_KREDIT = ""
+FOTO_LABEL = ""      # teks kredit yang tercetak: "Foto: TechCrunch" (foto artikel) atau "Foto ilustrasi: Nama / Unsplash" (foto stok)
 _FOTO_PESAN = ""
 FOTO_FOKUS = [(0.5, 0.45, 1.2), (0.3, 0.5, 1.4), (0.7, 0.45, 1.4)]   # sorotan foto per slide/scene fakta (x, y, zoom)
 
 
 def _muat_foto(spec):
     """Unduh/baca foto sumber. Gagal = pakai ilustrasi (render tidak pernah gagal karena foto)."""
-    global FOTO, FOTO_KREDIT, _FOTO_PESAN
-    FOTO, FOTO_KREDIT, _FOTO_PESAN = None, "", ""
+    global FOTO, FOTO_KREDIT, FOTO_LABEL, _FOTO_PESAN
+    FOTO, FOTO_KREDIT, FOTO_LABEL, _FOTO_PESAN = None, "", "", ""
     f = spec.get("foto")
     if not f:
         return
@@ -59,6 +62,7 @@ def _muat_foto(spec):
     print(f"foto: {ket}", file=sys.stderr)
     if im is not None:
         FOTO, FOTO_KREDIT = im, f["kredit"].strip()
+        FOTO_LABEL = ("Foto ilustrasi: " if (f.get("jenis") or "").strip().lower() == "stok" else "Foto: ") + FOTO_KREDIT
 
 
 def base():
@@ -93,7 +97,7 @@ def footer(d, spec, with_source=True):
         d.text((M, fy + 40), spec.get("sumber", ""), font=sf, fill=WHITE)
         d.text((W - M, fy + 64), "brainwork.id", font=font("semi", 30), fill=PURPLE_L, anchor="rm")
         if FOTO is not None and FOTO_KREDIT:
-            d.text((M, fy + 92), f"Foto: {FOTO_KREDIT}", font=font("reg", 26), fill=MUTE)
+            d.text((M, fy + 92), FOTO_LABEL, font=font("reg", 26), fill=MUTE)
     else:
         d.text((W // 2, H - FOOT // 2 + 4), "brainwork.id", font=font("bold", 36), fill=PURPLE_L, anchor="mm")
 
@@ -482,7 +486,7 @@ def _register_scene(rm):
             fr.d.rounded_rectangle([rm.X0, y + 28, rm.X0 + int(240 * p), y + 40], radius=6, fill=rm.GOLD)
         if s.get("sub"):
             fr.text_anim(rm.X0, y + 70, s["sub"], rm.font("r", 40), rm.XW, t, 1.4, color=rm.MUTE, stagger=0.04)
-        fr.fade_text(rm.X0, 1468, f"Foto: {FOTO_KREDIT}", rm.font("r", 26), t, 1.0, rm.MUTE)
+        fr.fade_text(rm.X0, 1468, FOTO_LABEL, rm.font("r", 26), t, 1.0, rm.MUTE)
     rm.SCENES["hook_foto"] = sc_hook_foto
 
     def sc_fakta_foto(fr, s, t, dur):
@@ -516,7 +520,7 @@ def build_scenes(spec):
     end = {"type": "end", "kicker": "IKUTI", "text": CTA, "dur": 4.0}
     if src:
         end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "") \
-            + (f" · Foto: {FOTO_KREDIT}" if FOTO is not None and FOTO_KREDIT else "")
+            + (f" · {FOTO_LABEL}" if FOTO is not None and FOTO_KREDIT else "")
     sc.append(end)
     total = sum(s["dur"] for s in sc)
     if total < 12.5:

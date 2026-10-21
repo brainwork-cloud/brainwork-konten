@@ -6,6 +6,8 @@ gambar dan caption. Risiko hak cipta ditanggung keputusan itu; foto yang buruk a
 ilustrasi (portal_art.py), jadi render tidak pernah gagal karena foto.
 
 spec["foto"] = {"url": "https://.../gambar.jpg", "kredit": "TechCrunch"}      # diunduh saat render (Actions punya internet)
+               {"url": "https://images.unsplash.com/photo-...", "kredit": "Nama Fotografer / Unsplash", "jenis": "stok"}
+                                                                               # foto stok berlisensi bebas; tercetak "Foto ilustrasi: ..." supaya tidak dikira foto kejadian aslinya
                {"file": "preview/contoh.jpg", "kredit": "..."}                 # berkas lokal (uji)
 Syarat lolos: kredit terisi, bisa dibuka sebagai gambar, sisi terpendek >= 560 px, sisi terpanjang >= 900 px,
 bukan gambar hampir polos (logo/latar rata) atau tangkapan layar/grafik antarmuka (>30% piksel hampir putih), dan pembesaran ke area kartu <= 2,1x (kalau lebih, hasilnya terlalu buram).
