@@ -1,1 +1,19 @@
-{"id": "PT-261021-01", "platform": "facebook_portal", "publish_at": "2026-10-21T08:00:00+07:00", "status": "approved", "message": "Google memperpanjang penyesuaian biaya berbasis performa untuk kampanye Demand Gen hingga 60 hari, dari sebelumnya tiga minggu.\n\n• Berlaku untuk kampanye Demand Gen dengan bidding Target CPA atau Target ROAS yang masih di fase pembelajaran. Bila konversi aktual di bawah prediksi, biaya bisa diturunkan agar hasil lebih dekat ke target.\n• Aktif otomatis tanpa pengaturan manual, dan bisa mulai dalam lima hari setelah kampanye berjalan. Di laporan hanya tampak sebagai biaya akhir, tanpa baris atau notifikasi terpisah.\n• Artinya bagi pengiklan: biaya akhir di laporan bisa berbeda dari biaya awal. Kelayakan tidak dijamin dan penghematan tidak pasti.\n\nStatus: Beta; belum ada rincian wilayah (termasuk Indonesia).\n\nSumber: Search Engine Land — https://searchengineland.com/google-ads-extends-demand-gen-cost-adjustments-from-3-weeks-to-60-days-497012; Google Ads Help — https://support.google.com/google-ads/answer/16581886?hl=en. Dilaporkan Search Engine Land pada 16 Okt 2026; isi halaman Google Ads Help diperiksa langsung.\n\nIkuti Brainwork.id untuk kabar marketing dan AI tiap hari.\n#GoogleAds #DemandGen", "image_urls": ["https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_01.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_02.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_03.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_04.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_05.jpg"]}
+{
+  "id": "PT-261021-01",
+  "platform": "facebook_portal",
+  "publish_at": "2026-10-21T08:00:00+07:00",
+  "status": "posted",
+  "message": "Google memperpanjang penyesuaian biaya berbasis performa untuk kampanye Demand Gen hingga 60 hari, dari sebelumnya tiga minggu.\n\n• Berlaku untuk kampanye Demand Gen dengan bidding Target CPA atau Target ROAS yang masih di fase pembelajaran. Bila konversi aktual di bawah prediksi, biaya bisa diturunkan agar hasil lebih dekat ke target.\n• Aktif otomatis tanpa pengaturan manual, dan bisa mulai dalam lima hari setelah kampanye berjalan. Di laporan hanya tampak sebagai biaya akhir, tanpa baris atau notifikasi terpisah.\n• Artinya bagi pengiklan: biaya akhir di laporan bisa berbeda dari biaya awal. Kelayakan tidak dijamin dan penghematan tidak pasti.\n\nStatus: Beta; belum ada rincian wilayah (termasuk Indonesia).\n\nSumber: Search Engine Land — https://searchengineland.com/google-ads-extends-demand-gen-cost-adjustments-from-3-weeks-to-60-days-497012; Google Ads Help — https://support.google.com/google-ads/answer/16581886?hl=en. Dilaporkan Search Engine Land pada 16 Okt 2026; isi halaman Google Ads Help diperiksa langsung.\n\nIkuti Brainwork.id untuk kabar marketing dan AI tiap hari.\n#GoogleAds #DemandGen",
+  "image_urls": [
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_01.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_02.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_03.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_04.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261021-01/PT-261021-01_05.jpg"
+  ],
+  "result": {
+    "id": "334538093075201_122246356094355528",
+    "url": "https://www.facebook.com/334538093075201_122246356094355528"
+  },
+  "posted_at": "2026-10-21T01:33:25.159533+00:00"
+}
