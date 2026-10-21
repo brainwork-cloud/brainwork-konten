@@ -12,9 +12,9 @@ Format portal/<ID>.json:
 {
   "id": "PT-261020-01",
   "format": "single",                        # "single" (default) | "carousel" | "motion"; rotasi dipilih agen 5
-  "kategori": "IKLAN",                       # label kecil (IKLAN, MEDIA SOSIAL, AI, E-COMMERCE, PLATFORM, REGULASI)
-  "judul": "Meta uji **iklan video** otomatis dari foto produk",   # judul berita, **kata penting** berwarna emas, maks ~16 kata
-  "ringkas": ["Fitur tersedia umum di Ads Manager.", "Pengiklan bisa mengubah gambar jadi video."],   # 1-3 poin, tiap poin satu kalimat
+  "kategori": "ADS",                         # label kecil (ADS, SOCIAL MEDIA, AI, E-COMMERCE, PLATFORM, REGULASI)
+  "judul": "Meta uji **video ads** otomatis dari foto produk",   # judul berita, **kata penting** berwarna emas, maks ~16 kata
+  "ringkas": ["Fitur tersedia umum di Ads Manager.", "Advertiser bisa mengubah gambar jadi video."],   # 1-3 poin, tiap poin satu kalimat
   "sumber": "Meta for Business",             # nama sumber utama
   "tanggal": "20 Okt 2026",                  # tanggal rilis sumber
   "status": "Sudah rilis untuk semua",       # opsional: "Sudah rilis ...", "Bertahap", "Masih uji coba"; tampil di slide/scene terakhir (kartu single mengabaikannya)
@@ -22,13 +22,13 @@ Format portal/<ID>.json:
   "foto": {"url": "https://situs.com/gambar-utama.jpg", "kredit": "TechCrunch"},   # opsional: foto dari artikel sumber (portal_foto.py), latar penuh gaya referensi; gagal/terlalu kecil -> otomatis pakai "gambar"
   # foto stok berlisensi bebas (Unsplash/Pexels), tercetak "Foto ilustrasi: <fotografer> / Unsplash":
   #   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "1981 Digital / Unsplash", "jenis": "stok"}
-  "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-iklan | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
+  "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-ads (dulu dashboard-iklan) | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
   "music": true,                             # hanya motion (default true)
   "caption": "teks postingan"                # dipakai agen redaktur untuk antrian, tidak digambar
 }
 Gaya media netral: tanpa aku/kamu, tanpa wajah, tanpa nama pribadi.
-Carousel: slide 1 sampul (judul), slide isi (satu fakta per slide), slide terakhir (status, sumber, ajakan ikuti).
-Motion: scene pembuka (judul), satu scene per fakta (dari "ringkas"), scene status (bila ada), scene penutup (sumber + ajakan ikuti).
+Carousel: slide 1 sampul (judul), slide isi (satu fakta per slide), slide terakhir (status, sumber, ajakan follow).
+Motion: scene pembuka (judul), satu scene per fakta (dari "ringkas"), scene status (bila ada), scene penutup (sumber + ajakan follow).
 Semua teks berasal dari field yang sama dengan kartu, jadi tidak ada fakta baru yang muncul hanya di slide/video.
 """
 import sys, os, json, shutil, tempfile
@@ -41,7 +41,7 @@ import portal_art
 import portal_foto
 
 FOOT = 190  # tinggi footer
-CTA = "Ikuti **Brainwork.id** untuk kabar marketing dan AI tiap hari."
+CTA = "Follow **Brainwork.id** untuk update marketing dan AI tiap hari."
 FORMATS = ("single", "carousel", "motion")
 FOTO = None          # PIL.Image foto latar bila spec["foto"] ada dan lolos pemeriksaan (portal_foto.ambil), selain itu None
 FOTO_KREDIT = ""
@@ -174,7 +174,7 @@ def slide_cover_foto(spec, idx, total):
     y0 = gy - 30 - th - 28 - 54
     y = pill(d, M, y0, spec.get("kategori", "BERITA").upper(), font("bold", 28)) + 28
     draw_rich(d, M, y, spec["judul"], tf, W - 2 * M, lh=1.12)
-    pill(d, M, gy, "GESER UNTUK DETAIL  ›", font("bold", 32), fg=WHITE, bg=PURPLE_D)
+    pill(d, M, gy, "SWIPE UNTUK DETAIL  ›", font("bold", 32), fg=WHITE, bg=PURPLE_D)
     footer(d, spec)
     return img
 
@@ -299,7 +299,7 @@ def slide_cover_art(spec, idx, total, g):
             break
     tf = tf or font("black", 46)
     draw_rich(d, M, y, spec["judul"], tf, W - 2 * M, lh=1.12)
-    pill(d, M, H - FOOT - 100, "GESER UNTUK DETAIL  ›", font("bold", 32), fg=WHITE, bg=PURPLE_D)
+    pill(d, M, H - FOOT - 100, "SWIPE UNTUK DETAIL  ›", font("bold", 32), fg=WHITE, bg=PURPLE_D)
     footer(d, spec)
     return img
 
@@ -326,7 +326,7 @@ def slide_cover(spec, idx, total):
     y = draw_rich(d, M, y, spec["judul"], tf, W - 2 * M, lh=1.13) + 40
     d.rounded_rectangle([M, y, M + 190, y + 14], radius=7, fill=GOLD)
     hf = font("bold", 34)
-    pill(d, M, H - FOOT - 120,"GESER UNTUK DETAIL  ›", hf, fg=WHITE, bg=PURPLE_D)
+    pill(d, M, H - FOOT - 120,"SWIPE UNTUK DETAIL  ›", hf, fg=WHITE, bg=PURPLE_D)
     footer(d, spec)
     return img
 
@@ -523,7 +523,7 @@ def build_scenes(spec):
     if spec.get("status"):
         sc.append({"type": "fakta", "kicker": "STATUS", "text": spec["status"], "dur": 3.2})
     src = spec.get("sumber", "")
-    end = {"type": "end", "kicker": "IKUTI", "text": CTA, "dur": 4.0}
+    end = {"type": "end", "kicker": "FOLLOW", "text": CTA, "dur": 4.0}
     if src:
         end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "")
         if FOTO is not None and FOTO_KREDIT:

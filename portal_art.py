@@ -306,7 +306,7 @@ def kind_hp_feed(t):
         s.text(18, 20, "9:41", "bold", 12, INK)
         s.rr((sw - 54, 14, sw - 20, 26), 4, line=INK, w=1.4)
         s.rr((sw - 51, 17, sw - 33, 23), 2, fill=INK)
-        s.text(18, 62, "Beranda", "black", 22, BLUE)
+        s.text(18, 62, "Home", "black", 22, BLUE)
         for i in range(2):
             s.ell(sw - 54 + i * 40, 62, 16, fill=GREY)
         search(s, sw - 54, 62, 8, INK)
@@ -400,8 +400,8 @@ def kind_dashboard_iklan(t):
             if i == 1:
                 s.rr((10, cy - 22, 54, cy + 22), 12, fill=(228, 237, 255))
             s.rr((24, cy - 9, 40, cy + 9), 4, fill=BLUE if i == 1 else GREY2)
-        s.text(92, 80, "Kampanye  ›  Ad set  ›", "reg", 13.5, MUTE)
-        s.text(92 + s.tw("Kampanye  ›  Ad set  ›", "reg", 13.5) + 8, 80, "Placements", "bold", 13.5, INK)
+        s.text(92, 80, "Campaign  ›  Ad set  ›", "reg", 13.5, MUTE)
+        s.text(92 + s.tw("Campaign  ›  Ad set  ›", "reg", 13.5) + 8, 80, "Placements", "bold", 13.5, INK)
         s.text(92, 120, t[0], "black", 26, INK)
         # kartu 1: otomatis
         c1 = (92, 150, 540, 276)
@@ -432,14 +432,14 @@ def kind_dashboard_iklan(t):
         s.rr((92, 440, 540, 512), 14, fill=(236, 248, 241))
         check(s, 122, 476, 13, (30, 160, 90))
         s.text(148, 462, t[3], "bold", 15.5, (16, 100, 60))
-        s.text(148, 488, "Placement manual masih tersedia", "reg", 13.5, (46, 110, 78))
+        s.text(148, 488, "Manual placement masih tersedia", "reg", 13.5, (46, 110, 78))
         # panel pengganti
         qx0, qy0, qx1, qy1 = 566, 150, 828, 548
         s.shadow((qx0, qy0, qx1, qy1), 14, blur=10, dy=6, alpha=40)
         s.rr((qx0, qy0, qx1, qy1), 14, fill=WHITE, line=(222, 225, 233), w=1.5)
         sparkle(s, qx0 + 28, qy0 + 32, 11, PURPLE)
         s.text(qx0 + 48, qy0 + 32, t[4], "bold", 17, INK)
-        rows = (("Kustomisasi media", "per placement"), ("Placement", "value rules"), ("Pengecualian placement", "di level akun"))
+        rows = (("Kustomisasi media", "per placement"), ("Placement", "value rules"), ("Placement exclusion", "di level akun"))
         for i, r_ in enumerate(rows):
             ry = qy0 + 66 + i * 108
             s.rr((qx0 + 14, ry, qx1 - 14, ry + 98), 12, fill=(246, 247, 251))
@@ -476,7 +476,7 @@ def kind_panggilan(t):
     def screen(s, sw, sh):
         s.rr((0, 0, sw, sh), 0, fill=(15, 22, 26))
         s.text(18, 20, "9:41", "bold", 12, WHITE)
-        s.text(sw / 2, 60, "Panggilan grup", "bold", 16, WHITE, "mm")
+        s.text(sw / 2, 60, "Group call", "bold", 16, WHITE, "mm")
         s.text(sw / 2, 80, "00:12", "reg", 12.5, (160, 190, 180), "mm")
         tiles = [((255, 183, 120), (240, 110, 120), (255, 214, 184), (60, 90, 190), (60, 40, 30)),
                  ((120, 200, 230), (60, 120, 200), (240, 196, 160), (236, 120, 70), (40, 30, 30)),
@@ -489,7 +489,7 @@ def kind_panggilan(t):
                 tile = _siluet(gw, gh, (52, 62, 72), (30, 38, 46), (180, 170, 160), (80, 90, 100), shift=0.04)
                 s.paste(tile, gx, gy, r=14)
                 s.rr((gx, gy, gx + gw, gy + gh), 14, line=GREEN, w=2.2)
-                pill(s, gx + 8, gy + gh - 32, "Tamu", "bold", 12, (22, 28, 32), WHITE, 9, 22)
+                pill(s, gx + 8, gy + gh - 32, "Guest", "bold", 12, (22, 28, 32), WHITE, 9, 22)
             else:
                 tile = _siluet(gw, gh, tl[0], tl[1], tl[2], tl[3], tl[4], shift=(i - 1.5) * 0.02)
                 s.paste(tile, gx, gy, r=14)
@@ -521,7 +521,7 @@ def kind_panggilan(t):
     cv.text(qx + 86, qy + 72, t[1], "reg", 14.5, MUTE)
     cv.rr((qx + 26, qy + 108, qx + qw - 26, qy + 154), 14, fill=(244, 246, 249), line=(214, 218, 228), w=1.5)
     cv.rr((qx + 46, qy + 126, qx + 46 + 190, qy + 136), 5, fill=GREY2)
-    pill(cv, qx + qw - 26 - 116, qy + 113, "Salin", "bold", 14.5, GREEN_D, WHITE, 18, 36)
+    pill(cv, qx + qw - 26 - 116, qy + 113, "Copy", "bold", 14.5, GREEN_D, WHITE, 18, 36)
     cv.rr((qx + 26, qy + 168, qx + qw - 26, qy + 204), 12, fill=(236, 248, 241))
     pending(cv, qx + 50, qy + 186, 11)
     cv.text(qx + 72, qy + 186, t[2], "semi", 14.5, (16, 100, 60))
@@ -530,7 +530,7 @@ def kind_panggilan(t):
     wx, wy, ww, wh = 600, 330, 410, 310
 
     def gbody(s, bw, bh):
-        s.text(bw / 2, 96, "Gabung panggilan", "black", 21, INK, "mm")
+        s.text(bw / 2, 96, "Join call", "black", 21, INK, "mm")
         s.text(bw / 2, 124, "Tidak perlu akun", "reg", 14, MUTE, "mm")
         s.rr((34, 150, bw - 34, 198), 12, fill=(246, 247, 250), line=(206, 210, 220), w=1.6)
         s.text(54, 174, t[3], "reg", 15.5, INK)
@@ -538,7 +538,7 @@ def kind_panggilan(t):
         s.text(bw / 2, 238, "Minta bergabung", "bold", 16, WHITE, "mm")
         s.text(bw / 2, 288, t[4], "reg", 13, MUTE, "mm")
 
-    window(cv, wx, wy, ww, wh, "Gabung panggilan", gbody)
+    window(cv, wx, wy, ww, wh, "Join call", gbody)
     return cv
 
 
@@ -550,7 +550,7 @@ def kind_chat_ai(t):
     def body(s, bw, bh):
         s.rr((0, 47, 210, bh), 0, fill=(244, 245, 249))
         s.line([(210, 47), (210, bh)], (222, 225, 233), 1)
-        s.text(24, 84, "Percakapan", "bold", 14.5, MUTE)
+        s.text(24, 84, "Chat", "bold", 14.5, MUTE)
         for i in range(5):
             s.rr((14, 108 + i * 52, 196, 148 + i * 52), 10, fill=(232, 224, 250) if i == 0 else None)
             s.rr((30, 124 + i * 52, 30 + 100 - i * 8, 132 + i * 52), 4, fill=(160, 140, 210) if i == 0 else GREY2)
@@ -566,7 +566,7 @@ def kind_chat_ai(t):
         s.ell(bw - 76, bh - 66, 20, fill=PURPLE)
         arrow(s, bw - 76, bh - 66, 8, True, WHITE)
 
-    window(cv, x, y, w, h, "Asisten AI", body)
+    window(cv, x, y, w, h, "AI assistant", body)
     return cv
 
 
@@ -667,19 +667,22 @@ def kind_grafik(t):
         for p in pts[-3:]:
             s.ell(p[0], p[1], 6, fill=WHITE, line=PURPLE, w=3)
 
-    window(cv, x, y, w, h, "Dasbor", body)
+    window(cv, x, y, w, h, "Dashboard", body)
     return cv
 
 
 KINDS = {
     "hp-feed": (kind_hp_feed, ["Atur rekomendasi", "Ketik topik yang ingin lebih sering atau jarang…", "Lebih sering", "Lebih jarang", "Rekomendasi diperbarui"]),
     "dashboard-iklan": (kind_dashboard_iklan, ["Placements", "Advantage+ placements", "Manual placements", "Awareness dan Traffic: masih manual", "Pengganti"]),
-    "panggilan": (kind_panggilan, ["Tautan panggilan", "Undang siapa pun, tanpa akun", "Tamu menunggu persetujuan host", "Masukkan nama Anda", "Panggilan 1:1 atau grup hingga 32 orang"]),
-    "chat-ai": (kind_chat_ai, ["Asisten AI", "Tulis pertanyaan Anda", "Jawaban AI", "Ketik pesan…", ""]),
-    "toko-online": (kind_toko_online, ["Cari produk", "Promo", "Lihat", "Pesanan", ""]),
+    "panggilan": (kind_panggilan, ["Call link", "Undang siapa pun, tanpa akun", "Guest menunggu persetujuan host", "Masukkan nama Anda", "Call 1:1 atau grup hingga 32 orang"]),
+    "chat-ai": (kind_chat_ai, ["AI assistant", "Tulis pertanyaan Anda", "Jawaban AI", "Ketik pesan…", ""]),
+    "toko-online": (kind_toko_online, ["Cari produk", "Promo", "Lihat", "Order", ""]),
     "dokumen": (kind_dokumen, ["Aturan baru", "Ringkasan isi", "Poin utama", "Berlaku bertahap", "RESMI"]),
-    "grafik": (kind_grafik, ["Ringkasan", "Tayangan", "Klik", "Konversi", ""]),
+    "grafik": (kind_grafik, ["Summary", "Impressions", "Clicks", "Conversions", ""]),
 }
+
+
+KINDS["dashboard-ads"] = KINDS["dashboard-iklan"]   # nama baru (istilah "ads"); "dashboard-iklan" tetap dikenal untuk spec lama
 
 
 # Detail yang disorot per fakta (carousel slide isi, scene fakta video): (x, y, zoom), x dan y 0-1 pada panggung
@@ -688,6 +691,7 @@ FOCI = {
     "dashboard-iklan": [(0.42, 0.52, 1.3), (0.41, 0.75, 1.5), (0.72, 0.57, 1.3)],
     "panggilan": [(0.64, 0.26, 1.5), (0.67, 0.69, 1.4), (0.30, 0.43, 1.2)],
 }
+FOCI["dashboard-ads"] = FOCI["dashboard-iklan"]
 FOCI_DEFAULT = [(0.35, 0.50, 1.4), (0.72, 0.45, 1.4), (0.50, 0.72, 1.3)]
 
 
