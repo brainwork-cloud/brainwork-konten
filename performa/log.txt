@@ -1,5 +1,5 @@
-Mulai 2026-10-21 15:17 WIB (Senin = segarkan semua insight: False)
-nopal-ig: 85 posting, followers 210563 | 
+Mulai 2026-10-21 15:34 WIB (Senin = segarkan semua insight: False)
+nopal-ig: 85 posting, followers 210562 | 
 nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: 63 posting (Reels 100), followers 44288 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 61 posting tidak tersedia
