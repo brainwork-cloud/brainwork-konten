@@ -170,3 +170,40 @@ a.kat:hover { border-color: var(--ungu-t); }
 .tbl-slide button { min-height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--garis); background: transparent; color: var(--putih); font: 500 13px var(--ui); cursor: pointer; }
 .tbl-slide button:hover { border-color: var(--ungu-t); }
 .sumber li { display: flex; flex-wrap: wrap; align-items: baseline; }
+
+/* Menu kepala: Kerja sama + tautan sosial */
+.ikuti a.kerja { color: var(--emas); font-weight: 600; }
+.ikuti a.kerja:hover { color: #ffd84a; }
+.ikuti a.kerja[aria-current] { text-decoration: underline; text-decoration-color: var(--emas); text-underline-offset: 6px; }
+@media (max-width: 559px) { .ikuti a.sosial { display: none; } }
+
+/* Kerja sama dan endorsement */
+.kerjasama { display: grid; gap: 24px; margin-top: 56px; padding: 28px 24px; border: 1px solid var(--garis); border-left: 6px solid var(--ungu); border-radius: 14px; background: var(--panel); }
+.kerjasama.ringkas { margin-top: 48px; padding: 22px 24px; }
+.kerjasama h2 { font-size: clamp(22px, 4.4vw, 30px); font-weight: 800; line-height: 1.15; letter-spacing: -0.025em; }
+.kerjasama.ringkas h2 { font-size: clamp(19px, 3.6vw, 24px); }
+.lede-k { margin: 12px 0 0; font: 400 17px/1.65 var(--baca); color: var(--putih); max-width: 36rem; text-wrap: pretty; }
+.kerjasama.ringkas .lede-k { margin-top: 8px; font-size: 16px; color: var(--redup); }
+.pilihan { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 18px 0 0; padding: 0; }
+.pilihan li { padding: 4px 14px; border: 1px solid var(--garis); border-radius: 999px; background: var(--panel-2); font-size: 14px; font-weight: 500; }
+.kontak-daftar { display: grid; gap: 10px; align-content: start; }
+.kontak { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 64px; padding: 12px 18px; border: 1px solid var(--garis); border-radius: 12px; background: var(--panel-2); text-decoration: none; }
+.kontak:hover { border-color: var(--ungu-t); }
+.kontak b { display: block; font-size: 16px; font-weight: 700; }
+.kontak small { display: block; margin-top: 2px; font-size: 13px; color: var(--redup); }
+.kontak svg { flex: none; width: 24px; height: 24px; }
+.kontak.wa { background: var(--emas); border-color: var(--emas); color: #0A0A0F; }
+.kontak.wa small { color: #3a3000; }
+.kontak.wa:hover { background: #ffd84a; border-color: #ffd84a; }
+.catatan-k { margin: 4px 2px 0; font-size: 13px; color: var(--redup); }
+@media (min-width: 860px) {
+  .kerjasama { grid-template-columns: minmax(0, 1fr) 21rem; gap: 40px; align-items: center; padding: 32px 32px 32px 30px; }
+  .kerjasama.ringkas { grid-template-columns: minmax(0, 1fr) 21rem; }
+}
+.halaman-k { max-width: 40rem; }
+.halaman-k h1 { font-weight: 800; font-size: clamp(28px, 6vw, 40px); line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 4px; }
+.halaman-k.teks { margin-top: 36px; }
+.halaman-k ol { padding-left: 22px; margin: 0 0 14px; }
+.halaman-k ol li { font: 400 18px/1.7 var(--baca); margin-bottom: 4px; }
+.kontak-halaman { margin-top: 24px; }
+.kontak-halaman .kontak-daftar { max-width: 26rem; }
