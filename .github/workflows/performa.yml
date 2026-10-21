@@ -1,0 +1,39 @@
+name: Data performa untuk dashboard
+# Mengambil angka performa semua akun (API resmi Meta/Threads + feed publik YouTube) memakai secret yang sudah ada,
+# lalu menyimpannya di folder performa/. Dashboard "Pantauan Performa Nopal Brainwork" di claude.ai membacanya
+# lewat konektor GitHub. Gratis: repo publik, tanpa Windsor. Nilai token tidak pernah dicetak atau disimpan.
+on:
+  schedule:
+    - cron: "47 23 * * *"   # 06.47 WIB
+    - cron: "47 11 * * *"   # 18.47 WIB
+  workflow_dispatch:
+  push:
+    paths: ["trigger/performa.txt", "kolektor_performa.py", ".github/workflows/performa.yml"]
+concurrency: performa
+permissions:
+  contents: write
+jobs:
+  ambil:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q requests
+      - name: Ambil data performa
+        env:
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          PORTAL_FB_PAGE_TOKEN: ${{ secrets.PORTAL_FB_PAGE_TOKEN }}
+          PORTAL_FB_PAGE_ID: ${{ secrets.PORTAL_FB_PAGE_ID }}
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+        run: python kolektor_performa.py
+      - name: Simpan ke repo
+        run: |
+          git config user.name "brainwork-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add performa
+          git diff --cached --quiet || (git commit -m "performa: data $(TZ=Asia/Jakarta date '+%Y-%m-%d %H:%M') WIB" && git pull --rebase && git push)
