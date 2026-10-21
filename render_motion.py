@@ -89,6 +89,18 @@ def layout(d, text, f, maxw, lh=1.1):
     return out, y
 
 
+def _baris_sumber(fr, s, t, t0):
+    """Baris sumber di scene penutup: "source" (y=1440) dan opsional "source2" (y=1482, mis. kredit foto); font mengecil bila terlalu panjang."""
+    for key, y in (("source", 1440), ("source2", 1482)):
+        txt = s.get(key)
+        if not txt:
+            continue
+        sz = 26
+        while sz > 18 and fr.d.textlength(txt, font=font("r", sz)) > XW:
+            sz -= 1
+        fr.fade_text(X0, y, txt, font("r", sz), t, t0, MUTE)
+
+
 def fit(d, text, w, sizes, maxw, maxlines):
     for s in sizes:
         f = font(w, s)
@@ -173,8 +185,7 @@ def sc_stat(fr, s, t, dur):
             r = int(40 * pa)
             fr.d.ellipse([cx - r, cy - 70 - r, cx + r, cy - 70 + r], fill=col)
             fr.d.pieslice([cx - int(66 * pa), cy, cx + int(66 * pa), cy + int(130 * pa)], 180, 360, fill=col)
-    if s.get("source"):
-        fr.fade_text(X0, 1440, s["source"], font("r", 26), t, 1.4, MUTE)
+    _baris_sumber(fr, s, t, 1.4)
 
 
 def sc_points(fr, s, t, dur):
@@ -233,8 +244,7 @@ def sc_end(fr, s, t, dur):
         bw = int(fr.d.textlength(HANDLE, font=hf) * eo(seg(t, 1.9, 2.4)))
         if bw > 0:
             fr.d.rounded_rectangle([140, 1272, 140 + bw, 1286], radius=7, fill=GOLD)
-    if s.get("source"):
-        fr.fade_text(X0, 1440, s["source"], font("r", 26), t, 1.8, MUTE)
+    _baris_sumber(fr, s, t, 1.8)
 
 
 def sc_mock(fr, s, t, dur):

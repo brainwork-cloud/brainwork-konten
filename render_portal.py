@@ -525,8 +525,9 @@ def build_scenes(spec):
     src = spec.get("sumber", "")
     end = {"type": "end", "kicker": "IKUTI", "text": CTA, "dur": 4.0}
     if src:
-        end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "") \
-            + (f" · {FOTO_LABEL}" if FOTO is not None and FOTO_KREDIT else "")
+        end["source"] = f"Sumber: {src}" + (f" · {spec['tanggal']}" if spec.get("tanggal") else "")
+        if FOTO is not None and FOTO_KREDIT:
+            end["source2"] = FOTO_LABEL
     sc.append(end)
     total = sum(s["dur"] for s in sc)
     if total < 12.5:
