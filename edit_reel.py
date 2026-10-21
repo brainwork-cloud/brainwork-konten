@@ -20,19 +20,19 @@ Spec edit (ditulis agen Produser):
   "cut_ranges": [[57.8, 64.9]],         # buang rentang detik (waktu rekaman asli), mis. kalimat yang diulang
   "max_sec": 60,                        # batas durasi video akhir (termasuk penutup 1,8 dtk). Default 60. Kalau lebih: jeda dipadatkan otomatis,
                                         # sisanya dilaporkan di <ID>_peringatan.txt supaya Produser memotong lewat cut_ranges (daftar kalimat: <ID>_kalimat.txt)
-  "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+  "outro": "Follow @nopal.brainwork buat tips ads & AI",
   # talking_head: sisipan B-roll (dibuat make_broll.py) yang menimpa gambar wajah, suara tetap jalan
   "cutaways": [{"after_word": "Library", "dur": 4, "clip": "rekaman/BW-261014-01/b1.mp4"},
                {"at": 12.5, "dur": 3, "clip": "rekaman/BW-261014-01/b2.mp4"}],
   # talking_head, MODE WAJAH HANYA DI PEMBUKA & PENUTUP: tengah video penuh animasi/grafis (scene render_motion + scenes_extra).
   # Tiap item menutup layar dari akhir kata pemicu sampai item berikutnya (item terakhir sampai penutup).
   # Durasi scene dihitung otomatis dari ucapan, jadi tidak perlu "dur". Kata pemicu: "kata", "dua kata", atau "kata#2" (kemunculan ke-2).
-  "cover": [{"from_word": "editor", "scene": {"type": "icon", "icon": "image", "kicker": "Advantage+", "text": "Foto statis jadi **video iklan**"}},
+  "cover": [{"from_word": "editor", "scene": {"type": "icon", "icon": "image", "kicker": "Advantage+", "text": "Foto statis jadi **video ads**"}},
             {"at": 12.5, "scene": {"type": "steps", "title": "Caranya", "items": ["...", "..."]}}],
   "close_sec": 6,                       # wajah kembali di N detik terakhir (default 6)
   "close_from_word": "Simpan",          # atau: wajah kembali mulai akhir kata ini (menggantikan close_sec)
   # activity: klip aktivitas Naufal (tanpa bicara) + teks di layar + musik otomatis
-  "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka laporan iklan dulu"}]
+  "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka report ads dulu"}]
 }
 Hasil: MP4 H.264 1080x1920 30fps + AAC, subtitle tertanam, siap IG Reels / TikTok / Shorts.
 """

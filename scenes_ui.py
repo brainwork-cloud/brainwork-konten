@@ -15,38 +15,38 @@ Umum:  {"type":"ui","layout":"form|library|chat|table|chart|feed","kicker":"Di A
   title  satu baris di atas jendela (maks ±34 karakter). kicker opsional. "tag" (opsional) = teks label emas di dekat target.
   Jendela berada di y 392-1132 supaya tidak menabrak subtitle talking head (y 1170-1360).
 
-layout "form" (formulir pengaturan iklan dengan opsi berpenggalan toggle + pratinjau di sisi kanan)
-  {"layout":"form","url":"manajer-iklan.app","heading":"Buat iklan","section":"Kreatif iklan",
+layout "form" (formulir pengaturan ads dengan opsi berpenggalan toggle + pratinjau di sisi kanan)
+  {"layout":"form","url":"ads-manager.app","heading":"Buat ads","section":"Creative",
    "rows":[{"label":"Tingkatkan kualitas","sub":"keterangan kecil","on":true},
            {"label":"Ubah gambar jadi video","sub":"...","on":false,"toggle":true}],      # toggle:true = baris yang diklik kursor
    "preview":"follow"|"image"|"video", "tag":"Aktifkan ini"}
   "follow": pratinjau berupa video bila toggle menyala, gambar bila mati. Toggle yang awalnya "on":true lalu diklik = dimatikan.
 
 layout "library" (halaman pencarian dengan filter, kolom ketik, dan kartu hasil)
-  {"layout":"library","url":"perpustakaan-iklan.app","heading":"Perpustakaan Iklan",
+  {"layout":"library","url":"ads-library.app","heading":"Ads Library",
    "phases":["country","query","results","highlight"],      # pilih tahapan yang ditampilkan (default semua)
-   "country":"Indonesia","category":"Semua iklan","query":"nama brand",
+   "country":"Indonesia","category":"Semua ads","query":"nama brand",
    "cards":[{"date":"3 Jun 2026","art":"a"},{"date":"2 Okt 2026","art":"b"}],"hl_card":0,"tag":"Sudah jalan lama"}
 
 layout "chat" (asisten AI generik: lampiran + pesan pengguna, jawaban diketik per butir)
-  {"layout":"chat","title_bar":"Asisten AI","file":"catatan-iklan.txt","user":"Ringkas pola iklan kompetitor ini.",
+  {"layout":"chat","title_bar":"Asisten AI","file":"catatan-ads.txt","user":"Ringkas pola ads kompetitor ini.",
    "bullets":["Hook yang paling sering","Jenis penawaran","Celah yang belum dipakai"]}
 
-layout "table" (dashboard: kartu angka + tabel iklan)
-  {"layout":"table","heading":"Iklan","kpis":[{"label":"Hasil","value":128},{"label":"Biaya per hasil","value":"Rp12 rb"}],
-   "rows":[{"name":"Iklan A","on":true,"budget":"Rp150 rb","result":"54","cost":"Rp9 rb"}],"hl_row":0,"hl_col":"cost"}
+layout "table" (dashboard: kartu angka + tabel ads)
+  {"layout":"table","heading":"Ads","kpis":[{"label":"Hasil","value":128},{"label":"Biaya per hasil","value":"Rp12 rb"}],
+   "rows":[{"name":"Ads A","on":true,"budget":"Rp150 rb","result":"54","cost":"Rp9 rb"}],"hl_row":0,"hl_col":"cost"}
 
 layout "chart" (dashboard grafik garis: kartu angka di atas + kurva yang tergambar, titik penting ditandai)
-  {"layout":"chart","url":"manajer-iklan.app/performa","heading":"Performa iklan","range":"7 hari terakhir",
+  {"layout":"chart","url":"ads-manager.app/performa","heading":"Performa ads","range":"7 hari terakhir",
    "kpis":[{"label":"Hasil","value":128},{"label":"Biaya per hasil","value":"Rp12 rb"},{"label":"ROAS","value":"3,4x"}],   # maks 3
    "series":[18,22,20,31,44,52,61],"series2":[...opsional garis pembanding...],"labels":["Sen","Sel","Rab","Kam","Jum","Sab","Min"],
-   "hl_idx":4,"unit":"hasil","fmt":"rb","legend":"Iklan A","legend2":"Iklan B","tag":"Mulai naik"}
+   "hl_idx":4,"unit":"hasil","fmt":"rb","legend":"Ads A","legend2":"Ads B","tag":"Mulai naik"}
   hl_idx = indeks titik yang disorot kamera. fmt "rb" = angka diringkas (12400 -> 12,4 rb).
 
-layout "feed" (insight postingan di layar ponsel: kartu metrik berurutan, satu metrik disorot)
-  {"layout":"feed","heading":"Insight postingan","hl":3,"tag":"Paling berharga",
-   "metrics":[{"label":"Jangkauan","value":12400,"fmt":"rb","icon":"chart"},{"label":"Disimpan","value":842,"icon":"bookmark"}]}
-  Tanpa "metrics" dipakai bawaan (Jangkauan, Disukai, Komentar, Disimpan, Dibagikan). icon: chart, heart, chat, bookmark, arrow.
+layout "feed" (insight post di layar ponsel: kartu metrik berurutan, satu metrik disorot)
+  {"layout":"feed","heading":"Insight post","hl":3,"tag":"Paling berharga",
+   "metrics":[{"label":"Reach","value":12400,"fmt":"rb","icon":"chart"},{"label":"Disimpan","value":842,"icon":"bookmark"}]}
+  Tanpa "metrics" dipakai bawaan (Reach, Disukai, Komentar, Disimpan, Dibagikan). icon: chart, heart, chat, bookmark, arrow.
   hl = indeks metrik yang disorot (angka 0 = pertama).
 
 Catatan: layout form otomatis memunculkan toast "Perubahan disimpan" setelah toggle diklik ("toast":false mematikan, "toast_text" mengganti teks).
@@ -377,7 +377,7 @@ def bubble_icon(u, cx, cy, r, col):
 
 # --------------------------------------------------------------------------------------------- layout: form
 def phone(u, x, y, w, h, vk, t, kind="bottle"):
-    """HP kecil berisi pratinjau iklan. vk 0 = gambar statis, 1 = video yang bergerak."""
+    """HP kecil berisi pratinjau ads. vk 0 = gambar statis, 1 = video yang bergerak."""
     u.rect(x - 6, y - 6, x + w + 6, y + h + 6, 34, fill=C["dark"])
     u.rect(x, y, x + w, y + h, 28, fill=(255, 255, 255))
     u.circle(x + 26, y + 34, 14, fill=C["purple"])
@@ -406,18 +406,18 @@ def phone(u, x, y, w, h, vk, t, kind="bottle"):
 
 
 def form_draw(u, s, t, P):
-    chrome(u, s.get("url", "manajer-iklan.app/iklan"))
+    chrome(u, s.get("url", "ads-manager.app/ads"))
     sidebar(u, 1)
-    u.text(104, 86, s.get("heading", "Buat iklan"), 26, 800)
+    u.text(104, 86, s.get("heading", "Buat ads"), 26, 800)
     cx = 600
-    for i, nm in enumerate(("Kampanye", "Set iklan", "Iklan")):
+    for i, nm in enumerate(("Campaign", "Ad set", "Ads")):
         wdt = u.width(nm, 15, 600) + 22
         cx2 = cx + wdt
         u.rect(cx, 74, cx2, 98, 12, fill=C["blue_l"] if i == 2 else C["bar"])
         u.text(cx + 11, 86, nm, 15, 600, C["blue"] if i == 2 else C["mute"])
         cx = cx2 + 10
     u.rect(100, 126, 590, 708, 16, fill=C["card"], line=C["line"])
-    u.text(124, 154, s.get("section", "Kreatif iklan"), 22, 700)
+    u.text(124, 154, s.get("section", "Creative"), 22, 700)
     rows = s.get("rows", [])[:4]
     tc = P.ev.get("click", 1e9)
     k_t = 0.0
@@ -544,9 +544,9 @@ def library_card(u, i, c, t, P, show_hl, loading=False):
 
 def library_draw(u, s, t, P):
     ph = s.get("phases", ["country", "query", "results", "highlight"])
-    chrome(u, s.get("url", "perpustakaan-iklan.app"))
-    u.text(48, 88, s.get("heading", "Perpustakaan Iklan"), 28, 800)
-    u.text(48, 116, "Telusuri iklan yang sedang dan pernah tayang", 16, 400, C["mute"])
+    chrome(u, s.get("url", "ads-library.app"))
+    u.text(48, 88, s.get("heading", "Ads Library"), 28, 800)
+    u.text(48, 116, "Telusuri ads yang sedang dan pernah tayang", 16, 400, C["mute"])
     ev = P.ev
     u.reg("pick", (54, 262, 282, 304))
     country = s.get("country", "Indonesia")
@@ -554,7 +554,7 @@ def library_draw(u, s, t, P):
     picked = first > 0 or t >= ev.get("pick", 1e9)
     dd_open = ev.get("open", 1e9) <= t < ev.get("pick", 1e9)
     dropdown(u, 48, 142, 240, "Negara/wilayah", country if picked else "Semua", active=dd_open)
-    dropdown(u, 304, 142, 240, "Kategori iklan", s.get("category", "Semua iklan"))
+    dropdown(u, 304, 142, 240, "Kategori ads", s.get("category", "Semua ads"))
     u.reg("dd1", (48, 142, 288, 202))
     u.rect(560, 142, 912, 202, 12, fill=C["card"], line=C["blue"] if ev.get("q0", 1e9) <= t else C["line"],
            w=2 if ev.get("q0", 1e9) <= t else 1)
@@ -571,14 +571,14 @@ def library_draw(u, s, t, P):
             xx = 610 + u.width(typed, 20, 500) + 2
             u.line(xx, 158, xx, 186, C["blue"], 2)
     else:
-        u.text(610, 172, "Cari kata kunci atau pengiklan", 17, 400, C["faint"])
+        u.text(610, 172, "Cari kata kunci atau advertiser", 17, 400, C["faint"])
     u.reg("search", (560, 142, 912, 202))
     cards = (s.get("cards") or DEF_CARDS)[:4]
     tres = ev.get("res", 1e9)
     if "results" in ph or "highlight" in ph:
         a = smooth((t - tres) / 0.3)
         if a > 0:
-            u.text(48, 224, "± 24 iklan ditemukan", 15, 600, C["mute"])
+            u.text(48, 224, "± 24 ads ditemukan", 15, 600, C["mute"])
     for i, c in enumerate(cards):
         p = smooth((t - tres - i * 0.16) / 0.38)
         sub, (cx, cy) = library_card(u, i, c, t, P, False, loading=(t - tres - i * 0.16) < 0.8)
@@ -770,11 +770,11 @@ def chat_plan(u, s, dur):
 
 
 # --------------------------------------------------------------------------------------------- layout: table
-COLS = [("name", "Nama iklan", 104), ("on", "Status", 392), ("budget", "Anggaran", 500), ("result", "Hasil", 650), ("cost", "Biaya per hasil", 760)]
-DEF_ROWS = [{"name": "Iklan A", "on": True, "budget": "Rp150 rb", "result": "54", "cost": "Rp9 rb", "art": "bottle"},
-            {"name": "Iklan B", "on": True, "budget": "Rp100 rb", "result": "31", "cost": "Rp14 rb", "art": "a"},
-            {"name": "Iklan C", "on": False, "budget": "Rp50 rb", "result": "9", "cost": "Rp27 rb", "art": "b"},
-            {"name": "Iklan D", "on": True, "budget": "Rp80 rb", "result": "22", "cost": "Rp16 rb", "art": "c"}]
+COLS = [("name", "Nama ads", 104), ("on", "Status", 392), ("budget", "Budget", 500), ("result", "Hasil", 650), ("cost", "Biaya per hasil", 760)]
+DEF_ROWS = [{"name": "Ads A", "on": True, "budget": "Rp150 rb", "result": "54", "cost": "Rp9 rb", "art": "bottle"},
+            {"name": "Ads B", "on": True, "budget": "Rp100 rb", "result": "31", "cost": "Rp14 rb", "art": "a"},
+            {"name": "Ads C", "on": False, "budget": "Rp50 rb", "result": "9", "cost": "Rp27 rb", "art": "b"},
+            {"name": "Ads D", "on": True, "budget": "Rp80 rb", "result": "22", "cost": "Rp16 rb", "art": "c"}]
 
 
 def count_text(v, p):
@@ -784,12 +784,12 @@ def count_text(v, p):
 
 
 def table_draw(u, s, t, P):
-    chrome(u, s.get("url", "manajer-iklan.app/iklan"))
+    chrome(u, s.get("url", "ads-manager.app/ads"))
     sidebar(u, 0)
-    u.text(104, 88, s.get("heading", "Iklan"), 26, 800)
+    u.text(104, 88, s.get("heading", "Ads"), 26, 800)
     u.rect(760, 70, 928, 106, 18, fill=C["blue"])
-    u.text(844, 88, "+ Buat iklan", 16, 700, (255, 255, 255), "mm")
-    kp = (s.get("kpis") or [{"label": "Hasil", "value": 116}, {"label": "Anggaran terpakai", "value": "Rp380 rb"}, {"label": "Biaya per hasil", "value": "Rp11 rb"}])[:3]
+    u.text(844, 88, "+ Buat ads", 16, 700, (255, 255, 255), "mm")
+    kp = (s.get("kpis") or [{"label": "Hasil", "value": 116}, {"label": "Budget terpakai", "value": "Rp380 rb"}, {"label": "Biaya per hasil", "value": "Rp11 rb"}])[:3]
     kw = (DW - 104 - 32 - 2 * 16) / 3
     pk = smooth(t / 1.0)
     for i, k in enumerate(kp):
@@ -840,7 +840,7 @@ def table_plan(u, s, dur):
     P.ev = {"row": t_row, "hl": t_hl}
     P.cur = [(0.5, 840, 640), (t_row - 0.1, c[0] - 60, c[1] + 4)]
     P.clicks = []
-    k0 = center(u.R["kpi1"])
+    k0 = center(u.R.get("kpi1") or u.R["kpi0"])  # tabel dengan 1 KPI tidak punya kpi1
     P.cam = [(0, DW / 2, DH / 2, 1.0), (0.9, k0[0], k0[1] + 30, 1.1), (t_row, c[0] - 100, c[1], 1.1), (t_hl + 0.4, c[0], c[1], 1.45)]
     return P
 
@@ -872,9 +872,9 @@ def chart_pts(vals, vmax):
 
 def chart_draw(u, s, t, P):
     ev = P.ev
-    chrome(u, s.get("url", "manajer-iklan.app/performa"))
+    chrome(u, s.get("url", "ads-manager.app/performa"))
     sidebar(u, 0)
-    u.text(104, 88, s.get("heading", "Performa iklan"), 26, 800)
+    u.text(104, 88, s.get("heading", "Performa ads"), 26, 800)
     u.rect(722, 70, 928, 106, 18, fill=C["card"], line=C["line"])
     u.text(742, 88, s.get("range", "7 hari terakhir"), 16, 600)
     u.line(900, 85, 906, 91, C["mute"], 2); u.line(906, 91, 912, 85, C["mute"], 2)
@@ -975,7 +975,7 @@ def chart_plan(u, s, dur):
 
 
 # --------------------------------------------------------------------------------------------- layout: feed
-FEED_DEF = [{"label": "Jangkauan", "value": 12400, "fmt": "rb", "icon": "chart"}, {"label": "Disukai", "value": 1248, "icon": "heart"},
+FEED_DEF = [{"label": "Reach", "value": 12400, "fmt": "rb", "icon": "chart"}, {"label": "Disukai", "value": 1248, "icon": "heart"},
             {"label": "Komentar", "value": 86, "icon": "chat"}, {"label": "Disimpan", "value": 842, "icon": "bookmark"},
             {"label": "Dibagikan", "value": 210, "icon": "arrow"}]
 FPX, FPY, FPW, FPH = 70, 84, 300, 640
@@ -1031,7 +1031,7 @@ def feed_draw(u, s, t, P):
     u.rect(px + 18, yact + 74, px + pw - 110, yact + 82, 4, fill=C["bar"])
     for i in range(4):
         u.circle(px + 40 + i * ((pw - 80) / 3), py + ph - 24, 7, fill=C["bar"])
-    u.text(410, 100, s.get("heading", "Insight postingan"), 24, 800)
+    u.text(410, 100, s.get("heading", "Insight post"), 24, 800)
     u.text(410, 128, s.get("sub", "7 hari pertama setelah tayang"), 15, 400, C["mute"])
     hl = s.get("hl", 3)
     mx = max(1.0, max(m["value"] if not isinstance(m["value"], str) else 0 for m in metrics))

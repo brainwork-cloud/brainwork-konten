@@ -3,8 +3,8 @@
 Scene tambahan untuk B-roll penuh (ilustrasi + animasi) @nopal.brainwork.
 Didaftarkan ke render_motion.SCENES, jadi dipakai di motion/*.json, make_broll (type "motion") dan "cover" di edits/*.json.
 
-  icon   {"type":"icon","icon":"image","kicker":"Advantage+ creative","text":"Foto statis jadi **video iklan**","note":"opsional"}
-  flow   {"type":"flow","kicker":"Alurnya","title":"Dari foto ke video","items":[{"icon":"image","label":"Foto produk"},{"icon":"video","label":"Video iklan"}]}   (2-3 item)
+  icon   {"type":"icon","icon":"image","kicker":"Advantage+ creative","text":"Foto statis jadi **video ads**","note":"opsional"}
+  flow   {"type":"flow","kicker":"Alurnya","title":"Dari foto ke video","items":[{"icon":"image","label":"Foto produk"},{"icon":"video","label":"Video ads"}]}   (2-3 item)
   steps  {"type":"steps","kicker":"Caranya","title":"Di **Ads Manager**","items":["Pakai foto produkmu","Buka Advantage+","Aktifkan opsinya"]}   (2-4 item, muncul satu per satu mengikuti durasi scene)
   vs     {"type":"vs","kicker":"Ingat","title":"opsional","yes":{"title":"Bahan tes"},"no":{"title":"Pengganti video asli"}}
 
