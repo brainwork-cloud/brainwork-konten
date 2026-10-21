@@ -102,11 +102,17 @@ def footer(d, spec, with_source=True):
         d.text((W // 2, H - FOOT // 2 + 4), "brainwork.id", font=font("bold", 36), fill=PURPLE_L, anchor="mm")
 
 
+def _gelap_ekstra():
+    """Foto terang digelapkan tambahan (maks 0,45) supaya judul putih dan logo tetap terbaca; foto gelap tidak diubah."""
+    t = portal_foto.terang(FOTO)
+    return max(0.0, min(1.0, (t - 105.0) / 140.0)) * 0.45
+
+
 def base_foto(focus=(0.5, 0.4), zoom=1.0, gelap=0.0, blur=0.0, sat=0.35, bawah=(0.30, 0.80, 0.95)):
     """Latar foto penuh di atas footer: redup, gradasi gelap di atas (untuk logo) dan di bawah (untuk teks)."""
     img = Image.new("RGB", (W, H), BG)
     ph = H - FOOT
-    img.paste(portal_foto.latar(FOTO, W, ph, focus, zoom, sat, gelap, blur), (0, 0))
+    img.paste(portal_foto.latar(FOTO, W, ph, focus, zoom, sat, max(gelap, _gelap_ekstra()), blur), (0, 0))
     portal_foto.gradasi(img, 0, 300, 0.72, 0.0, box=(0, 0, W, ph))
     portal_foto.gradasi(img, int(ph * bawah[0]), int(ph * bawah[1]), 0.0, bawah[2], box=(0, 0, W, ph))
     d = ImageDraw.Draw(img)
@@ -472,12 +478,12 @@ def _register_scene(rm):
 
     def sc_hook_foto(fr, s, t, dur):
         k = rm.eo(rm.seg(t, 0, max(0.5, dur)))
-        ph = 1180
-        fr.img.paste(portal_foto.latar(FOTO, rm.W, ph, (0.5, 0.42), 1.0 + 0.08 * k, 0.35), (0, 0))
+        ph = rm.H      # foto memenuhi seluruh layar; gradasi gelap di bawah untuk teks
+        fr.img.paste(portal_foto.latar(FOTO, rm.W, ph, (0.5, 0.40), 1.0 + 0.08 * k, 0.35, _gelap_ekstra()), (0, 0))
         portal_foto.gradasi(fr.img, 0, 360, 0.6, 0.0, box=(0, 0, rm.W, ph))
-        portal_foto.gradasi(fr.img, 520, ph, 0.0, 1.0, box=(0, 0, rm.W, ph))
+        portal_foto.gradasi(fr.img, 560, 1560, 0.0, 0.95, box=(0, 0, rm.W, ph))
         fr.d = ImageDraw.Draw(fr.img)
-        y = 880
+        y = 1000
         fr.fade_text(rm.X0, y, s.get("kicker", "").upper(), rm.font("s", 32), t, 0.2, rm.GOLD)
         f = rm.fit(fr.d, s["text"], "x", [84, 78, 72, 66, 60], rm.XW, 5)
         y = fr.text_anim(rm.X0, y + 62, s["text"], f, rm.XW, t, 0.3)
@@ -486,7 +492,7 @@ def _register_scene(rm):
             fr.d.rounded_rectangle([rm.X0, y + 28, rm.X0 + int(240 * p), y + 40], radius=6, fill=rm.GOLD)
         if s.get("sub"):
             fr.text_anim(rm.X0, y + 70, s["sub"], rm.font("r", 40), rm.XW, t, 1.4, color=rm.MUTE, stagger=0.04)
-        fr.fade_text(rm.X0, 1468, FOTO_LABEL, rm.font("r", 26), t, 1.0, rm.MUTE)
+        fr.fade_text(rm.X0, 1640, FOTO_LABEL, rm.font("r", 26), t, 1.0, rm.MUTE)
     rm.SCENES["hook_foto"] = sc_hook_foto
 
     def sc_fakta_foto(fr, s, t, dur):

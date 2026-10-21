@@ -41,7 +41,7 @@ Pengaman (dua halaman Facebook tidak boleh tertukar):
 - "instagram_portal": lolos pengaman halaman portal di atas, lalu akun IG yang tertaut ke halaman itu harus berusername "brainwork.id".
   Token yang sama (PORTAL_FB_PAGE_TOKEN), tanpa secret baru. Kegagalan IG tidak memengaruhi posting Facebook (file antrian terpisah).
 """
-import os, sys, json, glob, time, datetime as dt
+import os, re, sys, json, glob, time, datetime as dt
 import requests
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -186,6 +186,20 @@ def _portal_media(item, label):
     return ("video", video) if video else ("images", urls)
 
 
+def _sesuaikan_kredit_foto(item, text):
+    """Baris kredit foto di caption ("Foto: ..." atau "Foto ilustrasi: ...") hanya benar bila kartu benar-benar memakai foto.
+    Render menulis aset/<ID>/.foto.txt (baris 1 "dipakai" atau "diganti ilustrasi"). Kalau diganti ilustrasi, baris kredit
+    dibuang dari caption supaya tidak menyebut foto yang tidak tampil. Tanpa berkas itu caption tidak diubah."""
+    try:
+        baris = open(os.path.join(ROOT, "aset", item["id"], ".foto.txt"), encoding="utf-8").read().splitlines()
+    except (OSError, KeyError):
+        return text
+    if baris and baris[0].strip().startswith("diganti"):
+        sisa = [l for l in text.split("\n") if not re.match(r"^\s*Foto( ilustrasi)?\s*:", l)]
+        text = re.sub(r"\n{3,}", "\n\n", "\n".join(sisa)).strip()
+    return text
+
+
 def _cek_caption(text, label):
     if "sumber" not in text.lower() or "http" not in text.lower():
         raise ValueError(f"{label}: caption wajib memuat 'Sumber' dan tautan sumber (http...)")
@@ -193,7 +207,8 @@ def _cek_caption(text, label):
 
 def facebook_portal(item):
     """Portal Brainwork.id: berita bersumber ke halaman portal saja. Format: 1 gambar, carousel (multi-foto) atau Reels."""
-    text = item.get("message") or ""
+    text = _sesuaikan_kredit_foto(item, item.get("message") or "")
+    item = dict(item, message=text)
     _cek_caption(text, "portal")
     kind, media = _portal_media(item, "portal")
     if kind == "video":
@@ -233,7 +248,7 @@ def _ig_wait(cid, tok, tries, jeda):
 def instagram_portal(item):
     """Portal Brainwork.id di Instagram (@brainwork.id saja, Graph API), media sama dengan Facebook:
     1 gambar (IMAGE), 2-10 gambar (CAROUSEL: container anak lalu induk), atau video (REELS, tampil juga di feed)."""
-    text = item.get("message") or ""
+    text = _sesuaikan_kredit_foto(item, item.get("message") or "")
     _cek_caption(text, "portal IG")
     if len(text) > 2200:
         raise ValueError(f"portal IG: caption {len(text)} karakter, batas Instagram 2200")

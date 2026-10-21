@@ -71,11 +71,11 @@ def ambil(f, tw, th):
 def latar(im, w, h, focus=(0.5, 0.4), zoom=1.0, sat=0.35, gelap=0.0, blur=0.0):
     """Potong gaya 'cover' ke w x h, kurangi warna, gelapkan (campur dengan warna latar) dan kaburkan bila perlu."""
     iw, ih = im.size
-    sc = max(w / iw, h / ih) * zoom
-    vw, vh = w / sc, h / sc
-    cx = min(max(focus[0] * iw, vw / 2), iw - vw / 2)
-    cy = min(max(focus[1] * ih, vh / 2), ih - vh / 2)
-    out = im.resize((int(w), int(h)), Image.LANCZOS, box=(cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2))
+    sc = max(w / iw, h / ih) * max(1.0, zoom)          # zoom < 1 membuat kotak potong melebihi foto -> galat PIL; batasi
+    vw, vh = min(w / sc, iw), min(h / sc, ih)
+    x0 = min(max(focus[0] * iw - vw / 2, 0.0), iw - vw)
+    y0 = min(max(focus[1] * ih - vh / 2, 0.0), ih - vh)
+    out = im.resize((int(w), int(h)), Image.LANCZOS, box=(x0, y0, x0 + vw, y0 + vh))
     if blur:
         out = out.filter(ImageFilter.GaussianBlur(blur))
     out = ImageEnhance.Color(out).enhance(sat)
@@ -83,6 +83,11 @@ def latar(im, w, h, focus=(0.5, 0.4), zoom=1.0, sat=0.35, gelap=0.0, blur=0.0):
     if gelap:
         out = Image.blend(out, Image.new("RGB", out.size, BG), gelap)
     return out
+
+
+def terang(im):
+    """Kecerahan rata-rata foto (0-255), dipakai menggelapkan foto yang terlalu terang supaya teks putih tetap terbaca."""
+    return float(np.asarray(im.convert("L").resize((48, 48)), dtype=float).mean())
 
 
 def mask(w, h, y0, y1, a0, a1):
