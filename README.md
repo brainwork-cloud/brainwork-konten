@@ -19,7 +19,9 @@ Versi 3 · 17 Okt 2026. Salinan kerja ada di repo GitHub publik `brainwork-cloud
 | 3a Penerbit IG + mirror FB/Shorts | Tiap hari 10:55, 18:55 | Tidak |
 | 3b Antrian Threads | Senin–Jumat 12:37, 16:37 | Tidak |
 | 4 Analis | Minggu 18:22 | Tidak |
+| 5 Redaktur Portal (Brainwork.id) | Tiap hari 06:23 | Tidak |
 | 5 Mirror TikTok/Shorts | manual oleh Nazwa | — |
+| 6 Pemantau (COO, hanya membaca, lapor ke Naufal) | Tiap hari 09:37 | Tidak |
 
 ## Jalur publish
 | Platform | Jalur |
@@ -37,7 +39,7 @@ REVISI: spec dengan ID sama diunggah lagi → md5 spec beda dari `aset/<ID>/.spe
 Catatan: folder `rekaman/` tidak di-commit; repo publik hanya memuat hasil akhir.
 
 ## File
-`BRAND.md` · `render_carousel.py` · `render_motion.py` · `edit_reel.py` · `make_broll.py` · `fetch_media.py` · `fetch_inbox.py` · `publish.py` · `.github/workflows/` · `prompts/1-5` · `setup/` (`set_secrets.py --bot-pat`, `git_sync.sh`, `gh_run.py`, `purge_cdn.sh`) · `fonts/`
+`BRAND.md` · `render_carousel.py` · `render_motion.py` · `edit_reel.py` · `make_broll.py` · `fetch_media.py` · `fetch_inbox.py` · `publish.py` · `.github/workflows/` · `prompts/1-6` · `setup/` (`set_secrets.py --bot-pat`, `git_sync.sh`, `gh_run.py`, `purge_cdn.sh`) · `fonts/`
 
 ## Setup yang tersisa
 1. Repo publik `brainwork-konten` + sambungkan GitHub di claude.ai + aktifkan GitHub Pages (Settings → Pages → Deploy from branch `main`, folder `/root`).
