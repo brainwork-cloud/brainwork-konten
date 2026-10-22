@@ -64,7 +64,7 @@ def main():
                 if b["type"] == "web":
                     web_clip(b["url"], float(b.get("seconds", 5)), out, b.get("mobile", True))
                 elif b["type"] == "motion":
-                    for sc in b["scenes"]:   # foto latar hanya untuk carousel, Reels Motion, dan cover Talking Head (log .foto.txt ada di proses lain)
+                    for sc in b["scenes"]:   # foto Faceless/Aktivitas/Talking Head dipasang edit_reel.py (cover atau kartu berfoto, dicatat di .foto.txt), bukan di B-roll
                         if sc.pop("foto", None):
                             print("catatan: field foto diabaikan di make_broll", sid, b["name"])
                     render_motion.render_clip(b["scenes"], out)

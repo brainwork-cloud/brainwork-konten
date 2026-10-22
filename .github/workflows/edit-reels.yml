@@ -42,7 +42,7 @@ jobs:
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/$id.mp4" ]; then
               echo "== $id"
-              if python edit_reel.py "$f" 2> err.txt; then md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"; else { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt; fi
+              if python edit_reel.py "$f" 2> err.txt; then md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"; else { echo "GAGAL $id"; tail -c 1500 err.txt; } >> edit_gagal.txt; rm -f "aset/$id/.foto.txt"; fi
             fi
           done
       - name: Simpan hasil

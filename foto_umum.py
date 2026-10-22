@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """
-Foto latar untuk konten @nopal.brainwork: carousel, Reels Motion, dan cover Talking Head.
+Foto latar untuk konten @nopal.brainwork: carousel, Reels Motion, cover Talking Head, serta kartu foto Reels Faceless dan Reels Aktivitas.
 STANDAR FOTO WAJIB (keputusan Naufal 21 Okt 2026, diperketat 22 Okt 2026: "apa pun alasannya konten harus berfoto"): foto relevan
 berkredit sebagai latar redup, teks di atasnya. Foto TIDAK PERNAH dilewati:
   - spec tanpa foto -> renderer memasang foto cadangan (foto_cadangan.json, dipilih menurut topik) di sampul/hook dan satu slide/scene lain;
   - foto di spec gagal diunduh atau tidak lolos pemeriksaan -> diganti foto cadangan (kreditnya ikut berganti);
   - di GitHub Actions render GAGAL bila ada tempat berfoto tetapi tak satu foto pun bisa dimuat (bukan keluar polos);
   - render lokal tanpa internet ke Unsplash tetap jalan polos supaya QA tata letak bisa dilakukan.
-Pengecualian satu-satunya adalah yang tertulis di standar: scene `ui`, `mock`, `end`, slide `visual`, Reels Faceless, Reels Aktivitas, Threads.
+Reels Faceless dan Reels Aktivitas ikut wajib sejak 22 Okt 2026 (keputusan Naufal: "wajib foto/ilustrasi realistis, Threads tidak"):
+  - Faceless: item `cover` (format sama dengan Talking Head, boleh tanpa `from_word` bila memakai `at`/`dur`) berfoto; bila spec tak punya satu pun
+    item berfoto, editor memasang kartu `hook` berfoto 3 dtk di awal (teks hook dipindah dari banner ke kartu);
+  - Aktivitas: `kartu` opsional `[{"pos": "awal"|"akhir", "scene": {...}}]`; bila tak ada kartu berfoto, editor memasang kartu `hook` berfoto 2,8 dtk
+    sebelum klip pertama. Klip rekaman Naufal sendiri tidak diberi foto.
+Pengecualian satu-satunya adalah yang tertulis di standar: scene `ui`, `mock`, `end`, slide `visual`, dan Threads.
 
 Field `foto` boleh ada di slide carousel (cover, point, list, statement, cta) dan di scene video (hook, stat, points,
 statement, icon, flow, steps, vs; bukan ui, mock, end). Bentuknya sama dengan portal (portal_foto.py):
@@ -33,7 +38,7 @@ LOG = []        # satu entri per foto unik: {"kunci", "kredit", "stok", "label",
 _IM = {}        # (kunci, tw, th) -> (PIL.Image atau None, pesan)
 _BG = {}        # (kunci, tw, th, fokus, gelap) -> latar siap pakai
 _GANTI = {}     # kunci foto asli yang gagal/tak ada -> foto cadangan yang dipilih (konsisten untuk semua ukuran)
-AKTIF = False   # konten ini tunduk standar foto (carousel, Reels Motion, cover Talking Head, portal)
+AKTIF = False   # konten ini tunduk standar foto (carousel, Reels Motion, cover Talking Head, kartu Faceless/Aktivitas, portal)
 ADA_TEMPAT = True   # ada slide/scene yang boleh berfoto (False = semua `ui`/`visual`, tidak wajib gagal)
 SEED = ""       # ID konten (urutan foto cadangan stabil per konten)
 TEKS = ""       # teks topik konten (untuk mencocokkan foto cadangan)
@@ -237,6 +242,30 @@ def lengkapi_talking_head(spec, tw, th):
             ada.append(s)
 
 
+def kartu_hook(teks, dur=3.0):
+    """Reels Faceless dan Aktivitas: scene `hook` berfoto cadangan (menurut topik, tanpa mengulang foto yang sudah dipakai). Bila kolam kosong,
+    scene tanpa `foto`; pastikan() lalu menggagalkan render di Actions."""
+    sc = {"type": "hook", "kicker": "", "text": (teks or "").strip() or "Tips ads dan AI", "dur": float(dur)}
+    cad = _cad(1, _dipakai_semua())
+    if cad:
+        sc["foto"] = cad[0]
+    return sc
+
+
+def lengkapi_kartu(scenes, tw, th):
+    """Kartu foto Faceless/Aktivitas: scene berjenis boleh-foto tanpa `foto` dipasangi foto cadangan (tanpa mengulang foto yang sudah ada)."""
+    global ADA_TEMPAT
+    elig = [s for s in scenes if s.get("type") in _GAMBAR_OK]
+    if not elig:
+        ADA_TEMPAT = False
+        return
+    ada = [s["foto"] for s in elig if _punya(s.get("foto"))]
+    cad = _cad(len(elig), _muat_awal(ada, tw, th))
+    for s in elig:
+        if not _punya(s.get("foto")) and cad:
+            s["foto"] = cad.pop(0)
+
+
 def pastikan(path):
     """Panggil setelah foto dimuat (siapkan) dan sebelum render panjang: di Actions, bila ada tempat berfoto tetapi tak satu foto pun
     berhasil dimuat (jaringan putus, Unsplash turun), tulis .foto.txt lalu hentikan render dengan galat jelas. Konten tidak boleh
@@ -344,7 +373,7 @@ def kredit_baris(dipakai=None):
 
 
 def tulis_log(path, kosong="tanpa foto"):
-    """Tulis .foto.txt (format di docstring). Konten yang tunduk standar foto SELALU ditulis; selain itu (Faceless, Aktivitas) tidak menulis apa pun."""
+    """Tulis .foto.txt (format di docstring). Konten yang tunduk standar foto SELALU ditulis; selain itu (Threads) tidak menulis apa pun."""
     if not LOG and not AKTIF:
         return
     ok = [e for e in LOG if e["tampil"]]

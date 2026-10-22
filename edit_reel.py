@@ -32,7 +32,13 @@ Spec edit (ditulis agen Produser):
   "close_sec": 6,                       # wajah kembali di N detik terakhir (default 6)
   "close_from_word": "Simpan",          # atau: wajah kembali mulai akhir kata ini (menggantikan close_sec)
   # activity: klip aktivitas Naufal (tanpa bicara) + teks di layar + musik otomatis
-  "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka report ads dulu"}]
+  "clips": [{"file": "rekaman/<ID>/a1.mp4", "dur": 2.5, "start": 0, "text": "08.30, buka report ads dulu"}],
+  # STANDAR FOTO WAJIB (22 Okt 2026), Faceless dan Aktivitas ikut (Threads tidak):
+  # faceless: pakai "cover" seperti Talking Head ("at" detik atau "from_word"; "dur" opsional membatasi lama tampil; tanpa "close_sec" cover
+  #   berlaku sampai akhir ucapan). Tanpa item berfoto, editor memasang kartu hook berfoto 3 dtk di awal secara otomatis.
+  # activity: "kartu": [{"pos": "awal", "scene": {"type": "hook", "text": "...", "dur": 2.8}},
+  #                     {"pos": "akhir", "scene": {"type": "statement", "text": "Pelajarannya: ...", "dur": 3}}]; field "foto" di scene opsional
+  #   (diisi foto cadangan bila kosong). Tanpa kartu berfoto, editor memasang kartu hook berfoto 2,8 dtk sebelum klip pertama.
 }
 Hasil: MP4 H.264 1080x1920 30fps + AAC, subtitle tertanam, siap IG Reels / TikTok / Shorts.
 """
@@ -249,18 +255,21 @@ def plan_cover(spec, new_words, main_len, tmp, out_dir):
                 warns.append(f"cover dari kata '{c['from_word']}' tidak ketemu di transkrip, dilewati (perbaiki 'fix' atau pakai 'at' detik)")
         if st is not None and c.get("scene"):
             plan.append((float(st), c))
+    faceless = spec.get("mode") == "faceless"   # Faceless: tak ada wajah; cover boleh berlaku sampai akhir ucapan
     close = find_word_end(new_words, spec["close_from_word"]) if spec.get("close_from_word") else None
     if close is None:
         if spec.get("close_from_word"):
             warns.append(f"close_from_word '{spec['close_from_word']}' tidak ketemu, pakai close_sec")
-        close = main_len - float(spec.get("close_sec", 6))
+        close = main_len - float(spec.get("close_sec", 0 if faceless else 6))
     plan.sort(key=lambda x: x[0])
     plan = [(st, c) for st, c in plan if st < close - 0.8]
-    if plan and plan[0][0] < 2.0:
+    if plan and plan[0][0] < 2.0 and not faceless:
         warns.append(f"cover pertama mulai {plan[0][0]:.1f} dtk: wajah perlu tampil di pembuka (minimal 2 dtk)")
     res, lines = [], []
     for i, (st, c) in enumerate(plan):
         end = plan[i + 1][0] if i + 1 < len(plan) else close
+        if c.get("dur"):
+            end = min(end, st + float(c["dur"]))
         du = end - st
         if du < 0.8:
             warns.append(f"cover pada {st:.1f} dtk hanya {du:.1f} dtk, dilewati (geser kata pemicu)")
@@ -275,7 +284,8 @@ def plan_cover(spec, new_words, main_len, tmp, out_dir):
         lines.append(f"{st:6.1f} dtk | {du:4.1f} dtk | {scene.get('type')} | {(scene.get('text') or scene.get('title') or '')[:60]}")
     out = [(st, du, path, k == 0, k == len(res) - 1) for k, (st, du, path) in enumerate(res)]
     open(os.path.join(out_dir, f"{spec['id']}_cover.txt"), "w", encoding="utf-8").write(
-        f"wajah tampil: 0-{(res[0][0] if res else main_len):.1f} dtk dan {close:.1f}-{main_len:.1f} dtk\n" + "\n".join(lines) + "\n")
+        ("tanpa wajah (Faceless); item cover di bawah\n" if faceless else f"wajah tampil: 0-{(res[0][0] if res else main_len):.1f} dtk dan {close:.1f}-{main_len:.1f} dtk\n")
+        + "\n".join(lines) + "\n")
     return out, warns
 
 
@@ -379,11 +389,24 @@ def main():
     mode = spec.get("mode", "faceless")
     if mode == "activity":
         return activity(spec, P, out_dir, tmp)
-    try:   # standar foto wajib (22 Okt 2026): cover Talking Head memakai foto; lengkapi bila spec tanpa foto, ganti yang gagal, hentikan sebelum kerja berat bila tak ada yang bisa tampil (Actions)
+    try:   # standar foto wajib (22 Okt 2026): cover Talking Head dan Faceless berfoto; lengkapi bila spec tanpa foto, ganti yang gagal, hentikan sebelum kerja berat bila tak ada yang bisa tampil (Actions)
         import foto_umum
-        foto_umum.atur(spec, aktif=(mode == "talking_head" and bool(spec.get("cover"))))
+        faceless = mode == "faceless"
+        foto_umum.atur(spec, aktif=faceless or (mode == "talking_head" and bool(spec.get("cover"))))
         if foto_umum.AKTIF:
+            if not isinstance(spec.get("cover"), list):
+                spec["cover"] = []
+            if faceless:   # kartu hook buatan Produser yang belum berfoto dipasangi foto lebih dulu (dihitung sebagai foto pertama)
+                hooks = [(c.get("scene") or {}) for c in spec["cover"] if (c.get("scene") or {}).get("type") == "hook"]
+                if hooks:
+                    foto_umum.lengkapi_kartu(hooks, 1080, 1920)
             foto_umum.lengkapi_talking_head(spec, 1080, 1920)
+            if faceless:
+                foto_umum.ADA_TEMPAT = True   # Faceless selalu punya tempat: kartu hook otomatis
+            if faceless and not any((c.get("scene") or {}).get("type") in foto_umum._GAMBAR_OK and foto_umum._punya((c.get("scene") or {}).get("foto"))
+                                    for c in spec["cover"]):
+                spec["cover"].insert(0, {"at": 0.0, "dur": 3.0, "scene": foto_umum.kartu_hook(spec.get("hook"), 3.0)})
+                foto_umum.ADA_TEMPAT = True
             for c in spec["cover"]:
                 sc_ = c.get("scene") or {}
                 if sc_.get("foto") and sc_.get("type") in foto_umum._GAMBAR_OK:
@@ -507,7 +530,8 @@ def main():
 
     # subtitle + hook
     ass = os.path.join(tmp, "cap.ass")
-    build_ass(new_words, spec.get("hook"), spec.get("highlight_words"), main_len, ass)
+    hook_di_kartu = any((c.get("scene") or {}).get("type") == "hook" and c.get("at") is not None and float(c["at"]) <= 0.5 for c in spec.get("cover") or [])
+    build_ass(new_words, None if hook_di_kartu else spec.get("hook"), spec.get("highlight_words"), main_len, ass)   # kartu hook berfoto sudah memuat teks hook
     subbed = os.path.join(tmp, "sub.mp4")
     run(["ffmpeg", "-y", "-i", os.path.join(tmp, "main.mp4"), "-vf", f"subtitles={ass}:fontsdir={FONTS}",
          "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "copy", subbed])
@@ -569,20 +593,59 @@ def activity(spec, P, out_dir, tmp):
     import numpy  # noqa: F401  (dipakai render_motion.score)
     sys.path.insert(0, HERE)
     import render_motion
+    # standar foto wajib (22 Okt 2026): kartu berfoto di awal (dan/atau akhir). Klip rekaman Naufal sendiri tidak diberi foto.
+    kartu = []   # [(pos, scene)]
+    try:
+        import foto_umum
+        foto_umum.atur(spec, aktif=True)
+        for k in spec.get("kartu") or []:
+            if isinstance(k.get("scene"), dict):
+                kartu.append(("akhir" if k.get("pos") == "akhir" else "awal", dict(k["scene"])))
+        if not any(sc.get("type") in foto_umum._GAMBAR_OK for _, sc in kartu):
+            teks = spec.get("hook") or next((c.get("text") for c in spec["clips"] if c.get("text")), "")
+            kartu.insert(0, ("awal", foto_umum.kartu_hook(teks, 2.8)))
+            foto_umum.ADA_TEMPAT = True
+        for pos, sc in kartu:
+            sc["dur"] = round(max(1.5, min(4.0, float(sc.get("dur", 2.8 if pos == "awal" else 3.0)))), 3)
+        foto_umum.lengkapi_kartu([sc for _, sc in kartu], W, H)
+        for _, sc in kartu:
+            if sc.get("foto") and sc.get("type") in foto_umum._GAMBAR_OK:
+                foto_umum.siapkan(sc["foto"], W, H)
+        foto_umum.pastikan(os.path.join(out_dir, ".foto.txt"))
+    except SystemExit:
+        raise
+    except Exception as e:
+        print("peringatan: persiapan foto gagal:", type(e).__name__, e)
     norm, items, t = [], [], 0.0
+
+    def tambah_kartu(sc, i):
+        nonlocal t
+        raw = os.path.join(tmp, f"k{i}_raw.mp4"); n = os.path.join(tmp, f"k{i}.mp4")
+        render_motion.render_clip([sc], raw)
+        run(["ffmpeg", "-y", "-i", raw, "-an", "-vf", f"scale={W}:{H},fps={FPS},setsar=1,format=yuv420p",
+             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", n])
+        norm.append(n); items.append((t, t + sc["dur"], "")); t += sc["dur"]
+
+    awal = [sc for pos, sc in kartu if pos == "awal"]
+    akhir = [sc for pos, sc in kartu if pos == "akhir"]
+    for i, sc in enumerate(awal):
+        tambah_kartu(sc, i)
     for i, c in enumerate(spec["clips"]):
         d = float(c.get("dur", 2.5)); n = os.path.join(tmp, f"a{i}.mp4")
         run(["ffmpeg", "-y", "-ss", str(c.get("start", 0)), "-i", P(c["file"]), "-t", f"{d:.3f}", "-an", "-vf",
              f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},setsar=1,format=yuv420p",
              "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", n])
         norm.append(n); items.append((t, t + d, c.get("text", ""))); t += d
+    for i, sc in enumerate(akhir):
+        tambah_kartu(sc, 100 + i)
     lst = os.path.join(tmp, "list.txt"); open(lst, "w").write("".join(f"file '{n}'\n" for n in norm))
     cat = os.path.join(tmp, "cat.mp4"); run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", cat])
     scenes = [{"type": "hook", "dur": items[0][1]}] + [{"type": "statement", "dur": b - a} for a, b, _ in items[1:-1]] + [{"type": "end", "dur": items[-1][1] - items[-1][0]}]
     wav = os.path.join(tmp, "m.wav"); render_motion.score({"scenes": scenes}, wav)
     run(["ffmpeg", "-y", "-i", cat, "-i", wav, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
          "-ar", "48000", "-shortest", os.path.join(tmp, "main.mp4")])
-    ass = os.path.join(tmp, "cap.ass"); activity_ass(spec.get("hook"), items, ass)
+    hook_di_kartu = any(sc.get("type") == "hook" for sc in awal)   # teks hook sudah tampil di kartu pembuka
+    ass = os.path.join(tmp, "cap.ass"); activity_ass(None if hook_di_kartu else spec.get("hook"), items, ass)
     subbed = os.path.join(tmp, "sub.mp4")
     run(["ffmpeg", "-y", "-i", os.path.join(tmp, "main.mp4"), "-vf", f"subtitles={ass}:fontsdir={FONTS}",
          "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-c:a", "copy", subbed])
