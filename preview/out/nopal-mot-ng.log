@@ -1,0 +1,4 @@
+foto: gagal memuat: HTTPError: 404 Client Error: Not Found for url: https://images.unsplash.com/photo-0000000000000-tidak-ada?fm=jpg&q=80&w=1800
+foto: ok 2400x1800, pembesaran 1.07x
+foto: https://images.unsplash.com/photo-0000000000000-tidak-ada?fm=jpg&q=80&w=1800 diganti cadangan Vardan Papikyan / Unsplash
+{"files": ["preview/out/nopal-mot-ng/nopal-mot-ng.mp4", "nopal-mot-ng_tiktok.mp4", "nopal-mot-ng_cover.jpg"], "duration": 20.0}

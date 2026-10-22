@@ -1,0 +1,4 @@
+foto: gagal memuat: HTTPError: 404 Client Error: Not Found for url: https://images.unsplash.com/photo-0000000000000-tidak-ada?fm=jpg&q=80&w=1800
+foto: ok 2400x1800, pembesaran 0.64x
+foto: https://images.unsplash.com/photo-0000000000000-tidak-ada?fm=jpg&q=80&w=1800 diganti cadangan Vardan Papikyan / Unsplash
+{"format": "single", "file": "preview/out/PT-PREV-GS/PT-PREV-GS.jpg", "files": ["preview/out/PT-PREV-GS/PT-PREV-GS.jpg"]}
