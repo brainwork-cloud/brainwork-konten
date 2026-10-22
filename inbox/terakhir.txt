@@ -1,2 +1,3 @@
-4 file di inbox
+embeddedfolderview: 0 entri (panjang html 1278, ada 'flip-entry': False)
+0 file di inbox
 selesai: 0 file diimpor, 0 gagal
