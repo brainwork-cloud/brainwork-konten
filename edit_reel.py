@@ -383,7 +383,7 @@ def main():
         import foto_umum
         foto_umum.atur(spec, aktif=(mode == "talking_head" and bool(spec.get("cover"))))
         if foto_umum.AKTIF:
-            foto_umum.lengkapi_talking_head(spec)
+            foto_umum.lengkapi_talking_head(spec, 1080, 1920)
             for c in spec["cover"]:
                 sc_ = c.get("scene") or {}
                 if sc_.get("foto") and sc_.get("type") in foto_umum._GAMBAR_OK:

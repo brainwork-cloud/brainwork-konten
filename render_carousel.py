@@ -388,7 +388,7 @@ def main():
         sys.exit("Carousel IG wajib 2-10 slide")
     if foto_umum is not None:   # standar foto wajib: lengkapi bila spec tanpa foto, ganti yang gagal, hentikan render (Actions) bila tak ada yang bisa tampil
         foto_umum.atur(spec)
-        foto_umum.lengkapi_carousel(slides)
+        foto_umum.lengkapi_carousel(slides, W, H - 130)
         for s in slides:
             if s["type"] != "visual" and s.get("foto"):
                 foto_umum.siapkan(s["foto"], W, H - 130)

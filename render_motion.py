@@ -435,7 +435,7 @@ def main():
     kelola = foto_umum is not None and not spec.get("foto_dikelola")   # render_portal.py mengelola fotonya sendiri (spec["foto_dikelola"])
     if kelola:   # standar foto wajib (lihat foto_umum.py)
         foto_umum.atur(spec)
-        foto_umum.lengkapi_motion(sc)
+        foto_umum.lengkapi_motion(sc, W, H)
         for s in sc:
             if s.get("foto") and s["type"] in foto_umum._GAMBAR_OK:
                 foto_umum.siapkan(s["foto"], W, H)

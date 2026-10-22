@@ -151,60 +151,74 @@ def _punya(f):
     return isinstance(f, dict) and bool(f.get("url") or f.get("file"))
 
 
-def _cad(n):
+def _cad(n, hindari=()):
     try:
         import portal_foto
-        return [dict(g, cadangan=True) for g in portal_foto.cadangan(TEKS, SEED)[:n]]
+        return [dict(g, cadangan=True) for g in portal_foto.cadangan(TEKS, SEED, hindari=set(hindari))[:n]]
     except Exception:
         return []
 
 
-def lengkapi_carousel(slides):
+def _dipakai_semua():
+    return {kunci(g) for g in _GANTI.values()} | {e["kunci"] for e in LOG if e["dipakai"]}
+
+
+def _muat_awal(daftar_f, tw, th):
+    """Muat foto yang sudah ada di spec lebih dulu (yang gagal langsung diganti cadangan), lalu kembalikan kunci semua foto yang sudah
+    terpakai supaya foto tambahan dari renderer tidak sama dengan yang sudah ada."""
+    for f in daftar_f:
+        pilih(f, tw, th)
+    return _dipakai_semua() | {kunci(f) for f in daftar_f}
+
+
+def lengkapi_carousel(slides, tw, th):
     """Spec tanpa foto di sampul = pasang foto cadangan di sampul; bila total foto < 2 dan ada slide point/list tanpa foto, satu lagi."""
     global ADA_TEMPAT
     elig = [i for i, s in enumerate(slides) if s.get("type") != "visual"]
     if not elig:
         ADA_TEMPAT = False
         return
-    cad = _cad(2)
-    pakai = [slides[i] for i in elig if _punya(slides[i].get("foto"))]
+    ada = [slides[i]["foto"] for i in elig if _punya(slides[i].get("foto"))]
+    cad = _cad(2, _muat_awal(ada, tw, th))
+    pakai = len(ada)
     if not _punya(slides[elig[0]].get("foto")) and cad:
         slides[elig[0]]["foto"] = cad.pop(0)
-        pakai.append(slides[elig[0]])
-    if len(pakai) < 2 and cad:
+        pakai += 1
+    if pakai < 2 and cad:
         for i in elig[1:]:
             if slides[i].get("type") in ("point", "list") and not _punya(slides[i].get("foto")):
                 slides[i]["foto"] = cad.pop(0)
                 break
 
 
-def _lengkapi_scene(scenes, utama, kedua):
+def _lengkapi_scene(scenes, utama, kedua, tw, th):
     global ADA_TEMPAT
     elig = [s for s in scenes if s.get("type") in _GAMBAR_OK]
     if not elig:
         ADA_TEMPAT = False
         return
-    cad = _cad(2)
-    pakai = [s for s in elig if _punya(s.get("foto"))]
+    ada = [s["foto"] for s in elig if _punya(s.get("foto"))]
+    cad = _cad(2, _muat_awal(ada, tw, th))
+    pakai = len(ada)
     if not pakai and cad:
         s0 = next((s for s in elig if s.get("type") in utama), None)
         if s0 is not None:
             s0["foto"] = cad.pop(0)
-            pakai.append(s0)
-    if len(pakai) < 2 and cad:
+            pakai += 1
+    if pakai < 2 and cad:
         for s in elig:
             if s.get("type") in kedua and not _punya(s.get("foto")):
                 s["foto"] = cad.pop(0)
                 break
 
 
-def lengkapi_motion(scenes):
+def lengkapi_motion(scenes, tw, th):
     """Reels Motion: hook berfoto; bila total foto < 2, satu scene points/icon/flow/steps/vs juga (stat dan statement tidak otomatis, supaya
     foto suasana tidak jadi 'bukti' angka atau klaim)."""
-    _lengkapi_scene(scenes, ("hook",), ("points", "icon", "flow", "steps", "vs"))
+    _lengkapi_scene(scenes, ("hook",), ("points", "icon", "flow", "steps", "vs"), tw, th)
 
 
-def lengkapi_talking_head(spec):
+def lengkapi_talking_head(spec, tw, th):
     """Talking Head: minimal dua item cover non-ui berfoto (icon/flow/steps/vs/points; `statement` hanya bila tak ada jenis lain)."""
     global ADA_TEMPAT
     sc = [c["scene"] for c in spec.get("cover", []) if isinstance(c.get("scene"), dict)]
@@ -213,8 +227,8 @@ def lengkapi_talking_head(spec):
     if not elig:
         ADA_TEMPAT = False
         return
-    cad = _cad(2)
     ada = [s for s in sc if s.get("type") in _GAMBAR_OK and _punya(s.get("foto"))]
+    cad = _cad(2, _muat_awal([s["foto"] for s in ada], tw, th))
     for s in elig:
         if len(ada) >= 2 or not cad:
             break
