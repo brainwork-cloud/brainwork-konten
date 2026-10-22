@@ -9,16 +9,73 @@ spec["foto"] = {"url": "https://.../gambar.jpg", "kredit": "TechCrunch"}      # 
                {"url": "https://images.unsplash.com/photo-...", "kredit": "Nama Fotografer / Unsplash", "jenis": "stok"}
                                                                                # foto stok berlisensi bebas; tercetak "Foto ilustrasi: ..." supaya tidak dikira foto kejadian aslinya
                {"file": "preview/contoh.jpg", "kredit": "..."}                 # berkas lokal (uji)
+STANDAR FOTO WAJIB (keputusan Naufal 22 Okt 2026, "apa pun alasannya konten harus berfoto"): foto yang tidak lolos di atas TIDAK lagi membuat
+konten polos/ilustrasi. Renderer otomatis memakai foto cadangan dari foto_cadangan.json (kolam foto stok Unsplash yang sudah dipilih manual),
+dipilih menurut kata kunci topik konten (cadangan() di bawah), dan baris kredit konten otomatis mengikuti foto yang benar-benar tampil.
+Di GitHub Actions render GAGAL (bukan polos) bila tidak ada satu foto pun yang bisa tampil; render lokal (sandbox tanpa internet ke Unsplash) tetap
+jalan polos supaya QA tata letak bisa dilakukan, set FOTO_LONGGAR=1 untuk melonggarkan juga di Actions.
 Syarat lolos: kredit terisi, bisa dibuka sebagai gambar, sisi terpendek >= 560 px, sisi terpanjang >= 900 px,
 bukan gambar hampir polos (logo/latar rata) atau tangkapan layar/grafik antarmuka (>30% piksel hampir putih), dan pembesaran ke area kartu <= 2,1x (kalau lebih, hasilnya terlalu buram).
 """
-import io, os
+import io, json, os, re, time, zlib
 import numpy as np
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 
 UA = "Mozilla/5.0 (compatible; BrainworkBot/1.0; +https://brainwork.id)"
 BG = (10, 8, 20)
 MAX_BYTES = 15_000_000
+KOLAM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "foto_cadangan.json")
+_KOLAM = None
+
+
+def wajib():
+    """True bila foto WAJIB tampil (render di GitHub Actions): tanpa foto = render gagal, bukan polos."""
+    return os.environ.get("GITHUB_ACTIONS") == "true" and os.environ.get("FOTO_LONGGAR") != "1"
+
+
+def kolam():
+    """Daftar foto cadangan (foto_cadangan.json). Kosong bila berkas hilang/rusak (jangan gagalkan render)."""
+    global _KOLAM
+    if _KOLAM is None:
+        try:
+            _KOLAM = [d for d in json.load(open(KOLAM, encoding="utf-8")).get("foto", [])
+                      if isinstance(d, dict) and d.get("url") and (d.get("kredit") or "").strip()]
+        except Exception as e:
+            print(f"peringatan: kolam foto cadangan gagal dibaca: {type(e).__name__}: {e}", file=__import__("sys").stderr)
+            _KOLAM = []
+    return _KOLAM
+
+
+def teks_spec(obj, _skip=("foto", "url", "kredit", "file")):
+    """Gabungkan semua nilai teks di spec (judul, poin, slide, scene, caption) jadi satu string huruf kecil untuk mencocokkan topik."""
+    out = []
+    def walk(o):
+        if isinstance(o, str):
+            out.append(o)
+        elif isinstance(o, dict):
+            for k, v in o.items():
+                if k not in _skip:
+                    walk(v)
+        elif isinstance(o, (list, tuple)):
+            for v in o:
+                walk(v)
+    walk(obj)
+    return " ".join(out).lower()
+
+
+def cadangan(teks="", seed="", hindari=()):
+    """Foto cadangan terurut dari yang paling cocok dengan topik `teks` (jumlah kata kunci 'tema' yang muncul, per kata utuh);
+    seri skor sama diurutkan stabil menurut `seed` (ID konten), jadi hasilnya sama tiap render tetapi bergilir antar konten.
+    `hindari` = URL/kunci foto yang tak boleh dipilih (sudah dipakai atau sudah gagal). Mengembalikan salinan dict siap pakai."""
+    teks = (teks or "").lower()
+    hasil = []
+    for d in kolam():
+        if d["url"] in hindari:
+            continue
+        skor = sum(1 for k in d.get("tema", []) if re.search(r"(?<![a-z0-9])" + re.escape(k.lower()) + r"(?![a-z0-9])", teks))
+        hasil.append((-skor, zlib.crc32((str(seed) + d.get("id", d["url"])).encode()), d))
+    hasil.sort(key=lambda x: (x[0], x[1]))
+    return [{k: v for k, v in d.items() if k in ("url", "kredit", "jenis", "fokus")} for _, _, d in hasil]
 
 
 def ambil(f, tw, th):
@@ -32,8 +89,17 @@ def ambil(f, tw, th):
             data = open(f["file"], "rb").read()
         elif f.get("url"):
             import requests
-            r = requests.get(f["url"], headers={"User-Agent": UA, "Accept": "image/avif,image/webp,image/*;q=0.8"},
-                             timeout=30, stream=True)
+            r = None
+            for coba in range(3):    # gangguan jaringan sesaat atau 5xx: ulangi (404/403 tidak diulang)
+                try:
+                    r = requests.get(f["url"], headers={"User-Agent": UA, "Accept": "image/avif,image/webp,image/*;q=0.8"},
+                                     timeout=30, stream=True)
+                    if r.status_code < 500 and r.status_code != 429:
+                        break
+                except (requests.ConnectionError, requests.Timeout):
+                    if coba == 2:
+                        raise
+                time.sleep(2 * (coba + 1))
             r.raise_for_status()
             ct = (r.headers.get("content-type") or "").lower()
             if ct and not ct.startswith("image/"):

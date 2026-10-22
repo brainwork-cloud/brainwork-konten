@@ -187,29 +187,39 @@ def _portal_media(item, label):
 
 
 def _sesuaikan_kredit_foto(item, text):
-    """Baris kredit foto di caption ("Foto: ..." atau "Foto ilustrasi: ...") hanya benar bila kartu benar-benar memakai foto.
-    Render menulis aset/<ID>/.foto.txt (baris 1 "dipakai" atau "diganti ilustrasi"). Kalau diganti ilustrasi, baris kredit
-    dibuang dari caption supaya tidak menyebut foto yang tidak tampil. Tanpa berkas itu caption tidak diubah."""
+    """Baris kredit foto di caption ("Foto: ..." atau "Foto ilustrasi: ...") harus persis sama dengan foto yang benar-benar tampil.
+    Render menulis aset/<ID>/.foto.txt (baris 1 "dipakai", atau "tanpa foto: ..."/"diganti ilustrasi" bila tak ada foto yang tampil;
+    baris 3 "kredit: ..." = kredit foto yang tampil). Aturan:
+      - tidak ada foto yang tampil -> baris kredit dibuang dari caption (jangan menyebut foto yang tidak ada);
+      - ada baris "kredit:" -> baris kredit pertama di caption diganti dengan itu, baris kredit lain dibuang; bila caption BELUM punya baris
+        kredit (foto dipasang otomatis oleh renderer, mis. foto cadangan standar foto wajib) baris itu DISISIPKAN sebelum baris hashtag
+        (atau di akhir caption bila tak ada hashtag).
+    Tanpa berkas .foto.txt caption tidak diubah."""
     try:
         baris = open(os.path.join(ROOT, "aset", item["id"], ".foto.txt"), encoding="utf-8").read().splitlines()
     except (OSError, KeyError):
         return text
-    if baris and baris[0].strip().startswith("diganti"):
-        sisa = [l for l in text.split("\n") if not re.match(r"^\s*Foto( ilustrasi)?\s*:", l)]
+    pola = re.compile(r"^\s*Foto( ilustrasi)?\s*:")
+    if baris and baris[0].strip().lower().startswith(("diganti", "tanpa")):
+        sisa = [l for l in text.split("\n") if not pola.match(l)]
         text = re.sub(r"\n{3,}", "\n\n", "\n".join(sisa)).strip()
     else:
-        # konten @nopal.brainwork bisa memakai beberapa foto: baris 3 ".foto.txt" ("kredit: ...") memuat kredit foto yang benar-benar tampil;
-        # baris kredit di caption diganti dengan itu (baris kredit pertama diganti, sisanya dibuang). Portal tidak punya baris itu.
         kr = next((l.split(":", 1)[1].strip() for l in baris[1:] if l.lower().startswith("kredit:")), "")
         if kr:
             hasil, taruh = [], False
             for l in text.split("\n"):
-                if re.match(r"^\s*Foto( ilustrasi)?\s*:", l):
+                if pola.match(l):
                     if not taruh:
                         hasil.append(kr)
                         taruh = True
                     continue
                 hasil.append(l)
+            if not taruh:
+                idx = next((i for i in range(len(hasil) - 1, -1, -1) if hasil[i].strip()), None)
+                if idx is not None and all(t.startswith("#") for t in hasil[idx].split()):
+                    hasil.insert(idx, kr)
+                else:
+                    hasil.append(kr)
             text = "\n".join(hasil)
     return text
 

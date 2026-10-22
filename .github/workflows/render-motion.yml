@@ -25,7 +25,7 @@ jobs:
             h=$(md5sum "$f" | cut -c1-32)
             if [ ! -f "aset/$id/$id.mp4" ] || [ "$(cat "aset/$id/.spec.md5" 2>/dev/null)" != "$h" ]; then
               rm -rf "aset/$id"; echo "== $id"
-              if python render_motion.py "$f" "aset/$id"; then echo "$h" > "aset/$id/.spec.md5"; else echo "$id $(date -u +%FT%TZ)" >> motion_gagal.txt; fi
+              if python render_motion.py "$f" "aset/$id"; then echo "$h" > "aset/$id/.spec.md5"; else rm -rf "aset/$id"; echo "$id $(date -u +%FT%TZ)" >> motion_gagal.txt; fi
             fi
           done
       - name: Simpan hasil

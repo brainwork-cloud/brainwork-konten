@@ -379,6 +379,20 @@ def main():
     mode = spec.get("mode", "faceless")
     if mode == "activity":
         return activity(spec, P, out_dir, tmp)
+    try:   # standar foto wajib (22 Okt 2026): cover Talking Head memakai foto; lengkapi bila spec tanpa foto, ganti yang gagal, hentikan sebelum kerja berat bila tak ada yang bisa tampil (Actions)
+        import foto_umum
+        foto_umum.atur(spec, aktif=(mode == "talking_head" and bool(spec.get("cover"))))
+        if foto_umum.AKTIF:
+            foto_umum.lengkapi_talking_head(spec)
+            for c in spec["cover"]:
+                sc_ = c.get("scene") or {}
+                if sc_.get("foto") and sc_.get("type") in foto_umum._GAMBAR_OK:
+                    foto_umum.siapkan(sc_["foto"], 1080, 1920)
+            foto_umum.pastikan(os.path.join(out_dir, ".foto.txt"))
+    except SystemExit:
+        raise
+    except Exception as e:
+        print("peringatan: persiapan foto gagal:", type(e).__name__, e)
     src_audio = P(spec["audio"] if mode == "faceless" else spec["camera"])
     wav = os.path.join(tmp, "a.wav")
     run(["ffmpeg", "-y", "-i", src_audio, "-vn", "-ac", "1", "-ar", "16000", wav])

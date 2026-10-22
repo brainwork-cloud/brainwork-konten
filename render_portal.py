@@ -19,7 +19,7 @@ Format portal/<ID>.json:
   "tanggal": "20 Okt 2026",                  # tanggal rilis sumber
   "status": "Sudah rilis untuk semua",       # opsional: "Sudah rilis ...", "Bertahap", "Masih uji coba"; tampil di slide/scene terakhir (kartu single mengabaikannya)
   "slides": [{"judul": "Apa yang berubah", "isi": "kalimat fakta"}],   # hanya carousel: 2-4 slide isi (default: dari "ringkas")
-  "foto": {"url": "https://situs.com/gambar-utama.jpg", "kredit": "TechCrunch"},   # opsional: foto dari artikel sumber (portal_foto.py), latar penuh gaya referensi; gagal/terlalu kecil -> otomatis pakai "gambar"
+  "foto": {"url": "https://situs.com/gambar-utama.jpg", "kredit": "TechCrunch"},   # foto dari artikel sumber (portal_foto.py), latar penuh gaya referensi. STANDAR FOTO WAJIB (22 Okt 2026): foto yang gagal/terlalu kecil/tidak ada di spec TIDAK lagi jatuh ke ilustrasi; renderer otomatis memasang foto cadangan dari foto_cadangan.json (cocok topik) dan baris kredit mengikutinya; di Actions render gagal bila tak ada foto yang bisa tampil. "gambar" hanya dipakai render lokal tanpa internet ke Unsplash (QA)
   # foto stok berlisensi bebas (Unsplash/Pexels), tercetak "Foto ilustrasi: <fotografer> / Unsplash":
   #   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "1981 Digital / Unsplash", "jenis": "stok"}
   "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-ads (dulu dashboard-iklan) | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from render_carousel import (font, wrap_rich, draw_rich, fit, pill, W, H, M, BG, BG2, PURPLE, PURPLE_D,
                              PURPLE_L, GRID, GOLD, WHITE, MUTE)
 import portal_art
+import foto_umum
 import portal_foto
 
 FOOT = 190  # tinggi footer
@@ -51,18 +52,19 @@ FOTO_FOKUS = [(0.5, 0.45, 1.2), (0.3, 0.5, 1.4), (0.7, 0.45, 1.4)]   # sorotan f
 
 
 def _muat_foto(spec):
-    """Unduh/baca foto sumber. Gagal = pakai ilustrasi (render tidak pernah gagal karena foto)."""
+    """Muat foto latar. Standar foto wajib: foto di spec dicoba dulu; gagal, tak lolos, atau tak ada di spec = foto cadangan
+    (foto_umum.pilih). FOTO tetap None hanya bila tak satu foto pun bisa dimuat (QA lokal tanpa internet ke Unsplash); di Actions
+    main() menghentikan render dalam kasus itu."""
     global FOTO, FOTO_KREDIT, FOTO_LABEL, _FOTO_PESAN
     FOTO, FOTO_KREDIT, FOTO_LABEL, _FOTO_PESAN = None, "", "", ""
+    foto_umum.atur(spec, aktif=True)
     f = spec.get("foto")
-    if not f:
-        return
-    im, ket = portal_foto.ambil(f, W, H - FOOT)
-    _FOTO_PESAN = ket
-    print(f"foto: {ket}", file=sys.stderr)
+    im, fe = foto_umum.pilih(f if isinstance(f, dict) else {}, W, H - FOOT)
+    _FOTO_PESAN = "; ".join(e["ket"] for e in foto_umum.LOG)[:300]
     if im is not None:
-        FOTO, FOTO_KREDIT = im, f["kredit"].strip()
-        FOTO_LABEL = ("Foto ilustrasi: " if (f.get("jenis") or "").strip().lower() == "stok" else "Foto: ") + FOTO_KREDIT
+        FOTO, FOTO_KREDIT = im, fe["kredit"].strip()
+        FOTO_LABEL = foto_umum.label(fe)
+        foto_umum.tandai_tampil(fe)
 
 
 def base():
@@ -539,7 +541,7 @@ def render_motion(spec, out_dir, frames=None):
     import render_motion as rm
     rm.HANDLE = "brainwork.id"
     _register_scene(rm)
-    mspec = {"id": spec["id"], "music": spec.get("music", True), "scenes": spec.get("scenes") or build_scenes(spec)}
+    mspec = {"id": spec["id"], "music": spec.get("music", True), "foto_dikelola": True, "scenes": spec.get("scenes") or build_scenes(spec)}
     tmp = tempfile.mkdtemp()
     p = os.path.join(tmp, spec["id"] + ".json")
     json.dump(mspec, open(p, "w", encoding="utf-8"), ensure_ascii=False)
@@ -571,8 +573,9 @@ def main():
     _muat_foto(spec)
     out = args[1] if len(args) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", spec["id"])
     os.makedirs(out, exist_ok=True)
-    if spec.get("foto"):   # catatan hasil foto (dibaca agen 5 dan manusia): dipakai atau alasan diganti ilustrasi
-        open(os.path.join(out, ".foto.txt"), "w", encoding="utf-8").write(("dipakai" if FOTO is not None else "diganti ilustrasi") + "\n" + _FOTO_PESAN + "\n")
+    foto_umum.pastikan(os.path.join(out, ".foto.txt"))     # Actions: tanpa foto = render gagal (portal_gagal.txt), bukan kartu polos
+    # catatan hasil foto (dibaca agen 5, publisher, dan manusia); baris 3 "kredit: ..." dipakai publisher untuk caption
+    foto_umum.tulis_log(os.path.join(out, ".foto.txt"), kosong="diganti ilustrasi")
     fmt = spec.get("format", "single")
     if fmt not in FORMATS:
         sys.exit(f"format tidak dikenal: {fmt!r} (pilih {', '.join(FORMATS)})")

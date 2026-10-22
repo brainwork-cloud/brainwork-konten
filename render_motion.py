@@ -18,10 +18,11 @@ Format motion/<ID>.json:
   ]
 }
 Aturan: 3-6 scene, total 15-30 detik, scene terakhir "end" (>= 3 dtk). Teks di antara **...** berwarna emas.
-Foto latar (standar foto 21 Okt 2026, lihat foto_umum.py): scene hook/stat/points/statement/icon/flow/steps/vs boleh punya
+Foto latar (standar foto 21 Okt 2026, WAJIB sejak 22 Okt 2026: spec tanpa foto = renderer memasang foto cadangan, foto gagal = diganti
+cadangan, lihat foto_umum.py): scene hook/stat/points/statement/icon/flow/steps/vs boleh punya
   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "Nama / Unsplash", "jenis": "stok"}
   Foto dimuat saat render (butuh internet; di sandbox tanpa akses hasilnya tampilan polos), diredupkan, zoom pelan, kredit tercetak.
-  Hasil dicatat di <folder output>/.foto.txt. Foto gagal/tidak lolos = scene tampil polos seperti biasa.
+  Hasil dicatat di <folder output>/.foto.txt. Foto gagal/tidak lolos = diganti foto cadangan; render lokal tanpa internet ke Unsplash tampil polos.
 Area aman Reels/TikTok: teks berada di x 90-960, y 250-1500.
 """
 import sys, os, json, re, math, subprocess, wave
@@ -431,6 +432,14 @@ def main():
     total = sum(s["dur"] for s in sc)
     if not (3 <= len(sc) <= 6) or not (12 <= total <= 32) or sc[-1]["type"] != "end":
         sys.exit("spec tidak valid: 3-6 scene, 12-32 detik, scene terakhir 'end'")
+    kelola = foto_umum is not None and not spec.get("foto_dikelola")   # render_portal.py mengelola fotonya sendiri (spec["foto_dikelola"])
+    if kelola:   # standar foto wajib (lihat foto_umum.py)
+        foto_umum.atur(spec)
+        foto_umum.lengkapi_motion(sc)
+        for s in sc:
+            if s.get("foto") and s["type"] in foto_umum._GAMBAR_OK:
+                foto_umum.siapkan(s["foto"], W, H)
+        foto_umum.pastikan(os.path.join(out, ".foto.txt"))
     if "--frames" in sys.argv:
         ts = sys.argv[sys.argv.index("--frames") + 1].split(",")
         for tt in ts:
@@ -453,7 +462,7 @@ def main():
                     "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", os.path.join(out, f"{sid}_tiktok.mp4")], check=True)
     cover_t = min(sc[0]["dur"] - 0.2, 2.6)
     render_frame(spec, cover_t).save(os.path.join(out, f"{sid}_cover.jpg"), quality=90)
-    if foto_umum is not None:
+    if kelola:
         foto_umum.tulis_log(os.path.join(out, ".foto.txt"))
     print(json.dumps({"files": [mp4, f"{sid}_tiktok.mp4", f"{sid}_cover.jpg"], "duration": total}))
 

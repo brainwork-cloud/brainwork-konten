@@ -222,8 +222,14 @@ def muat_item(konten, out):
         status = (sp.get("status") or c["status"] or "").strip()
         foto = c["foto"]
         ft = aset / ".foto.txt"
-        if ft.exists() and ft.read_text("utf-8").lstrip().lower().startswith("diganti"):
-            foto = ""  # render jatuh ke ilustrasi: kredit foto tidak ditampilkan
+        if ft.exists():
+            ftb = ft.read_text("utf-8").splitlines()
+            if ftb and ftb[0].strip().lower().startswith(("diganti", "tanpa")):
+                foto = ""  # tidak ada foto yang tampil: kredit foto tidak ditampilkan
+            else:   # standar foto wajib: renderer bisa mengganti foto (cadangan); kredit di baris 3 ".foto.txt" = foto yang benar-benar tampil
+                kr = next((l.split(":", 1)[1].strip() for l in ftb[1:] if l.lower().startswith("kredit:")), "")
+                if kr:
+                    foto = kr
         judul = sp.get("judul", "").strip()
         items.append({
             "id": pid, "judul": judul, "plain": judul.replace("**", ""), "kat": label, "kslug": kslug, "format": fmt,
@@ -622,7 +628,7 @@ class Situs:
 <h2>Cara kerja</h2>
 <p>{NAMA} dikelola lewat alur otomatis berbantuan AI: mencari berita, menulis ringkasan, memeriksa fakta, lalu menerbitkannya di situs ini serta di Facebook dan Instagram. Redaksi meninjau hasilnya setiap pekan.</p>
 <h2>Gambar</h2>
-<p>Ilustrasi pada kartu dibuat otomatis dan ditandai "ILUSTRASI"; itu bukan tangkapan layar produk. Bila memakai foto, kreditnya kami cantumkan.</p>
+<p>Setiap kartu memakai foto berkredit. Foto stok berlisensi bebas ditandai "Foto ilustrasi" dan hanya menggambarkan suasana, bukan peristiwa yang diberitakan; foto dari artikel sumber ditandai "Foto: nama media". Kartu lama yang berilustrasi buatan sendiri ditandai "ILUSTRASI" dan bukan tangkapan layar produk.</p>
 <h2>Dibangun otomatis dengan AI</h2>
 <p>Dari mencari berita sampai situs ini terisi, semuanya dikerjakan agen AI tiap hari. Manusia meninjau tiap pekan, bukan tiap posting. Mau juga membangun mesin seperti ini? Masuk daftar tunggu lewat <a href="{WA_AI_URL}" rel="noopener" target="_blank">CS Nazwa</a>, atau lihat cara kerjanya di <a href="{SKALARIUM_MESIN}" rel="noopener" target="_blank">Skalarium</a>.</p>
 <h2>Kerja sama dan endorsement</h2>

@@ -34,7 +34,8 @@ jobs:
             id=$(basename "$f" .json)
             if [ ! -f "aset/$id/${id}_01.jpg" ]; then
               rm -rf "aset/$id"; echo "== $id"
-              python render_carousel.py "$f" "aset/$id" && md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5"
+              # gagal (mis. standar foto wajib: tak ada foto yang bisa dimuat) = hasil sebagian dibuang + dicatat di carousel_gagal.txt; run berikutnya mencoba lagi
+              python render_carousel.py "$f" "aset/$id" && md5sum "$f" | cut -c1-32 > "aset/$id/.spec.md5" || { rm -rf "aset/$id"; echo "$id $(date -u +%FT%TZ)" >> carousel_gagal.txt; }
             fi
           done
       - name: Simpan hasil
@@ -42,6 +43,7 @@ jobs:
           git config user.name "brainwork-bot"
           git config user.email "bot@users.noreply.github.com"
           git add aset
+          [ -f carousel_gagal.txt ] && git add carousel_gagal.txt || true
           files=$(git diff --cached --name-only -- aset)
           git diff --cached --quiet || (git commit -m "render: carousel" && git pull --rebase && git push)
           bash setup/purge_cdn.sh $files

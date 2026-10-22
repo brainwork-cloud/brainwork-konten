@@ -17,10 +17,12 @@ Format spec.json:
   ]
 }
 Teks di antara **...** dicetak warna emas.
-Foto latar (standar foto 21 Okt 2026, lihat foto_umum.py): slide cover/point/list/statement/cta boleh punya
+Foto latar (standar foto 21 Okt 2026, WAJIB sejak 22 Okt 2026: spec tanpa foto = renderer memasang foto cadangan, foto gagal = diganti cadangan,
+lihat foto_umum.py): slide cover/point/list/statement/cta boleh punya
   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "Nama / Unsplash", "jenis": "stok"}
   Foto dimuat saat render (butuh internet), diredupkan sebagai latar, kredit tercetak di atas footer. Slide "visual" tidak berfoto.
-  Foto gagal/tidak lolos = slide tampil dengan latar grid biasa. Hasil dicatat di <folder output>/.foto.txt.
+  Foto gagal/tidak lolos = diganti foto cadangan (foto_cadangan.json); render lokal tanpa internet ke Unsplash tampil dengan latar grid biasa.
+  Hasil dicatat di <folder output>/.foto.txt.
 """
 import sys, os, json, re
 from PIL import Image, ImageDraw, ImageFont
@@ -384,6 +386,13 @@ def main():
     slides = spec["slides"]
     if not 2 <= len(slides) <= 10:
         sys.exit("Carousel IG wajib 2-10 slide")
+    if foto_umum is not None:   # standar foto wajib: lengkapi bila spec tanpa foto, ganti yang gagal, hentikan render (Actions) bila tak ada yang bisa tampil
+        foto_umum.atur(spec)
+        foto_umum.lengkapi_carousel(slides)
+        for s in slides:
+            if s["type"] != "visual" and s.get("foto"):
+                foto_umum.siapkan(s["foto"], W, H - 130)
+        foto_umum.pastikan(os.path.join(out, ".foto.txt"))
     files = []
     global FOTO_SLIDE
     for i, s in enumerate(slides, 1):

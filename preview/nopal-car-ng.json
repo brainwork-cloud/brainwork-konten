@@ -1,0 +1,38 @@
+{
+ "id": "nopal-car-ng",
+ "kicker": "Meta Ads",
+ "slides": [
+  {
+   "type": "cover",
+   "title": "3 kesalahan **targeting** yang bikin ads boncos",
+   "foto": {
+    "url": "https://images.unsplash.com/photo-0000000000000-tidak-ada?fm=jpg&q=80&w=1800",
+    "kredit": "Tidak Ada / Unsplash",
+    "jenis": "stok"
+   }
+  },
+  {
+   "type": "point",
+   "title": "Audiens terlalu sempit",
+   "body": "Budget kecil di audiens kecil bikin frekuensi cepat naik dan CPM mahal."
+  },
+  {
+   "type": "point",
+   "title": "Tanpa pengecualian",
+   "body": "Pembeli lama tetap kena iklan penawaran pelanggan baru."
+  },
+  {
+   "type": "list",
+   "title": "Cek sebelum publish",
+   "items": [
+    "Ukuran audiens",
+    "Pengecualian",
+    "Placement"
+   ]
+  },
+  {
+   "type": "cta",
+   "title": "Simpan dan coba hari ini"
+  }
+ ]
+}
