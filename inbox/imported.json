@@ -17,5 +17,8 @@
  "1ca4d216d23f87357c46af3b20e55fda": "queue__BW-261015-01__threads__202610211638.json",
  "d6add6e2f1aee1d8fb81bdd80bc71f9e": "portal__PT-261022-01__202610220630.json",
  "23c7e4247e91cfec125fc5e7e9d9cf80": "queue__PT-261022-01__facebook_portal__202610220630.json",
- "f7fbca0e8a85a0d285f31f1cd0b0dd4a": "queue__PT-261022-01__instagram_portal__202610220630.json"
+ "f7fbca0e8a85a0d285f31f1cd0b0dd4a": "queue__PT-261022-01__instagram_portal__202610220630.json",
+ "f3dd465797fd202a73b47a0bbcdb13bb": "portal__PT-261023-01__202610230630.json",
+ "e946e09eeeb4443964e0fe6d7553b174": "queue__PT-261023-01__facebook_portal__202610230630.json",
+ "33282353494c3d48c087345324cbbc47": "queue__PT-261023-01__instagram_portal__202610230630.json"
 }
