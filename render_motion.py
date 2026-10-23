@@ -458,6 +458,15 @@ def main():
     pr.stdin.close(); pr.wait()
     if os.path.exists(wav):
         os.remove(wav)
+    # Instagram menolak video di atas ±4 MB lewat API; latar foto (standar foto wajib) membuat berkas ±2x lebih besar,
+    # jadi bila lebih dari 3,4 MB dimampatkan bertahap (crf 23, 26, 29) sampai muat. Resolusi tetap 1080x1920.
+    for crf in (23, 26, 29):
+        if os.path.getsize(mp4) <= 3_400_000:
+            break
+        kecil = mp4 + ".kecil.mp4"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-c:v", "libx264", "-preset", "medium", "-crf", str(crf),
+                        "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", kecil], check=True)
+        os.replace(kecil, mp4)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-vf", "scale=720:1280", "-c:v", "libx264", "-crf", "26",
                     "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart", os.path.join(out, f"{sid}_tiktok.mp4")], check=True)
     cover_t = min(sc[0]["dur"] - 0.2, 2.6)
