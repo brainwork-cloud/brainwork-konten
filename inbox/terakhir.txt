@@ -1,3 +1,2 @@
 7 file di inbox
-masuk: queue__BW-261022-02__youtube__202610241857.json -> queue/BW-261022-02__youtube.json
-selesai: 1 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
