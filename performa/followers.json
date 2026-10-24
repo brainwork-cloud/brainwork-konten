@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-10-23 19:10 WIB",
+"diperbarui": "2026-10-24 07:03 WIB",
 "rows": [
 {
 "kode": "nopal-fb",
@@ -20,6 +20,12 @@
 "followers": 44278
 },
 {
+"kode": "nopal-fb",
+"akun": "Page Nopal Brainwork",
+"tanggal": "2026-10-24",
+"followers": 44276
+},
+{
 "kode": "nopal-ig",
 "akun": "@nopal.brainwork",
 "tanggal": "2026-10-21",
@@ -36,6 +42,12 @@
 "akun": "@nopal.brainwork",
 "tanggal": "2026-10-23",
 "followers": 210478
+},
+{
+"kode": "nopal-ig",
+"akun": "@nopal.brainwork",
+"tanggal": "2026-10-24",
+"followers": 210452
 },
 {
 "kode": "nopal-threads",
@@ -56,6 +68,12 @@
 "followers": 9558
 },
 {
+"kode": "nopal-threads",
+"akun": "@nopal.brainwork",
+"tanggal": "2026-10-24",
+"followers": 9564
+},
+{
 "kode": "portal-fb",
 "akun": "Page Brainwork.id",
 "tanggal": "2026-10-21",
@@ -71,6 +89,12 @@
 "kode": "portal-fb",
 "akun": "Page Brainwork.id",
 "tanggal": "2026-10-23",
+"followers": 0
+},
+{
+"kode": "portal-fb",
+"akun": "Page Brainwork.id",
+"tanggal": "2026-10-24",
 "followers": 0
 },
 {
@@ -92,6 +116,12 @@
 "followers": 4301
 },
 {
+"kode": "portal-ig",
+"akun": "@brainwork.id",
+"tanggal": "2026-10-24",
+"followers": 4299
+},
+{
 "kode": "sk-en-ig",
 "akun": "@skalarium.en",
 "tanggal": "2026-10-21",
@@ -110,6 +140,12 @@
 "followers": 1
 },
 {
+"kode": "sk-en-ig",
+"akun": "@skalarium.en",
+"tanggal": "2026-10-24",
+"followers": 1
+},
+{
 "kode": "sk-id-ig",
 "akun": "@skalarium",
 "tanggal": "2026-10-21",
@@ -125,6 +161,12 @@
 "kode": "sk-id-ig",
 "akun": "@skalarium",
 "tanggal": "2026-10-23",
+"followers": 1
+},
+{
+"kode": "sk-id-ig",
+"akun": "@skalarium",
+"tanggal": "2026-10-24",
 "followers": 1
 }
 ]
