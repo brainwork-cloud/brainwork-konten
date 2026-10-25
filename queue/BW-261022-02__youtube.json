@@ -2,10 +2,21 @@
   "id": "BW-261022-02",
   "platform": "youtube",
   "publish_at": "2026-10-25T19:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "video_path": "aset/BW-261022-02/BW-261022-02.mp4",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261022-02/BW-261022-02.mp4",
   "title": "Cara Riset Iklan Kompetitor Gratis Pakai Meta Ad Library #Shorts",
   "description": "Alur sederhana: cari iklan kompetitor di Meta Ad Library, catat hook dan penawarannya, lalu ringkas polanya pakai AI.",
-  "tags": ["metaads", "risetiklan", "adlibrary", "umkm", "digitalmarketing"]
+  "tags": [
+    "metaads",
+    "risetiklan",
+    "adlibrary",
+    "umkm",
+    "digitalmarketing"
+  ],
+  "result": {
+    "id": "-zykDAgL0BM",
+    "url": "https://youtube.com/shorts/-zykDAgL0BM"
+  },
+  "posted_at": "2026-10-25T12:30:42.466761+00:00"
 }
