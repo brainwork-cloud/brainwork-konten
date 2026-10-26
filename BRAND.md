@@ -10,14 +10,14 @@ Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 ## 2. Pilar konten & porsi per minggu
 | Pilar | Porsi | Format utama | Contoh |
 |---|---|---|---|
-| EVERGREEN | 20% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist |
+| EVERGREEN | 20% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist, cara bangun akun sosial media organik (Talking Head) |
 | NEWS | 20% | Threads, Reels Motion, Carousel | Update platform (Meta, IG, Threads, TikTok, Google, YouTube), rilis/fitur tool AI, data riset industri terbaru, tren digital marketing Indonesia, serta teknologi lain yang relevan untuk kreator, marketer, dan UMKM (mis. gadget kreator seperti iPhone lipat, kamera, perangkat editing) bila sudah resmi diumumkan atau dirilis. WAJIB dari sumber resmi/media kredibel yang dibuka sendiri, berita ≤ 7 hari saat tayang, sebut sumber di caption, bedakan "sudah rilis" vs "masih tes". Tanpa politik, gosip, atau rumor. |
 | ARSIP (kemas ulang hit lama) | ±30% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
 | IDENTITAS | 10% | Talking head, Reels Aktivitas, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja, keseharian kerja (tanpa data perusahaan) |
 | SERI "Hari ke-N bangun akun dari 0" | 20% | Talking Head, Reels Motion, Carousel progres, Threads | Seri andalan awal akun, lanjut dari Hari ke-1 = 21 Agu 2024. Aturan lengkap di bagian 11 |
 | THREADS | 3–5 post/minggu | Single post ATAU utas 4 post | Kasus + angka + cliffhanger |
 
-Catatan komposisi (keputusan Naufal 26 Okt 2026): minimal 80% konten dari keluarga topik yang sudah terbukti pada audiens akun ini (tools AI, website/tools berguna, setting IG dan Meta Ads praktis, jualan/UMKM, kemas ulang hit di bagian 6, plus SERI). Maksimal 20% eksperimen, termasuk NEWS. ARSIP naik ke ±30% karena median views tertinggi (data 25 Okt: ARSIP 1.726, EVERGREEN 1.024; sampel kecil, 4 post per pilar). Kalau hit di bagian 6 yang belum dikemas ulang tinggal kurang dari 4, turunkan ARSIP ke 20% dan naikkan EVERGREEN. Talking Head SERI Kamis tetap ada tiap pekan.
+Catatan komposisi (keputusan Naufal 26 Okt 2026): minimal 80% konten dari keluarga topik yang sudah terbukti pada audiens akun ini (tools AI, website/tools berguna, setting IG dan Meta Ads praktis, jualan/UMKM, kemas ulang hit di bagian 6, plus SERI dan cara bangun akun sosial media organik). Maksimal 20% eksperimen, termasuk NEWS. ARSIP naik ke ±30% karena median views tertinggi (data 25 Okt: ARSIP 1.726, EVERGREEN 1.024; sampel kecil, 4 post per pilar). Kalau hit di bagian 6 yang belum dikemas ulang tinggal kurang dari 4, turunkan ARSIP ke 20% dan naikkan EVERGREEN. Talking Head Kamis tetap ada tiap pekan dan bertema bangun akun (ditegaskan Naufal 26 Okt 2026 12.04: tidak hanya seri, juga cara bangun akun sosial media organik). Bergilir per pekan: SERI "Hari ke-N" (kisah dan angka akun ini, bagian 11) dan "Cara bangun akun sosial media organik" (pelajaran praktis untuk audiens, Pilar EVERGREEN, Topik diawali "Cara bangun akun organik:"). SERI tetap hadir tiap pekan lewat 1 Threads SERI.
 
 ## 3. Suara & gaya (wajib)
 - Sapaan **"aku/kamu"**. DILARANG "gue/lu/lo".
@@ -94,7 +94,7 @@ Aturan agen:
 - Angka nyata saja. Pengikut terbaru dari tab **Seri** di Sheet (agen 3a mencatatnya tiap pagi dari performa/followers.json, data kolektor performa). Boleh dibandingkan dengan puncak 221 rb dan milestone lama yang memang pernah Naufal posting: 10 rb organik di Hari ke-39, 100 rb di Minggu ke-20, 200 rb di Minggu ke-35. Kemas menarik: angka besar di cover, selisih naik atau turun dari minggu lalu, satu pelajaran. Tanpa angka karangan.
 - Dilarang mengulang klaim lama yang tidak bisa diverifikasi (contoh: diundang 10+ perusahaan dan kementerian, penghasilan puluhan juta), kecuali Naufal memberi bukti di Catatan Review. Bagian 4 tetap berlaku (jangan sebut tempat kerja atau data pemberi kerja).
 - Isi bergilir: (a) angka dan pelajaran minggu ini; (b) pelajaran dari post terbaik atau terburuk (tab Performa); (c) kabar terbaru digital marketing yang dites di akun ini (aturan NEWS: sumber resmi, ≤ 7 hari, bedakan sudah rilis vs masih tes); (d) di balik layar sistem konten otomatis (tanpa data perusahaan pemberi kerja).
-- Format dan ritme: 1 Reels per minggu (Talking Head, atau Reels Motion bila Naufal belum sempat merekam), Carousel progres saat ada milestone, 1 Threads per minggu.
+- Format dan ritme: 1 Reels SERI pada pekan SERI (Talking Head Kamis bergilir dengan "Cara bangun akun organik", lihat bagian 2; Reels Motion bila Naufal belum sempat merekam), Carousel progres saat ada milestone, 1 Threads per minggu.
 - Caption: baris pertama persis "Hari ke-N bangun akun dari 0", hashtag #bangunakundari0 (dihitung dalam batas 5).
 - Distribusi: @nopal.brainwork saja (Instagram, Threads, YouTube Shorts, TikTok manual Nazwa). TIDAK ke Brainwork.id.
 
