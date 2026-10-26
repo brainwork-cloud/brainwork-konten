@@ -1,5 +1,3 @@
-3 file di inbox
-masuk: specs__BW-261027-03__202610261214.json -> specs/BW-261027-03.json
-masuk: specs__BW-261028-02__202610261214.json -> specs/BW-261028-02.json
-masuk: specs__BW-261030-01__202610261214.json -> specs/BW-261030-01.json
-selesai: 3 file diimpor, 0 gagal
+4 file di inbox
+masuk: queue__BW-261029-01__threads__202610261239.json -> queue/BW-261029-01__threads.json
+selesai: 1 file diimpor, 0 gagal
