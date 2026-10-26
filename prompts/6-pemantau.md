@@ -26,7 +26,7 @@ Tiap butir MERAH/KUNING wajib memuat: apa yang terjadi (ID/nama file/run), bukti
 ## Langkah
 
 ### 1. Token dan gerbang (`tokens/status.txt`)
-Baris yang ada: `Cek terakhir`, `THREADS` (berlaku sampai <tgl>), `FACEBOOK`, `PORTAL`, `PORTAL_IG`, `YOUTUBE`.
+Baris yang ada: `Cek terakhir`, `THREADS` (berlaku sampai <tgl>), `FACEBOOK`, `PORTAL`, `PORTAL_IG`, `NOPAL_IG`, `YOUTUBE`. `NOPAL_IG` (baru 26 Okt 2026) = kesiapan posting IG @nopal.brainwork lewat Graph API tanpa Windsor: `BELUM SIAP` = KUNING sampai 29 Okt 2026 dan MERAH mulai 30 Okt bila agen 3a masih memakai Windsor; baris ini sendiri tidak membuat MERAH sebelum itu.
 - MERAH: baris yang hilang, tidak memuat OK/valid/diperbarui, `PORTAL:` atau `PORTAL_IG:` tidak berawalan OK, atau token Threads berlaku ≤ 5 hari lagi.
 - KUNING: Threads ≤ 14 hari lagi; `Cek terakhir` lebih dari 9 hari lalu (workflow `renew-tokens.yml` jalan Senin 09:17 WIB); atau commit `token: status` terakhir (`git log -1 --format=%cI --grep="token: status"`) lebih dari 9 hari.
 
@@ -89,7 +89,7 @@ Jadwal yang seharusnya (WIB): Perencana Minggu 18:52, Analis Minggu 18:22, Produ
 ### 7. Data dan integrasi
 - `performa/harian.json` bidang `diperbarui` (format "2026-10-22 07:04 WIB"): lebih tua dari 14 jam = KUNING, lebih dari 30 jam = MERAH (workflow `performa.yml` seharusnya 06:47 dan 18:47). Baris "Selesai:" terakhir di `performa/log.txt`: sumber berawalan `nopal-` yang berstatus GAGAL = KUNING (sebut sumbernya; `nopal-tiktok=TIDAK TERSEDIA` dan semua sumber berawalan `sk-` milik Skalarium diabaikan; SEBAGIAN diabaikan kecuali `nopal-ig` atau `nopal-threads`).
 - Tab Seri: baris terakhir harus bertanggal kemarin atau hari ini (dicatat agen 3a pagi hari). Lebih tua = KUNING. Laporkan pengikut terakhir dan selisihnya dalam satu baris di ringkasan (angka dari Sheet, bukan dari ingatan).
-- Windsor.ai (jalur posting IG): panggil `get_current_user` bila tersedia. Kalau hasilnya memuat status trial atau langganan, tulis sisa hari: ≤ 5 hari = MERAH (posting IG berhenti saat trial habis), ≤ 10 hari = KUNING. Tidak memuat info = "tidak terbaca" tanpa temuan; error panggilan = KUNING. Jangan memanggil tool tulis.
+- Windsor.ai (jalur posting IG): panggil `get_current_user` bila tersedia. Kalau hasilnya memuat status trial atau langganan, tulis sisa hari: ≤ 5 hari = MERAH (posting IG berhenti saat trial habis), ≤ 10 hari = KUNING. Tidak memuat info = "tidak terbaca" tanpa temuan; error panggilan = KUNING. Jangan memanggil tool tulis. Naufal melapor 26 Okt 2026 bahwa trial berakhir ±1 Nov 2026 (tanggal tepat tidak terbaca dari API): selama agen 3a masih memakai Windsor untuk posting IG, hitung sisa hari dari tanggal itu dan ≤ 5 hari = MERAH. Setelah `NOPAL_IG: OK` di tokens/status.txt dan prompts/3a-penerbit-ig.md memakai antrian `instagram` (bukan Windsor), abaikan temuan Windsor.
 
 ### 8. Bandingkan dengan kemarin dan lapor
 - Baca baris Log Agen "Pemantau" terakhir (kolom Ringkasan). Butir yang sama dengan kemarin ditulis ringkas "masih: <butir> (hari ke-N)" tanpa mengulang penjelasan; butir kemarin yang sudah beres ditulis "selesai: <butir>".

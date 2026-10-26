@@ -6,7 +6,7 @@ Publisher Threads + Facebook Page + YouTube Shorts @nopal.brainwork + Facebook d
 Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berstatus APPROVED/POSTED di Sheet.
 {
   "id": "BW-261014-01",
-  "platform": "threads" | "facebook" | "youtube" | "facebook_portal" | "instagram_portal",
+  "platform": "threads" | "facebook" | "youtube" | "facebook_portal" | "instagram_portal" | "instagram",
   "publish_at": "2026-10-14T19:00:00+07:00",
   "status": "approved",                 # approved -> posted | failed ; cancelled = dilewati
   # threads
@@ -25,6 +25,9 @@ Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berst
   # instagram_portal (mirror konten portal yang sama ke @brainwork.id lewat Graph API; akun IG dicari dari halaman portal)
   "message": "caption (wajib memuat 'Sumber' dan tautan http, maks 2200 karakter)", dan media yang SAMA persis dengan Facebook:
   "image_url" (1 gambar) | "image_urls" (carousel 2-10 gambar: container anak lalu container induk CAROUSEL) | "video_url" (REELS, share_to_feed)
+  # instagram (@nopal.brainwork lewat Graph API, pengganti Windsor.ai; token FB_PAGE_TOKEN harus punya izin instagram_content_publish)
+  "message": "caption IG (maks 2200 karakter)", dan SATU jenis media:
+  "image_url" (1 gambar) | "image_urls" (carousel 2-10 gambar) | "video_url" (REELS, share_to_feed) + "cover_url" opsional (gambar sampul Reels)
   # youtube
   "video_path": "aset/BW-261014-01/BW-261014-01.mp4",
   "title": "...", "description": "...", "tags": ["..."]
@@ -38,6 +41,8 @@ Pengaman (dua halaman Facebook tidak boleh tertukar):
 - "facebook_portal": username halaman PORTAL_FB_PAGE_ID harus "brainwork.id", id-nya beda dari FB_PAGE_ID, caption wajib memuat
   "Sumber" + tautan, tepat satu jenis media (gambar / carousel / video). Media belum ada (404) = ditunda, tetap approved,
   dicoba lagi 30 menit kemudian.
+- "instagram" (@nopal.brainwork): lolos pengaman halaman mirror Nopal (FB_PAGE_ID), lalu akun IG yang tertaut ke halaman itu harus berusername
+  "nopal.brainwork". Token yang sama (FB_PAGE_TOKEN), tanpa secret baru. Kredit foto disamakan dengan aset/<ID>/.foto.txt.
 - "instagram_portal": lolos pengaman halaman portal di atas, lalu akun IG yang tertaut ke halaman itu harus berusername "brainwork.id".
   Token yang sama (PORTAL_FB_PAGE_TOKEN), tanpa secret baru. Kegagalan IG tidak memengaruhi posting Facebook (file antrian terpisah).
 """
@@ -303,6 +308,74 @@ def instagram_portal(item):
     return {"id": mid, "url": perma or f"https://www.instagram.com/{PORTAL_USERNAME}/"}
 
 
+NOPAL_USERNAME = "nopal.brainwork"
+
+
+def ig_nopal_account():
+    """Akun Instagram @nopal.brainwork, dicari dari halaman Facebook mirror (FB_PAGE_ID) yang tertaut ke akun itu.
+    Pengaman berlapis: fb_page() memastikan halaman mirror Nopal (bukan portal), lalu username IG WAJIB nopal.brainwork.
+    Token yang sama (FB_PAGE_TOKEN) harus punya izin instagram_content_publish. Mengembalikan (ig_user_id, token)."""
+    pid, tok = fb_page()
+    r = requests.get(f"{FB}/{pid}", params={"fields": "instagram_business_account{id,username}", "access_token": tok}, timeout=30)
+    r.raise_for_status()
+    ig = r.json().get("instagram_business_account") or {}
+    if not ig.get("id") or (ig.get("username") or "").lower() != NOPAL_USERNAME:
+        raise RuntimeError(f"akun Instagram yang tertaut ke FB_PAGE_ID bukan @{NOPAL_USERNAME} (ditemukan: {ig.get('username')!r}); posting dibatalkan")
+    return ig["id"], tok
+
+
+def instagram_nopal(item):
+    """Instagram @nopal.brainwork lewat Graph API (pengganti Windsor.ai): 1 gambar (IMAGE), 2-10 gambar (CAROUSEL: container anak lalu
+    induk), atau video (REELS, tampil juga di feed, cover_url opsional). Caption = message."""
+    text = _sesuaikan_kredit_foto(item, item.get("message") or "")
+    if not text.strip():
+        raise ValueError("IG: message (caption) kosong")
+    if len(text) > 2200:
+        raise ValueError(f"IG: caption {len(text)} karakter, batas Instagram 2200")
+    video = item.get("video_url")
+    urls = item.get("image_urls") or ([item["image_url"]] if item.get("image_url") else [])
+    if video and urls:
+        raise ValueError("IG: pilih salah satu, gambar (image_url/image_urls) atau video_url, bukan keduanya")
+    if not video and not urls:
+        raise ValueError("IG: butuh image_url (1 gambar), image_urls (carousel) atau video_url (Reels)")
+    if len(urls) > 10:
+        raise ValueError("IG: maksimal 10 gambar per carousel")
+    cover = item.get("cover_url") if video else None
+    for u in ([video] if video else urls) + ([cover] if cover else []):
+        _cek_url(u)
+    ig, tok = ig_nopal_account()
+
+    def buat(data):
+        c = requests.post(f"{FB}/{ig}/media", data={**data, "access_token": tok}, timeout=120)
+        c.raise_for_status()
+        return c.json()["id"]
+
+    if video:
+        data = {"media_type": "REELS", "video_url": video, "caption": text, "share_to_feed": "true"}
+        if cover:
+            data["cover_url"] = cover
+        cid = buat(data)
+        _ig_wait(cid, tok, 60, 10)  # video: sampai 10 menit
+    elif len(urls) == 1:
+        cid = buat({"image_url": urls[0], "caption": text})
+        _ig_wait(cid, tok, 30, 5)
+    else:
+        anak = [buat({"image_url": u, "is_carousel_item": "true"}) for u in urls]
+        for k in anak:
+            _ig_wait(k, tok, 30, 5)
+        cid = buat({"media_type": "CAROUSEL", "children": ",".join(anak), "caption": text})
+        _ig_wait(cid, tok, 30, 5)
+    p = requests.post(f"{FB}/{ig}/media_publish", data={"creation_id": cid, "access_token": tok}, timeout=120)
+    p.raise_for_status()
+    mid = p.json()["id"]
+    perma = None
+    try:  # posting sudah tayang; gagal mengambil tautan tidak boleh menandai antrian "failed"
+        perma = requests.get(f"{FB}/{mid}", params={"fields": "permalink", "access_token": tok}, timeout=30).json().get("permalink")
+    except Exception:
+        pass
+    return {"id": mid, "url": perma or f"https://www.instagram.com/{NOPAL_USERNAME}/"}
+
+
 def youtube_post(item):
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
@@ -336,10 +409,11 @@ def youtube_post(item):
 
 
 HANDLERS = {"threads": threads_post, "facebook": facebook_post, "youtube": youtube_post, "facebook_portal": facebook_portal,
-            "instagram_portal": instagram_portal}
+            "instagram_portal": instagram_portal, "instagram": instagram_nopal}
 NEEDS = {"threads": ["THREADS_ACCESS_TOKEN"], "facebook": ["FB_PAGE_TOKEN", "FB_PAGE_ID"],
          "facebook_portal": ["PORTAL_FB_PAGE_TOKEN", "PORTAL_FB_PAGE_ID"],
          "instagram_portal": ["PORTAL_FB_PAGE_TOKEN", "PORTAL_FB_PAGE_ID"],
+         "instagram": ["FB_PAGE_TOKEN", "FB_PAGE_ID"],
          "youtube": ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"]}
 
 

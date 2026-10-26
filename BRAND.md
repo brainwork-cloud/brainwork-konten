@@ -10,12 +10,14 @@ Versi 2 · 19 Okt 2026 · pemilik: Naufal · admin: Nazwa
 ## 2. Pilar konten & porsi per minggu
 | Pilar | Porsi | Format utama | Contoh |
 |---|---|---|---|
-| EVERGREEN | 40% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist |
-| NEWS | 20% | Threads, Reels Motion, Carousel | Update platform (Meta, IG, Threads, TikTok, Google, YouTube), rilis/fitur tool AI, data riset industri terbaru, tren digital marketing Indonesia. WAJIB dari sumber resmi/media kredibel yang dibuka sendiri, berita ≤ 7 hari saat tayang, sebut sumber di caption, bedakan "sudah rilis" vs "masih tes". Tanpa politik, gosip, atau rumor. |
-| ARSIP (kemas ulang hit lama) | 10% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
+| EVERGREEN | 20% | Carousel, Talking Head, Reels Faceless (VO Naufal + B-roll agen), Reels Motion | Setting IG/Meta Ads, tools AI, website berguna, checklist |
+| NEWS | 20% | Threads, Reels Motion, Carousel | Update platform (Meta, IG, Threads, TikTok, Google, YouTube), rilis/fitur tool AI, data riset industri terbaru, tren digital marketing Indonesia, serta teknologi lain yang relevan untuk kreator, marketer, dan UMKM (mis. gadget kreator seperti iPhone lipat, kamera, perangkat editing) bila sudah resmi diumumkan atau dirilis. WAJIB dari sumber resmi/media kredibel yang dibuka sendiri, berita ≤ 7 hari saat tayang, sebut sumber di caption, bedakan "sudah rilis" vs "masih tes". Tanpa politik, gosip, atau rumor. |
+| ARSIP (kemas ulang hit lama) | ±30% (maks 40%/30 hari) | Hook & cover baru dari topik hit | Lihat bagian 6 |
 | IDENTITAS | 10% | Talking head, Reels Aktivitas, Threads | Cara aku pakai Claude untuk riset iklan, pelajaran kerja, keseharian kerja (tanpa data perusahaan) |
 | SERI "Hari ke-N bangun akun dari 0" | 20% | Talking Head, Reels Motion, Carousel progres, Threads | Seri andalan awal akun, lanjut dari Hari ke-1 = 21 Agu 2024. Aturan lengkap di bagian 11 |
 | THREADS | 3–5 post/minggu | Single post ATAU utas 4 post | Kasus + angka + cliffhanger |
+
+Catatan komposisi (keputusan Naufal 26 Okt 2026): minimal 80% konten dari keluarga topik yang sudah terbukti pada audiens akun ini (tools AI, website/tools berguna, setting IG dan Meta Ads praktis, jualan/UMKM, kemas ulang hit di bagian 6, plus SERI). Maksimal 20% eksperimen, termasuk NEWS. ARSIP naik ke ±30% karena median views tertinggi (data 25 Okt: ARSIP 1.726, EVERGREEN 1.024; sampel kecil, 4 post per pilar). Kalau hit di bagian 6 yang belum dikemas ulang tinggal kurang dari 4, turunkan ARSIP ke 20% dan naikkan EVERGREEN. Talking Head SERI Kamis tetap ada tiap pekan.
 
 ## 3. Suara & gaya (wajib)
 - Sapaan **"aku/kamu"**. DILARANG "gue/lu/lo".
@@ -59,7 +61,7 @@ Aturan kemas ulang: tools/website WAJIB dicek masih ada & versi terbaru. Hook da
 
 ## 7. Monetisasi (soft)
 - Produk tangga 1: Pack 50 Prompt UMKM (NolKaryawan) Rp 28.000. Sebut maks 1x/minggu, di CTA atau caption, tidak hard selling.
-- CTA default: simpan, kirim ke teman, komen kata kunci.
+- CTA (keputusan Naufal 26 Okt 2026: komentar semua post masih 0 dan follower baru datar walau reach naik 2x, jadi CTA tegas boleh dan perlu diuji): tiap konten IG memuat TEPAT SATU ajakan aksi yang tegas, dengan alasan konkret. Daftar, checklist, tools (ARSIP, EVERGREEN): "Simpan, biar nggak lupa" di slide atau kalimat terakhir. SERI, IDENTITAS, NEWS: ajakan follow dengan alasan, mis. "Follow, besok lanjut Hari ke-N" atau "Follow, minggu depan aku bahas X". Ajakan komentar dengan kata kunci hanya untuk 1 konten per pekan (eksperimen) dan hanya bila ada yang membalas. Jangan menumpuk simpan + follow + komen dalam satu konten. Penilaian eksperimen oleh Analis: followers_baru harian (performa/harian.json) dan komentar pada pekan 26 Okt-1 Nov dan 2-8 Nov, dibanding rata-rata 12-24 Okt (±19 follower baru per hari, komentar 0).
 
 ## 8. Urutan bukti gaya (wajib untuk Produser; makin atas makin kuat)
 Kalau dua sumber bertentangan, yang lebih atas menang.

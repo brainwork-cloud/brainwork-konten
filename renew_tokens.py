@@ -91,6 +91,22 @@ if pt and pp and any(l.startswith("PORTAL: OK") for l in lines):
     except Exception as e:
         lines.append(f"PORTAL_IG: BELUM SIAP (gagal cek: {type(e).__name__}) {today}")
 
+# Posting Instagram @nopal.brainwork lewat Graph API (pengganti Windsor.ai): akun IG harus tertaut ke halaman mirror Nopal (FB_PAGE_ID)
+# dan token halaman harus punya izin instagram_content_publish. Baris TERPISAH; tidak memengaruhi status token lain.
+ft, fp = os.environ.get("FB_PAGE_TOKEN"), os.environ.get("FB_PAGE_ID")
+if ft and fp:
+    try:
+        ig = requests.get(f"https://graph.facebook.com/v23.0/{fp}", params={"fields": "instagram_business_account{id,username}", "access_token": ft}, timeout=30).json().get("instagram_business_account") or {}
+        scopes = requests.get("https://graph.facebook.com/v23.0/debug_token", params={"input_token": ft, "access_token": ft}, timeout=30).json().get("data", {}).get("scopes", [])
+        if (ig.get("username") or "").lower() != "nopal.brainwork":
+            lines.append(f"NOPAL_IG: BELUM SIAP (akun IG tertaut ke halaman mirror: {ig.get('username')!r}, bukan nopal.brainwork) {today}")
+        elif "instagram_content_publish" not in scopes:
+            lines.append(f"NOPAL_IG: BELUM SIAP (token halaman mirror tidak punya izin instagram_content_publish) {today} -> buat ulang token: python3 setup/fb_auth.py (tambah izin instagram_basic dan instagram_content_publish)")
+        else:
+            lines.append(f"NOPAL_IG: OK @nopal.brainwork (id {ig.get('id')}), izin posting ada, dicek {today}")
+    except Exception as e:
+        lines.append(f"NOPAL_IG: BELUM SIAP (gagal cek: {type(e).__name__}) {today}")
+
 if os.environ.get("YT_REFRESH_TOKEN"):
     t = requests.post("https://oauth2.googleapis.com/token", data={
         "client_id": os.environ.get("YT_CLIENT_ID"), "client_secret": os.environ.get("YT_CLIENT_SECRET"),
