@@ -28,6 +28,7 @@ Antrian: file queue/<ID>__<platform>.json, ditulis agen HANYA untuk konten berst
   # instagram (@nopal.brainwork lewat Graph API, pengganti Windsor.ai; token FB_PAGE_TOKEN harus punya izin instagram_content_publish)
   "message": "caption IG (maks 2200 karakter)", dan SATU jenis media:
   "image_url" (1 gambar) | "image_urls" (carousel 2-10 gambar) | "video_url" (REELS, share_to_feed) + "cover_url" opsional (gambar sampul Reels)
+  "dry_run": true -> container dibuat sampai FINISHED lalu berhenti (status "tested"), TIDAK ditayangkan; untuk menguji jalur dan izin
   # youtube
   "video_path": "aset/BW-261014-01/BW-261014-01.mp4",
   "title": "...", "description": "...", "tags": ["..."]
@@ -365,6 +366,8 @@ def instagram_nopal(item):
             _ig_wait(k, tok, 30, 5)
         cid = buat({"media_type": "CAROUSEL", "children": ",".join(anak), "caption": text})
         _ig_wait(cid, tok, 30, 5)
+    if item.get("dry_run"):  # uji jalur: container sudah FINISHED (izin, URL media, caption diterima Instagram), TIDAK ditayangkan
+        return {"dry_run": True, "container": cid, "id": None, "url": None}
     p = requests.post(f"{FB}/{ig}/media_publish", data={"creation_id": cid, "access_token": tok}, timeout=120)
     p.raise_for_status()
     mid = p.json()["id"]
@@ -438,7 +441,7 @@ def main():
             break
         try:
             item["result"] = HANDLERS[plat](item)
-            item["status"] = "posted"
+            item["status"] = "tested" if (item["result"] or {}).get("dry_run") else "posted"
         except Tunda as e:  # belum siap: biarkan approved, coba lagi di run berikutnya
             print(item["id"], plat, "ditunda:", e)
             continue

@@ -1,0 +1,12 @@
+{
+  "id": "UJI-IG-1",
+  "platform": "instagram",
+  "publish_at": "2026-10-26T11:20:00+07:00",
+  "status": "approved",
+  "dry_run": true,
+  "message": "Uji jalur posting IG (dry run, tidak ditayangkan).",
+  "image_urls": [
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261023-01/BW-261023-01_01.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261023-01/BW-261023-01_02.jpg"
+  ]
+}
