@@ -2,9 +2,16 @@
   "id": "UJI-IG-3",
   "platform": "instagram",
   "publish_at": "2026-10-26T11:20:00+07:00",
-  "status": "approved",
+  "status": "tested",
   "dry_run": true,
   "message": "Uji jalur Reels IG, versi _ig 3,3 MB (dry run, tidak ditayangkan).",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261022-02/BW-261022-02_ig.mp4",
-  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261022-02/BW-261022-02_cover.jpg"
+  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261022-02/BW-261022-02_cover.jpg",
+  "result": {
+    "dry_run": true,
+    "container": "17953501575295243",
+    "id": null,
+    "url": null
+  },
+  "posted_at": "2026-10-26T04:36:45.048060+00:00"
 }
