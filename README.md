@@ -26,7 +26,7 @@ Versi 3 · 17 Okt 2026. Salinan kerja ada di repo GitHub publik `brainwork-cloud
 ## Jalur publish
 | Platform | Jalur |
 |---|---|
-| IG Carousel & Reels | Windsor.ai API (akun 17841468857262342) |
+| IG Carousel & Reels | Graph API lewat publish.py (queue/<ID>__instagram.json); Windsor.ai tidak dipakai sejak 27 Okt 2026 |
 | Threads | Threads API via GitHub Actions (`publish.py`), diantrikan agen 3b |
 | Facebook Page Brainwork.id (mirror IG) | Graph API Page token via GitHub Actions (`publish.py`: foto multi / Reels), diantrikan agen 3a setelah IG terbit |
 | YouTube Shorts (mirror Reels) | YouTube Data API via GitHub Actions (`publish.py`), diantrikan agen 3a H+1 |
