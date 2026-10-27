@@ -1,8 +1,8 @@
-Mulai 2026-10-26 21:07 WIB (Senin = segarkan semua insight: True)
-nopal-ig: 85 posting, followers 210328 | 
+Mulai 2026-10-27 07:07 WIB (Senin = segarkan semua insight: False)
+nopal-ig: 85 posting, followers 210316 | 
 nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-nopal-fb: 60 posting (Reels 100), followers 44258 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 58 posting tidak tersedia
+nopal-fb: 60 posting (Reels 100), followers 44255 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 59 posting tidak tersedia
 portal-ig: 23 posting, followers 4290 | 
 portal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 portal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
@@ -11,7 +11,7 @@ nopal-threads: 134 posting |
 nopal-yt: 15 video dari feed (Nopal • Spesialis Bangun Sosial Media)
 sk-id-yt: 15 video dari feed (Skalarium)
 sk-en-yt: 15 video dari feed (skalarium english)
-sk-id-ig: 22 posting publik, followers 2
-sk-en-ig: 22 posting publik, followers 1
+sk-id-ig: 23 posting publik, followers 2
+sk-en-ig: 23 posting publik, followers 1
 Issue data #1: 6 komentar diperbarui
-Selesai: 417 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA
+Selesai: 421 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA
