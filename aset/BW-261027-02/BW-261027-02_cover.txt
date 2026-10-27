@@ -1,9 +1,10 @@
 tanpa wajah (Faceless); item cover di bawah
    0.0 dtk |  3.0 dtk | hook | Berhenti lihat **jumlah like** dulu
-   4.3 dtk |  1.1 dtk | points | 3 angka di **Insight**
+   3.0 dtk |  2.4 dtk | points | 3 angka di **Insight**
    5.4 dtk |  4.3 dtk | ui | **Reach**: akun unik yang lihat
    9.7 dtk |  4.6 dtk | steps | Yang biasanya **diubah**
   14.3 dtk |  6.3 dtk | ui | **Save**: mau dibuka lagi
   20.6 dtk |  7.9 dtk | steps | Bikin isinya **lebih praktis**
   28.5 dtk |  6.5 dtk | ui | **Share**: layak dikirim
-  35.0 dtk |  6.7 dtk | vs | Bandingkan dengan
+  35.0 dtk |  4.2 dtk | vs | Bandingkan dengan **dirimu sendiri**
+  39.2 dtk |  2.5 dtk | statement | Biar **nggak lupa** cara bacanya
