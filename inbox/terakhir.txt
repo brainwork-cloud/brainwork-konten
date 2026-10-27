@@ -1,3 +1,2 @@
 8 file di inbox
-masuk: queue__BW-261027-03__instagram__202610271056.json -> queue/BW-261027-03__instagram.json
-selesai: 1 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
