@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-10-28 19:20 WIB",
+"diperbarui": "2026-10-29 07:13 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 210271,
+"followers": 210261,
 "posting_total": 396,
 "konten_tercatat": 88,
 "status": "OK",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9618,
+"followers": 9620,
 "posting_total": null,
 "konten_tercatat": 136,
 "status": "OK",
@@ -39,8 +39,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 19,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCMsUpKhfHQypk3kWzGIPJYw",
 "id_kanal": "UCMsUpKhfHQypk3kWzGIPJYw"
 },
 {
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44244,
+"followers": 44243,
 "posting_total": null,
 "konten_tercatat": 60,
 "status": "SEBAGIAN",
@@ -107,8 +107,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 2,
-"posting_total": 28,
-"konten_tercatat": 28,
+"posting_total": 29,
+"konten_tercatat": 29,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -137,8 +137,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 28,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPeNszPzJU28VAgkUSxd3hw",
 "id_kanal": "UCPeNszPzJU28VAgkUSxd3hw"
 },
 {
@@ -163,8 +163,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 1,
-"posting_total": 27,
-"konten_tercatat": 27,
+"posting_total": 28,
+"konten_tercatat": 28,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -193,8 +193,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 26,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
 },
 {
