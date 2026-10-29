@@ -1,0 +1,5 @@
+zoom pelan: 0.0-6.3 dtk, 53.1-56.6 dtk
+snap zoom 'gratis' 4.0 dtk
+snap zoom 'Simpan' 53.4 dtk
+chat 4.8-6.3 dtk dari kamu: Serius gratis?
+298 dari 1700 frame diubah
