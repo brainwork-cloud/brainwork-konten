@@ -491,6 +491,22 @@ def main():
         cv, cw = plan_cover(spec, new_words, main_len, tmp, out_dir)
         cuts += cv
         warns += cw
+    if mode == "talking_head" and spec.get("efek_wajah"):
+        # efek wajah (29 Okt 2026): zoom pelan, snap zoom, gelembung chat; hanya di bagian wajah, sebelum cover & subtitle dipasang
+        try:
+            import efek_wajah
+            spec["_hook_di_kartu"] = any((c.get("scene") or {}).get("type") == "hook" and c.get("at") is not None and float(c["at"]) <= 0.5
+                                         for c in spec.get("cover") or [])
+            rp, ew_warns = efek_wajah.rencana(spec, new_words, main_len, cuts, find_word_end)
+            warns += ew_warns
+            if rp:
+                fx_mp4 = os.path.join(tmp, "main_fx.mp4")
+                n_fr, n_ubah = efek_wajah.terapkan(rp, os.path.join(tmp, "main.mp4"), fx_mp4)
+                shutil.move(fx_mp4, os.path.join(tmp, "main.mp4"))
+                open(os.path.join(out_dir, f"{spec['id']}_efek.txt"), "w", encoding="utf-8").write(
+                    "\n".join(rp["catatan"]) + f"\n{n_ubah} dari {n_fr} frame diubah\n")
+        except Exception as e:
+            warns.append(f"efek_wajah gagal ({type(e).__name__}: {e}); video dirender tanpa efek")
     # batas durasi Reels (default 60 dtk): bagian yang tak penting dipotong Produser lewat cut_ranges
     if final_len > max_sec + 0.05:
         warns.append(f"DURASI {final_len:.1f} dtk melebihi batas {max_sec:.0f} dtk: potong minimal {final_len - max_sec + 0.5:.1f} dtk lagi lewat 'cut_ranges' "
