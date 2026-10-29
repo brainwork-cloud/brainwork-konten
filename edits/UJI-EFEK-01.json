@@ -1,0 +1,192 @@
+{
+ "id": "UJI-EFEK-01",
+ "mode": "talking_head",
+ "camera": "rekaman/UJI-EFEK-01/kamera.mp4",
+ "hook": "Intip iklan kompetitor, gratis",
+ "highlight_words": [
+  "gratis",
+  "kompetitor",
+  "Claude"
+ ],
+ "cut_silence": true,
+ "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+ "sources": {
+  "rekaman/UJI-EFEK-01/kamera.mp4": "1x9woZa7KfeZsbEFrTKbQIQA477sR-d9U"
+ },
+ "whisper_prompt": false,
+ "fix": {
+  "metaedge library": "Meta Ad Library",
+  "rempel": "Tempel",
+  "cloud": "Claude",
+  "kerusel": "carousel",
+  "prom": "prompt",
+  "reset": "riset",
+  "versi mu": "versimu"
+ },
+ "cut_ranges": [
+  [
+   17.55,
+   19.7
+  ],
+  [
+   44.5,
+   47.7
+  ],
+  [
+   57.8,
+   64.9
+  ]
+ ],
+ "cover": [
+  {
+   "from_word": "pakainya",
+   "scene": {
+    "type": "ui",
+    "layout": "library",
+    "query": "nama brand",
+    "phases": [
+     "country"
+    ],
+    "kicker": "Meta Ad Library",
+    "title": "Cara **pakainya**"
+   }
+  },
+  {
+   "from_word": "semua iklan",
+   "scene": {
+    "type": "ui",
+    "layout": "library",
+    "query": "nama brand",
+    "phases": [
+     "query"
+    ],
+    "kicker": "Lalu",
+    "title": "Ketik nama **brand kompetitor**"
+   }
+  },
+  {
+   "from_word": "brand kompetitor",
+   "scene": {
+    "type": "ui",
+    "layout": "library",
+    "query": "nama brand",
+    "phases": [
+     "results",
+     "highlight"
+    ],
+    "kicker": "Cek tanggal tayang",
+    "title": "Yang **sudah jalan lama**",
+    "tag": "Jalan lama",
+    "hl_card": 0
+   }
+  },
+  {
+   "from_word": "dipertahankan",
+   "scene": {
+    "type": "icon",
+    "icon": "warning",
+    "kicker": "Tapi",
+    "text": "Bukan berarti performanya **pasti bagus**"
+   }
+  },
+  {
+   "from_word": "bagus",
+   "scene": {
+    "type": "steps",
+    "kicker": "Catat",
+    "title": "Dari tiap **iklan**",
+    "items": [
+     "Kalimat pembuka",
+     "Penawarannya",
+     "Formatnya: video, gambar, carousel"
+    ]
+   }
+  },
+  {
+   "from_word": "carousel",
+   "scene": {
+    "type": "ui",
+    "layout": "chat",
+    "file": "catatan-iklan.txt",
+    "user": "Ringkas pola iklan ini.",
+    "phase": "ask",
+    "kicker": "Tempel ke Claude",
+    "title": "Minta dia **ringkas polanya**"
+   }
+  },
+  {
+   "from_word": "ringkas pola",
+   "scene": {
+    "type": "ui",
+    "layout": "chat",
+    "file": "catatan-iklan.txt",
+    "user": "Ringkas pola iklan ini.",
+    "phase": "answer",
+    "kicker": "Minta Claude cari",
+    "title": "**Polanya**",
+    "bullets": [
+     "Hook yang paling sering",
+     "Jenis penawaran",
+     "Celah yang belum dipakai kompetitor"
+    ]
+   }
+  },
+  {
+   "from_word": "kompetitor#3",
+   "scene": {
+    "type": "vs",
+    "kicker": "Pakai hasilnya",
+    "yes": {
+     "title": "Ambil **polanya**"
+    },
+    "no": {
+     "title": "Jangan jiplak iklannya"
+    }
+   }
+  },
+  {
+   "from_word": "iklannya",
+   "scene": {
+    "type": "icon",
+    "icon": "chat",
+    "kicker": "Butuh contekan prompt buat jualan?",
+    "text": "Aku **kumpulin** buat kamu"
+   }
+  },
+  {
+   "from_word": "kumpulin",
+   "scene": {
+    "type": "icon",
+    "icon": "doc",
+    "kicker": "Info di caption",
+    "text": "**Pack 50 Prompt UMKM**"
+   }
+  },
+  {
+   "from_word": "caption",
+   "scene": {
+    "type": "icon",
+    "icon": "chart",
+    "kicker": "Riset iklan kecil begini",
+    "text": "Bikin kamu **nggak mulai dari nol**"
+   }
+  }
+ ],
+ "close_from_word": "dari nol",
+ "ui_rev": 4,
+ "efek_wajah": {
+  "zoom": true,
+  "snap": [
+   "gratis",
+   "Simpan"
+  ],
+  "chat": [
+   {
+    "from_word": "gratis",
+    "teks": "Serius gratis?",
+    "dari": "kamu",
+    "dur": 2.4
+   }
+  ]
+ }
+}
