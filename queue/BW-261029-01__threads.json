@@ -1,1 +1,22 @@
-{"id": "BW-261029-01", "platform": "threads", "publish_at": "2026-10-29T08:00:00+07:00", "status": "approved", "posts": ["Hari ke-799 bangun akun dari 0.\nDitahap ini akunku punya tim agen AI. Bukan satu AI yang ngerjain semuanya, tapi beberapa agen yang masing-masing punya satu tugas. Ini siapa ngerjain apa, dan bagian mana yang tetap dipegang manusia.", "Perencana nyusun rencana konten 7 hari tiap Minggu malam.\nProduser nulis naskah dan bahan visual tiap hari kerja.\nAnalis baca performa tiap pekan, lalu nitip pelajarannya ke Perencana.\nPemantau ngecek tiap pagi: semua agen jalan atau ada yang macet.", "Tapi nggak ada yang tayang tanpa persetujuan manusia. Agen penerbit cuma posting konten yang sudah di-approve di Sheet.\nAI juga bisa salah. Makanya ada tab Koreksi: tiap koreksi dari tim dicatat, dan agen wajib baca sebelum nulis lagi, supaya salahnya nggak terulang.", "Jadi sistem ini bukan ganti manusia, tapi bagi kerja: agen ngerjain yang berulang, manusia mutusin yang penting.\nKamu mau aku bahas bagian mana dulu: cara bikin sistem begini sendiri, alur approve-nya, atau kesalahan yang pernah dibuat sistem ini?"]}
+{
+  "id": "BW-261029-01",
+  "platform": "threads",
+  "publish_at": "2026-10-29T08:00:00+07:00",
+  "status": "posted",
+  "posts": [
+    "Hari ke-799 bangun akun dari 0.\nDitahap ini akunku punya tim agen AI. Bukan satu AI yang ngerjain semuanya, tapi beberapa agen yang masing-masing punya satu tugas. Ini siapa ngerjain apa, dan bagian mana yang tetap dipegang manusia.",
+    "Perencana nyusun rencana konten 7 hari tiap Minggu malam.\nProduser nulis naskah dan bahan visual tiap hari kerja.\nAnalis baca performa tiap pekan, lalu nitip pelajarannya ke Perencana.\nPemantau ngecek tiap pagi: semua agen jalan atau ada yang macet.",
+    "Tapi nggak ada yang tayang tanpa persetujuan manusia. Agen penerbit cuma posting konten yang sudah di-approve di Sheet.\nAI juga bisa salah. Makanya ada tab Koreksi: tiap koreksi dari tim dicatat, dan agen wajib baca sebelum nulis lagi, supaya salahnya nggak terulang.",
+    "Jadi sistem ini bukan ganti manusia, tapi bagi kerja: agen ngerjain yang berulang, manusia mutusin yang penting.\nKamu mau aku bahas bagian mana dulu: cara bikin sistem begini sendiri, alur approve-nya, atau kesalahan yang pernah dibuat sistem ini?"
+  ],
+  "result": {
+    "ids": [
+      "18094291040193538",
+      "18034551035887933",
+      "17935179897409032",
+      "17912820420471919"
+    ],
+    "url": "https://www.threads.com/@nopal.brainwork/post/DfD1Vr8lYj_"
+  },
+  "posted_at": "2026-10-29T01:32:37.924993+00:00"
+}
