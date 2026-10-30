@@ -1,17 +1,17 @@
-Mulai 2026-10-30 07:14 WIB (Senin = segarkan semua insight: False)
-nopal-ig: 87 posting, followers 210238 | 
+Mulai 2026-10-30 19:21 WIB (Senin = segarkan semua insight: False)
+nopal-ig: 87 posting, followers 210222 | 
 nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-nopal-fb: 59 posting (Reels 100), followers 44242 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 57 posting tidak tersedia
-portal-ig: 26 posting, followers 4287 | 
+nopal-fb: 59 posting (Reels 100), followers 44236 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 57 posting tidak tersedia
+portal-ig: 27 posting, followers 4287 | 
 portal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 portal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-portal-fb: 13 posting (Reels 5), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 4 posting tidak tersedia
+portal-fb: 14 posting (Reels 5), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 4 posting tidak tersedia
 nopal-threads: 137 posting | 
 nopal-yt: 15 video dari feed (Nopal • Spesialis Bangun Sosial Media)
-GAGAL sk-id-yt: HTTPError: 404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPeNszPzJU28VAgkUSxd3hw
-GAGAL sk-en-yt: HTTPError: 500 Server Error: Internal Server Error for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg
-sk-id-ig: 31 posting publik, followers 2
-sk-en-ig: 31 posting publik, followers 3
+sk-id-yt: 15 video dari feed (Skalarium)
+sk-en-yt: 15 video dari feed (skalarium english)
+sk-id-ig: 32 posting publik, followers 1
+sk-en-ig: 32 posting publik, followers 4
 Issue data #1: 6 komentar diperbarui
-Selesai: 463 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=GAGAL, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=GAGAL, sk-en-tiktok=TIDAK TERSEDIA
+Selesai: 470 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA
