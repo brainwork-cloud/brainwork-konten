@@ -1,1 +1,19 @@
-{"id": "PT-261030-01", "platform": "instagram_portal", "publish_at": "2026-10-30T08:00:00+07:00", "status": "approved", "message": "Google meluncurkan pratinjau Connected Apps Platform, tempat developer membangun dan mengelola aplikasi untuk Search dan aplikasi Gemini.\n\n• Aplikasi terhubung lewat server MCP di cloud atau Android MCP. Pendaftaran, pengujian, dan pengajuan lewat Google Connected Console.\n• Developer memilih tayang di Search, Gemini, atau keduanya, dan bisa memantau trafik, latensi, dan tingkat error. Identitas brand, seperti logo terverifikasi dan akun terautentikasi, tetap dikelola developer.\n• Artinya buat pelaku usaha dengan aplikasi sendiri: ada jalur resmi untuk mengajukan aplikasinya ke Search dan Gemini.\n\nStatus: pratinjau, akses dibuka bertahap; Google menyebut lebih dari 50 aplikasi sudah tayang. Belum ada konfirmasi untuk Indonesia.\n\nSumber: Google (blog resmi): https://blog.google/innovation-and-ai/technology/developers-tools/connected-apps-one-place/\nFoto ilustrasi: Immo Wegmann / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleGemini #AI #DigitalMarketing", "image_urls": ["https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_01.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_02.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_03.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_04.jpg", "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_05.jpg"]}
+{
+  "id": "PT-261030-01",
+  "platform": "instagram_portal",
+  "publish_at": "2026-10-30T08:00:00+07:00",
+  "status": "posted",
+  "message": "Google meluncurkan pratinjau Connected Apps Platform, tempat developer membangun dan mengelola aplikasi untuk Search dan aplikasi Gemini.\n\n• Aplikasi terhubung lewat server MCP di cloud atau Android MCP. Pendaftaran, pengujian, dan pengajuan lewat Google Connected Console.\n• Developer memilih tayang di Search, Gemini, atau keduanya, dan bisa memantau trafik, latensi, dan tingkat error. Identitas brand, seperti logo terverifikasi dan akun terautentikasi, tetap dikelola developer.\n• Artinya buat pelaku usaha dengan aplikasi sendiri: ada jalur resmi untuk mengajukan aplikasinya ke Search dan Gemini.\n\nStatus: pratinjau, akses dibuka bertahap; Google menyebut lebih dari 50 aplikasi sudah tayang. Belum ada konfirmasi untuk Indonesia.\n\nSumber: Google (blog resmi): https://blog.google/innovation-and-ai/technology/developers-tools/connected-apps-one-place/\nFoto ilustrasi: Immo Wegmann / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleGemini #AI #DigitalMarketing",
+  "image_urls": [
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_01.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_02.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_03.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_04.jpg",
+    "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261030-01/PT-261030-01_05.jpg"
+  ],
+  "result": {
+    "id": "17873295252644891",
+    "url": "https://www.instagram.com/p/DfGcolTDAE0/"
+  },
+  "posted_at": "2026-10-30T01:53:41.040800+00:00"
+}
