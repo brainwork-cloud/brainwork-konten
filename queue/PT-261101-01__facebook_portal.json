@@ -1,1 +1,13 @@
-{"id":"PT-261101-01","platform":"facebook_portal","publish_at":"2026-11-01T08:00:00+07:00","status":"approved","message":"Google berencana mendukung sinyal preferensi AI training bersama di robots.txt mulai awal 2027.\n\n• Google menyebut akan mendukung sinyal AIPREF, yaitu sinyal preferensi AI training bersama yang dibaca mesin.\n• Situs menyatakan sikap lewat satu token di robots.txt: user-agent: __usage_ai-training.\n• Kontrol Google-Extended yang sudah ada tetap tersedia; sinyal baru belum aktif.\n\nStatus: rencana, belum aktif (target awal 2027); belum ada rincian wilayah.\n\nSumber: Google Developers: https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers; Search Engine Roundtable: https://www.seroundtable.com/google-ai-training-control-42430.html\nFoto ilustrasi: Immo Wegmann / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleSearch #AI #SEO","video_url":"https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261101-01/PT-261101-01.mp4"}
+{
+  "id": "PT-261101-01",
+  "platform": "facebook_portal",
+  "publish_at": "2026-11-01T08:00:00+07:00",
+  "status": "posted",
+  "message": "Google berencana mendukung sinyal preferensi AI training bersama di robots.txt mulai awal 2027.\n\n• Google menyebut akan mendukung sinyal AIPREF, yaitu sinyal preferensi AI training bersama yang dibaca mesin.\n• Situs menyatakan sikap lewat satu token di robots.txt: user-agent: __usage_ai-training.\n• Kontrol Google-Extended yang sudah ada tetap tersedia; sinyal baru belum aktif.\n\nStatus: rencana, belum aktif (target awal 2027); belum ada rincian wilayah.\n\nSumber: Google Developers: https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers; Search Engine Roundtable: https://www.seroundtable.com/google-ai-training-control-42430.html\nFoto ilustrasi: Immo Wegmann / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleSearch #AI #SEO",
+  "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261101-01/PT-261101-01.mp4",
+  "result": {
+    "id": "1622501522752094",
+    "url": "https://www.facebook.com/reel/1622501522752094/"
+  },
+  "posted_at": "2026-11-01T01:01:41.834585+00:00"
+}
