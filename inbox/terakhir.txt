@@ -1,3 +1,2 @@
-daftar embedded gagal: SSLError(MaxRetryError("HTTPSConnectionPool(host='drive.google.com', port=443): Max retries exceeded with url: /uc?id=102gOjaaqyjGrG8ZWg7EaMYRGHM3OTQWd (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))"))
-2 file di inbox
+3 file di inbox
 selesai: 0 file diimpor, 0 gagal
