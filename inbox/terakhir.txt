@@ -1,2 +1,5 @@
-9 file di inbox
-selesai: 0 file diimpor, 0 gagal
+3 file di inbox
+masuk: specs__BW-261104-02__202611021215.json -> specs/BW-261104-02.json
+masuk: specs__BW-261106-01__202611021215.json -> specs/BW-261106-01.json
+masuk: specs__BW-261109-02__202611021215.json -> specs/BW-261109-02.json
+selesai: 3 file diimpor, 0 gagal
