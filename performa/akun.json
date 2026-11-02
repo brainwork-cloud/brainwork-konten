@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-02 07:13 WIB",
+"diperbarui": "2026-11-02 19:38 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,9 +8,9 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 210153,
+"followers": 210149,
 "posting_total": 398,
-"konten_tercatat": 88,
+"konten_tercatat": 87,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9681,
+"followers": 9686,
 "posting_total": null,
 "konten_tercatat": 137,
 "status": "OK",
@@ -39,8 +39,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 20,
-"status": "GAGAL",
-"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCMsUpKhfHQypk3kWzGIPJYw",
+"status": "SEBAGIAN",
+"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UCMsUpKhfHQypk3kWzGIPJYw"
 },
 {
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44209,
+"followers": 44201,
 "posting_total": null,
 "konten_tercatat": 58,
 "status": "SEBAGIAN",
@@ -80,7 +80,7 @@
 "plan": "Tab Portal",
 "followers": 0,
 "posting_total": null,
-"konten_tercatat": 15,
+"konten_tercatat": 16,
 "status": "SEBAGIAN",
 "catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 5 posting tidak tersedia",
 "id_kanal": ""
@@ -92,9 +92,9 @@
 "akun": "@brainwork.id",
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
-"followers": 4284,
-"posting_total": 126,
-"konten_tercatat": 28,
+"followers": 4282,
+"posting_total": 127,
+"konten_tercatat": 29,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -192,9 +192,9 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 34,
-"status": "GAGAL",
-"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg",
+"konten_tercatat": 35,
+"status": "SEBAGIAN",
+"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
 },
 {
