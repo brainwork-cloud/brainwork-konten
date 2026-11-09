@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-08 19:21 WIB",
+"diperbarui": "2026-11-09 07:17 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209917,
+"followers": 209892,
 "posting_total": 398,
 "konten_tercatat": 85,
 "status": "OK",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9766,
+"followers": 9767,
 "posting_total": null,
 "konten_tercatat": 137,
 "status": "OK",
@@ -39,8 +39,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 20,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCMsUpKhfHQypk3kWzGIPJYw",
 "id_kanal": "UCMsUpKhfHQypk3kWzGIPJYw"
 },
 {
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44158,
+"followers": 44155,
 "posting_total": null,
 "konten_tercatat": 56,
 "status": "SEBAGIAN",
@@ -92,7 +92,7 @@
 "akun": "@brainwork.id",
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
-"followers": 4266,
+"followers": 4264,
 "posting_total": 131,
 "konten_tercatat": 33,
 "status": "OK",
@@ -137,8 +137,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 49,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPeNszPzJU28VAgkUSxd3hw",
 "id_kanal": "UCPeNszPzJU28VAgkUSxd3hw"
 },
 {
@@ -193,8 +193,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 46,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
 },
 {
