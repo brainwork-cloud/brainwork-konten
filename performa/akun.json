@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-11 19:41 WIB",
+"diperbarui": "2026-11-12 07:33 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209805,
+"followers": 209794,
 "posting_total": 398,
 "konten_tercatat": 84,
 "status": "OK",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9788,
+"followers": 9790,
 "posting_total": null,
 "konten_tercatat": 137,
 "status": "OK",
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44136,
+"followers": 44134,
 "posting_total": null,
 "konten_tercatat": 55,
 "status": "SEBAGIAN",
@@ -107,8 +107,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 1,
-"posting_total": 59,
-"konten_tercatat": 59,
+"posting_total": 60,
+"konten_tercatat": 60,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -136,7 +136,7 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 59,
+"konten_tercatat": 60,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UCPeNszPzJU28VAgkUSxd3hw"
@@ -163,8 +163,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 4,
-"posting_total": 55,
-"konten_tercatat": 55,
+"posting_total": 56,
+"konten_tercatat": 56,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -192,7 +192,7 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 54,
+"konten_tercatat": 55,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
