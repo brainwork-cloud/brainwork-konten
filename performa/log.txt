@@ -1,12 +1,12 @@
-Mulai 2026-11-12 07:33 WIB (Senin = segarkan semua insight: False)
-nopal-ig: 84 posting, followers 209794 | 
+Mulai 2026-11-13 02:10 WIB (Senin = segarkan semua insight: False)
+nopal-ig: 83 posting, followers 209767 | 
 nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-nopal-fb: 55 posting (Reels 100), followers 44134 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 53 posting tidak tersedia
-portal-ig: 36 posting, followers 4258 | 
+nopal-fb: 54 posting (Reels 100), followers 44127 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 52 posting tidak tersedia
+portal-ig: 37 posting, followers 4254 | 
 portal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 portal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-portal-fb: 23 posting (Reels 8), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 7 posting tidak tersedia
+portal-fb: 24 posting (Reels 9), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 8 posting tidak tersedia
 nopal-threads: 137 posting | 
 nopal-yt: 15 video dari feed (Nopal • Spesialis Bangun Sosial Media)
 sk-id-yt: 15 video dari feed (Skalarium)
