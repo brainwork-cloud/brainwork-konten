@@ -95,5 +95,8 @@
  "e072a21542efa0da37c4893d09d9aa96": "motion__BW-261110-02__202611101211.json",
  "0d72eb68ef165489cf583ba9e7425ea7": "portal__PT-261111-01__202611110627.json",
  "0ec7e51919ffb367af65b1780ea8da8c": "queue__PT-261111-01__facebook_portal__202611110627.json",
- "5125a4ee634ead43b20a483ea55a374c": "queue__PT-261111-01__instagram_portal__202611110627.json"
+ "5125a4ee634ead43b20a483ea55a374c": "queue__PT-261111-01__instagram_portal__202611110627.json",
+ "df0067f5340e9151f75bfc27fbc528d8": "portal__PT-261112-01__202611120627.json",
+ "994d55c4aa787c17e64a664ef79fcf6f": "queue__PT-261112-01__facebook_portal__202611120627.json",
+ "4e5ddcf3c7448ebff2a587b4dae62309": "queue__PT-261112-01__instagram_portal__202611120627.json"
 }
