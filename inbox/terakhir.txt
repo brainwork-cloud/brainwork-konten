@@ -1,3 +1,2 @@
 2 file di inbox
-masuk: motion__BW-261114-01__202611131213.json -> motion/BW-261114-01.json
-selesai: 1 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
