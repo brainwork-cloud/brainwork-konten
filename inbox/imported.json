@@ -100,5 +100,8 @@
  "994d55c4aa787c17e64a664ef79fcf6f": "queue__PT-261112-01__facebook_portal__202611120627.json",
  "4e5ddcf3c7448ebff2a587b4dae62309": "queue__PT-261112-01__instagram_portal__202611120627.json",
  "63bc0b8f3013de53a5f00d22508b288e": "motion__BW-261112-02__202611121210.json",
- "3d5db03c92f7cb73cd2a90a3910fe1bb": "specs__BW-261116-02__202611121212.json"
+ "3d5db03c92f7cb73cd2a90a3910fe1bb": "specs__BW-261116-02__202611121212.json",
+ "deae59c9ce57c74c1bc46e3529aa7dbf": "portal__PT-261113-01__202611130627.json",
+ "70e6dab0b86b2d68da096430dfb4c873": "queue__PT-261113-01__facebook_portal__202611130627.json",
+ "412a24d617113fa86c1f6c471302a26f": "queue__PT-261113-01__instagram_portal__202611130627.json"
 }
