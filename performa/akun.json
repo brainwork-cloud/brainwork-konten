@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-13 02:10 WIB",
+"diperbarui": "2026-11-13 10:36 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209767,
+"followers": 209759,
 "posting_total": 398,
 "konten_tercatat": 83,
 "status": "OK",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9798,
+"followers": 9802,
 "posting_total": null,
 "konten_tercatat": 137,
 "status": "OK",
@@ -39,8 +39,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 20,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "500 Server Error: Internal Server Error for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCMsUpKhfHQypk3kWzGIPJYw",
 "id_kanal": "UCMsUpKhfHQypk3kWzGIPJYw"
 },
 {
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44127,
+"followers": 44121,
 "posting_total": null,
 "konten_tercatat": 54,
 "status": "SEBAGIAN",
@@ -80,7 +80,7 @@
 "plan": "Tab Portal",
 "followers": 0,
 "posting_total": null,
-"konten_tercatat": 24,
+"konten_tercatat": 25,
 "status": "SEBAGIAN",
 "catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 8 posting tidak tersedia",
 "id_kanal": ""
@@ -93,8 +93,8 @@
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
 "followers": 4254,
-"posting_total": 135,
-"konten_tercatat": 37,
+"posting_total": 136,
+"konten_tercatat": 38,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -107,8 +107,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 1,
-"posting_total": 60,
-"konten_tercatat": 60,
+"posting_total": 61,
+"konten_tercatat": 61,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -137,8 +137,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 60,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPeNszPzJU28VAgkUSxd3hw",
 "id_kanal": "UCPeNszPzJU28VAgkUSxd3hw"
 },
 {
@@ -163,8 +163,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 4,
-"posting_total": 56,
-"konten_tercatat": 56,
+"posting_total": 58,
+"konten_tercatat": 58,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -193,8 +193,8 @@
 "followers": null,
 "posting_total": null,
 "konten_tercatat": 55,
-"status": "SEBAGIAN",
-"catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
+"status": "GAGAL",
+"catatan": "500 Server Error: Internal Server Error for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
 },
 {

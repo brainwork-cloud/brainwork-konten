@@ -1,17 +1,17 @@
-Mulai 2026-11-13 02:10 WIB (Senin = segarkan semua insight: False)
-nopal-ig: 83 posting, followers 209767 | 
+Mulai 2026-11-13 10:36 WIB (Senin = segarkan semua insight: False)
+nopal-ig: 83 posting, followers 209759 | 
 nopal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 nopal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-nopal-fb: 54 posting (Reels 100), followers 44127 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 52 posting tidak tersedia
-portal-ig: 37 posting, followers 4254 | 
+nopal-fb: 54 posting (Reels 100), followers 44121 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 52 posting tidak tersedia
+portal-ig: 38 posting, followers 4254 | 
 portal-fb: /posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
 portal-fb: /published_posts tidak terbaca ((#10) This endpoint requires the 'pages_read_user_content' permission or the 'Pa)
-portal-fb: 24 posting (Reels 9), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 8 posting tidak tersedia
+portal-fb: 25 posting (Reels 9), followers 0 | hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 8 posting tidak tersedia
 nopal-threads: 137 posting | 
-nopal-yt: 15 video dari feed (Nopal • Spesialis Bangun Sosial Media)
-sk-id-yt: 15 video dari feed (Skalarium)
-sk-en-yt: 15 video dari feed (skalarium english)
+GAGAL nopal-yt: HTTPError: 500 Server Error: Internal Server Error for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCMsUpKhfHQypk3kWzGIPJYw
+GAGAL sk-id-yt: HTTPError: 404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCPeNszPzJU28VAgkUSxd3hw
+GAGAL sk-en-yt: HTTPError: 500 Server Error: Internal Server Error for url: https://www.youtube.com/feeds/videos.xml?channel_id=UC_vdJ5nU1A2RXhmQ2_BeNVg
 sk-id-ig: 50 posting publik, followers 1
 sk-en-ig: 50 posting publik, followers 4
 Issue data #1: 7 komentar diperbarui
-Selesai: 586 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=SEBAGIAN, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=SEBAGIAN, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=SEBAGIAN, sk-en-tiktok=TIDAK TERSEDIA
+Selesai: 591 konten. nopal-ig=OK, nopal-threads=OK, nopal-yt=GAGAL, nopal-tiktok=TIDAK TERSEDIA, nopal-fb=SEBAGIAN, portal-fb=SEBAGIAN, portal-ig=OK, sk-id-ig=SEBAGIAN, sk-id-fb=TIDAK TERSEDIA, sk-id-yt=GAGAL, sk-id-tiktok=TIDAK TERSEDIA, sk-en-ig=SEBAGIAN, sk-en-fb=TIDAK TERSEDIA, sk-en-yt=GAGAL, sk-en-tiktok=TIDAK TERSEDIA
