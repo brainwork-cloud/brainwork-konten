@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-15 10:06 WIB",
+"diperbarui": "2026-11-16 00:59 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -689,9 +689,18 @@
 "kode": "nopal-ig",
 "akun": "@nopal.brainwork",
 "tanggal": "2026-11-13",
-"reach": 182,
+"reach": 257,
+"followers_baru": 20,
+"views": 270,
+"vv": 2
+},
+{
+"kode": "nopal-ig",
+"akun": "@nopal.brainwork",
+"tanggal": "2026-11-14",
+"reach": 160,
 "followers_baru": 0,
-"views": 190,
+"views": 154,
 "vv": 2
 },
 {
@@ -1382,9 +1391,18 @@
 "kode": "portal-ig",
 "akun": "@brainwork.id",
 "tanggal": "2026-11-13",
-"reach": 6,
+"reach": 33,
+"followers_baru": 1,
+"views": 66,
+"vv": 2
+},
+{
+"kode": "portal-ig",
+"akun": "@brainwork.id",
+"tanggal": "2026-11-14",
+"reach": 5,
 "followers_baru": 0,
-"views": 19,
+"views": 9,
 "vv": 2
 }
 ]
