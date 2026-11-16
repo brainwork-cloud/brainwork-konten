@@ -108,6 +108,8 @@ Aturan agen:
 - BATAS DURASI REELS 60 DETIK (keputusan Naufal 19 Okt 2026): semua Reels (Talking Head, Faceless, Aktivitas, Motion) maksimal 60 detik termasuk penutup merek 1,8 detik. Editor otomatis merapatkan jeda dan membuang kata isian; kalau masih lebih, bagian paling tidak penting dipotong lewat `cut_ranges` dengan urutan prioritas: rekaman ulang atau kalimat berulang, basa-basi, penjelasan kedua untuk poin yang sama, poin berdampak terkecil. Kalimat pembuka dan penutup tidak pernah dipotong.
 - BERKAS IG: Instagram menolak unggahan video lewat API di atas ±4 MB (sejak 30 Sep 2026). Editor karena itu membuat `<ID>_ig.mp4` (720x1280, ≤ 3,3 MB, kualitas hampir sama di layar ponsel) di samping `<ID>.mp4` (penuh, untuk YouTube Shorts) dan `<ID>_tiktok.mp4` (±9 MB, untuk TikTok). Kolom Aset Reels hasil editor berisi 3 baris: `.mp4`, `_tiktok.mp4`, `_ig.mp4`; Penerbit IG memakai `_ig.mp4`.
 
+- EFEK WAJAH (standar semua Talking Head sejak 16 Nov 2026, keputusan Naufal): di bagian yang wajahnya tampil, editor memasang zoom pelan (pembuka maju, penutup mundur), snap zoom pada kata kunci hook dan kata ajakan, serta satu gelembung chat ungu di pembuka berisi pertanyaan atau reaksi penonton (pengirim "kamu", "AI", atau "Nopal"; bukan testimoni, tanpa emoji). Subtitle dan teks hook tidak ikut membesar. Spec tanpa field `efek_wajah` tetap mendapat zoom + snap default; `"efek_wajah": false` hanya atas permintaan Naufal.
+
 ## 13. Portal Brainwork.id (keputusan Naufal 19 Okt 2026)
 - Media portal "homeless media" di Facebook Page `brainwork.id` (Instagram @brainwork.id dimirror otomatis dari konten yang sama). Produksi SENDIRI, bukan mirror @nopal.brainwork. Hanya berita.
 - Berjalan PENUH OTOMATIS tanpa persetujuan per post (agen 5 mengantrikan sendiri, publisher memposting). Kontrol manusia: review sekali seminggu (Senin) oleh Naufal/Nazwa di tab `Review Portal`, plus kolom Catatan Review di tab `Portal` untuk membatalkan atau menandai kesalahan.
@@ -119,3 +121,11 @@ Aturan agen:
 - Satu konten per hari, boleh kosong kalau tidak ada berita layak. Tidak menyalin teks sumber (kutipan maks 1 dan < 15 kata); gambar sumber hanya sebagai foto utama berkredit (lihat GAMBAR).
 - Tidak memberitakan produk atau merek pemberi kerja Naufal (bagian 4 berlaku penuh).
 - Agen tidak bisa mengedit atau menghapus post yang tayang; kesalahan ditandai untuk tindakan manual Naufal.
+
+## 14. Alur tayang: diam = tayang (keputusan Naufal 16 Nov 2026)
+- Naufal: "aku cukup pantau yang butuh rekamanku". Konten @nopal.brainwork tidak lagi menunggu approve manusia.
+- `SIAP REVIEW` = siap tayang otomatis. Agen 3a (IG) dan 3b (Threads) memeriksa (aset 200, foto `dipakai`, caption/naskah lengkap, tidak ada catatan ragu) lalu mengubahnya ke `APPROVED` dan menerbitkannya di jam tayang. Nazwa/Naufal tetap bisa menahan kapan saja dengan `REVISI` atau `BATAL` (antrian Threads yang sudah diunggah dibatalkan agen 3b).
+- `PERLU CEK` = agen ragu (fakta tidak bisa dicek, subtitle bermasalah, render gagal berulang). Tidak tayang; dirangkum di laporan pekanan Senin.
+- Rekaman wajah opsional: `PERLU REKAM` yang rekamannya belum masuk sampai run Produser terakhir sebelum tayang diganti otomatis (aset siap pakai atau Reels Motion dari naskah yang sama), supaya slot tidak kosong. Pemantau memberi tahu Naufal hanya bila rekaman dibutuhkan ≤ 2 hari, token/login/akun perlu tangannya, atau posting berhenti.
+- Baris lewat tanggal di-BATAL-kan otomatis (isinya tetap ada untuk dipakai ulang).
+- Laporan pekanan ke Naufal: Senin pagi (angka pekan lalu, rekaman yang dibutuhkan pekan ini, yang sudah dibereskan otomatis, maksimal 3 keputusan termasuk pertanyaan yang belum dijawab).

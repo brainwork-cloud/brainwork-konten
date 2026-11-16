@@ -491,10 +491,12 @@ def main():
         cv, cw = plan_cover(spec, new_words, main_len, tmp, out_dir)
         cuts += cv
         warns += cw
-    if mode == "talking_head" and spec.get("efek_wajah"):
-        # efek wajah (29 Okt 2026): zoom pelan, snap zoom, gelembung chat; hanya di bagian wajah, sebelum cover & subtitle dipasang
+    if mode == "talking_head" and spec.get("efek_wajah", True):
+        # efek wajah (29 Okt 2026; STANDAR semua Talking Head sejak 16 Nov 2026, matikan dengan "efek_wajah": false):
+        # zoom pelan, snap zoom, gelembung chat; hanya di bagian wajah, sebelum cover & subtitle dipasang
         try:
             import efek_wajah
+            spec.setdefault("efek_wajah", True)
             spec["_hook_di_kartu"] = any((c.get("scene") or {}).get("type") == "hook" and c.get("at") is not None and float(c["at"]) <= 0.5
                                          for c in spec.get("cover") or [])
             rp, ew_warns = efek_wajah.rencana(spec, new_words, main_len, cuts, find_word_end)
