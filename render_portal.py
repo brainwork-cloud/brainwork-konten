@@ -24,6 +24,8 @@ Format portal/<ID>.json:
   #   "foto": {"url": "https://images.unsplash.com/photo-...?fm=jpg&q=80&w=1800", "kredit": "1981 Digital / Unsplash", "jenis": "stok"}
   "gambar": {"jenis": "hp-feed", "teks": ["label 1", "label 2"], "fokus": [[0.65, 0.4, 1.5]]},   # ilustrasi buatan sendiri (portal_art.py): jenis hp-feed | dashboard-ads (dulu dashboard-iklan) | panggilan | chat-ai | toko-online | dokumen | grafik; teks (opsional, maks 5 label pendek, hanya istilah yang sudah ada di fakta); fokus (opsional) = sorotan [x, y, zoom] per slide fakta / scene fakta. Tanpa "gambar" kartu memakai tata letak teks saja
   "music": true,                             # hanya motion (default true)
+  "gaya": "v2",                              # opsional, UJI SAMPUL v2 (keputusan Naufal 16 Nov 2026): kartu single, sampul carousel, dan scene pembuka motion
+  "hook": "**AI Max** jadi default",          #   wajib bila gaya v2: judul pendek 2-4 kata, **frasa kunci** di blok emas; foto lebih terang, judul lengkap jadi subjudul
   "caption": "teks postingan"                # dipakai agen redaktur untuk antrian, tidak digambar
 }
 Gaya media netral: tanpa aku/kamu, tanpa wajah, tanpa nama pribadi.
@@ -31,8 +33,8 @@ Carousel: slide 1 sampul (judul), slide isi (satu fakta per slide), slide terakh
 Motion: scene pembuka (judul), satu scene per fakta (dari "ringkas"), scene status (bila ada), scene penutup (sumber + ajakan follow).
 Semua teks berasal dari field yang sama dengan kartu, jadi tidak ada fakta baru yang muncul hanya di slide/video.
 """
-import sys, os, json, shutil, tempfile
-from PIL import Image, ImageDraw, ImageFilter
+import sys, os, re, json, shutil, tempfile
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from render_carousel import (font, wrap_rich, draw_rich, fit, pill, W, H, M, BG, BG2, PURPLE, PURPLE_D,
@@ -181,6 +183,179 @@ def slide_cover_foto(spec, idx, total):
     return img
 
 
+# ---------------------------------------------------------------- sampul v2 (uji, keputusan Naufal 16 Nov 2026)
+# Spec "gaya": "v2" + "hook" (2-4 kata, **frasa kunci** di blok emas). Foto lebih terang (penggelapan minimal),
+# hook sangat besar (Anton), badge kategori, judul lengkap jadi subjudul, sumber + kredit foto tetap tercetak.
+# Tanpa foto (QA lokal tanpa internet) atau tanpa hook = tata letak lama.
+ANTON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Anton-Regular.ttf")
+V2_PAD = 18
+_SPEC = {}
+
+
+def v2_aktif(spec):
+    return spec.get("gaya") == "v2" and bool((spec.get("hook") or "").strip()) and FOTO is not None
+
+
+def _anton(size):
+    try:
+        return ImageFont.truetype(ANTON, size)
+    except OSError:
+        return font("black", max(24, int(size * 0.62)))
+
+
+def _hook_tokens(hook):
+    toks, hl = [], False
+    for part in re.split(r"(\*\*)", hook.strip()):
+        if part == "**":
+            hl = not hl
+            continue
+        toks += [(w.upper(), hl) for w in part.split()]
+    return toks
+
+
+def _runs(line):
+    """[(teks, sorot)] berurutan: kata bersebelahan dengan status sorot sama digabung."""
+    out = []
+    for w, h in line:
+        if out and out[-1][1] == h:
+            out[-1] = (out[-1][0] + " " + w, h)
+        else:
+            out.append((w, h))
+    return out
+
+
+def _line_w(d, line, f):
+    sp = d.textlength(" ", font=f)
+    rs = _runs(line)
+    return sum(d.textlength(t, font=f) + (2 * V2_PAD if h else 0) for t, h in rs) + sp * (len(rs) - 1)
+
+
+def _hook_lines(d, hook, f, mw):
+    lines, cur = [], []
+    for tok in _hook_tokens(hook):
+        if cur and _line_w(d, cur + [tok], f) > mw:
+            lines.append(cur)
+            cur = [tok]
+        else:
+            cur.append(tok)
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _hook_metrics(f):
+    asc = -f.getbbox("HAMBURGQ", anchor="ls")[1]
+    return asc, int(asc * 1.24)
+
+
+def _draw_hook(img, x, y, f, lines):
+    """Hook mulai y (atas huruf baris pertama); kata biasa putih berbayang, frasa kunci di blok emas."""
+    d = ImageDraw.Draw(img)
+    asc, lh = _hook_metrics(f)
+    sp = d.textlength(" ", font=f)
+    shadow = Image.new("L", img.size, 0)
+    sd = ImageDraw.Draw(shadow)
+    ops, yb = [], y + asc
+    for line in lines:
+        cx = x
+        for i, (t, h) in enumerate(_runs(line)):
+            if i:
+                cx += sp
+            tw = d.textlength(t, font=f)
+            if h:
+                ops.append(("box", (cx, yb - asc - 12, cx + tw + 2 * V2_PAD, yb + 16)))
+                ops.append(("txt", (cx + V2_PAD, yb), t, BG))
+                cx += tw + 2 * V2_PAD
+            else:
+                sd.text((cx, yb + 6), t, font=f, fill=170, anchor="ls")
+                ops.append(("txt", (cx, yb), t, WHITE))
+                cx += tw
+        yb += lh
+    img.paste(Image.new("RGB", img.size, (0, 0, 0)), (0, 0), shadow.filter(ImageFilter.GaussianBlur(10)))
+    d = ImageDraw.Draw(img)
+    for op in ops:
+        if op[0] == "box":
+            d.rounded_rectangle(op[1], radius=14, fill=GOLD)
+        else:
+            d.text(op[1], op[2], font=f, fill=op[3], anchor="ls")
+
+
+def _badge(d, x, y, text, f):
+    tw = d.textlength(text, font=f)
+    ph = f.size + 26
+    pw = tw + 48 + 28
+    d.rounded_rectangle([x, y, x + pw, y + ph], radius=ph / 2, fill=PURPLE)
+    cy = y + ph / 2
+    d.ellipse([x + 24, cy - 8, x + 40, cy + 8], fill=GOLD)
+    d.text((x + 24 + 28, cy), text, font=f, fill=WHITE, anchor="lm")
+    return y + ph
+
+
+def sampul_v2(spec, w, h, carousel=False, motion=False):
+    """Sampul/kartu gaya v2 ukuran w x h (1080x1350 kartu & sampul carousel, 1080x1920 pembuka motion)."""
+    img = Image.new("RGB", (w, h), BG)
+    img.paste(portal_foto.latar(FOTO, w, h, (0.5, 0.40), 1.0, 0.95, 0.04 + _gelap_ekstra() * 0.35), (0, 0))
+    d = ImageDraw.Draw(img)
+    mw = w - 2 * M
+    sub = (spec.get("judul") or "").replace("**", "")
+    sf = font("semi", 32)
+    for sz in (38, 35, 32):
+        sf = font("semi", sz)
+        if len(wrap_rich(d, sub, sf, mw)) <= 3:
+            break
+    sub_h = len(wrap_rich(d, sub, sf, mw)) * int(sf.size * 1.3)
+    hf, lines = None, []
+    for maks in (2, 3):
+        for sz in (172, 160, 148, 136, 124, 112, 100, 92):
+            f = _anton(sz)
+            ls = _hook_lines(d, spec["hook"], f, mw)
+            if len(ls) <= maks:
+                hf, lines = f, ls
+                break
+        if hf:
+            break
+    if hf is None:
+        hf = _anton(92)
+        lines = _hook_lines(d, spec["hook"], hf, mw)
+    asc, lh = _hook_metrics(hf)
+    hook_h = asc + (len(lines) - 1) * lh + 16
+    bf = font("bold", 30)
+    badge_h = bf.size + 26
+    bottom = h - (440 if motion else 96)          # motion: blok teks di atas area antarmuka Reels
+    sub_y = bottom - sub_h
+    hook_y = sub_y - 34 - hook_h
+    badge_y = hook_y - 30 - badge_h
+    portal_foto.gradasi(img, 0, 250, 0.62, 0.0)
+    portal_foto.gradasi(img, max(0, badge_y - 300), badge_y + 140, 0.0, 0.93)
+    d = ImageDraw.Draw(img)
+    wordmark(d, M, 56)
+    d.text((w - M, 82), spec.get("tanggal", ""), font=font("semi", 30), fill=WHITE, anchor="rm")
+    _badge(d, M, badge_y, spec.get("kategori", "BERITA").upper(), bf)
+    if carousel:
+        sw = font("bold", 28)
+        t = "SWIPE UNTUK DETAIL  \u203a"
+        pw = d.textlength(t, font=sw) + 44
+        d.rounded_rectangle([w - M - pw, badge_y + 2, w - M, badge_y + badge_h - 2], radius=(badge_h - 4) / 2, fill=PURPLE_D)
+        d.text((w - M - pw / 2, badge_y + badge_h / 2), t, font=sw, fill=WHITE, anchor="mm")
+    _draw_hook(img, M, hook_y, hf, lines)
+    d = ImageDraw.Draw(img)
+    draw_rich(d, M, sub_y, sub, sf, mw, color=(232, 228, 244), lh=1.3)
+    cf = font("reg", 23)
+    kredit = FOTO_LABEL if FOTO_KREDIT else ""
+    if motion:
+        if kredit:
+            d.text((M, bottom + 34), kredit, font=cf, fill=MUTE)
+    else:
+        src = "Sumber: " + spec.get("sumber", "") if spec.get("sumber") else ""
+        if d.textlength(src, font=cf) + d.textlength(kredit, font=cf) + 40 <= mw:
+            d.text((M, h - 46), src, font=cf, fill=MUTE, anchor="ls")
+            d.text((w - M, h - 46), kredit, font=cf, fill=MUTE, anchor="rs")
+        else:
+            d.text((M, h - 70), src, font=cf, fill=MUTE, anchor="ls")
+            d.text((M, h - 38), kredit, font=cf, fill=MUTE, anchor="ls")
+    return img
+
+
 def _gambar(spec):
     """spec['gambar'] -> (jenis, teks[], fokus[]) atau None. Boleh berupa string (jenis saja)."""
     g = spec.get("gambar")
@@ -244,6 +419,9 @@ def render_art(spec, out_path, g):
 
 def render(spec, out_path):
     """Format single: satu kartu berita."""
+    if v2_aktif(spec):
+        sampul_v2(spec, W, H).save(out_path, "JPEG", quality=90, optimize=True)
+        return
     if FOTO is not None:
         return render_foto(spec, out_path)
     g = _gambar(spec)
@@ -307,6 +485,8 @@ def slide_cover_art(spec, idx, total, g):
 
 
 def slide_cover(spec, idx, total):
+    if v2_aktif(spec):
+        return sampul_v2(spec, W, H, carousel=True)
     if FOTO is not None:
         return slide_cover_foto(spec, idx, total)
     g = _gambar(spec)
@@ -497,6 +677,20 @@ def _register_scene(rm):
         fr.fade_text(rm.X0, 1640, FOTO_LABEL, rm.font("r", 26), t, 1.0, rm.MUTE)
     rm.SCENES["hook_foto"] = sc_hook_foto
 
+    def sc_hook_v2(fr, s, t, dur):
+        """Pembuka gaya v2: sampul v2 penuh (hook langsung terbaca di frame pertama) dengan zoom pelan."""
+        if "v2" not in soft:
+            soft["v2"] = sampul_v2(_SPEC, rm.W, rm.H, motion=True)
+        z = 1.0 + 0.035 * rm.eo(rm.seg(t, 0, max(0.5, dur)))
+        im = soft["v2"]
+        if z > 1.0005:
+            cw, ch = rm.W / z, rm.H / z
+            x0, y0 = (rm.W - cw) / 2, (rm.H - ch) / 2
+            im = im.resize((rm.W, rm.H), Image.LANCZOS, box=(x0, y0, x0 + cw, y0 + ch))
+        fr.img.paste(im, (0, 0))
+        fr.d = ImageDraw.Draw(fr.img)
+    rm.SCENES["hook_v2"] = sc_hook_v2
+
     def sc_fakta_foto(fr, s, t, dur):
         fx, fy, fz = FOTO_FOKUS[s.get("fi", 0) % len(FOTO_FOKUS)]
         k = rm.eo(rm.seg(t, 0, max(0.5, dur)))
@@ -513,7 +707,7 @@ def build_scenes(spec):
         sys.exit("motion butuh minimal 2 poin di 'ringkas'")
     g = None if FOTO is not None else _gambar(spec)
     art = {"art": g[0], "teks": g[1], "fokus": g[2]} if g else {}
-    ht = "hook_foto" if FOTO is not None else "hook_art" if g else "hook"
+    ht = "hook_v2" if v2_aktif(spec) else "hook_foto" if FOTO is not None else "hook_art" if g else "hook"
     ft = "fakta_foto" if FOTO is not None else "fakta_art" if g else "fakta"
     sc = [dict({"type": ht, "kicker": spec.get("kategori", "BERITA"), "text": spec["judul"], "dur": 3.6}, **art)]
     if spec.get("tanggal"):
@@ -538,6 +732,8 @@ def build_scenes(spec):
 
 
 def render_motion(spec, out_dir, frames=None):
+    global _SPEC
+    _SPEC = spec
     import render_motion as rm
     rm.HANDLE = "brainwork.id"
     _register_scene(rm)
