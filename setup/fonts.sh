@@ -9,4 +9,6 @@ for w in Regular SemiBold Bold ExtraBold Black; do
 done
 # Inter (variabel) dipakai scene "ui"; kalau gagal diunduh, scenes_ui.py otomatis memakai Poppins
 [ -s fonts/Inter-Var.ttf ] || curl -sSL -o fonts/Inter-Var.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf" || rm -f fonts/Inter-Var.ttf
+# Anton (OFL) untuk judul pendek sampul v2 (uji 16 Nov 2026); gagal diunduh = renderer memakai Poppins Black
+[ -s fonts/Anton-Regular.ttf ] || curl -sSL -o fonts/Anton-Regular.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/anton/Anton-Regular.ttf" || rm -f fonts/Anton-Regular.ttf
 ls fonts
