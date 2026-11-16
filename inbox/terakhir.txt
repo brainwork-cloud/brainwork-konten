@@ -1,5 +1,4 @@
-11 file di inbox
-masuk: portal__PT-261116-01__202611160628.json -> portal/PT-261116-01.json
-masuk: queue__PT-261116-01__facebook_portal__202611160628.json -> queue/PT-261116-01__facebook_portal.json
-masuk: queue__PT-261116-01__instagram_portal__202611160628.json -> queue/PT-261116-01__instagram_portal.json
-selesai: 3 file diimpor, 0 gagal
+10 file di inbox
+masuk: queue__BW-261116-02__instagram__202611161056.json -> queue/BW-261116-02__instagram.json
+masuk: specs__BW-261123-02__202611161212.json -> specs/BW-261123-02.json
+selesai: 2 file diimpor, 0 gagal
