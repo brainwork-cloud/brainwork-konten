@@ -1,4 +1,5 @@
-10 file di inbox
-masuk: queue__BW-261116-02__instagram__202611161056.json -> queue/BW-261116-02__instagram.json
-masuk: specs__BW-261123-02__202611161212.json -> specs/BW-261123-02.json
-selesai: 2 file diimpor, 0 gagal
+13 file di inbox
+masuk: queue__BW-261117-01__threads__202611161239.json -> queue/BW-261117-01__threads.json
+masuk: queue__BW-261118-01__threads__202611161239.json -> queue/BW-261118-01__threads.json
+masuk: queue__BW-261119-01__threads__202611161239.json -> queue/BW-261119-01__threads.json
+selesai: 3 file diimpor, 0 gagal
