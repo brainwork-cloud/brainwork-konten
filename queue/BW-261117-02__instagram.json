@@ -2,8 +2,13 @@
   "id": "BW-261117-02",
   "platform": "instagram",
   "publish_at": "2026-11-17T19:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "message": "Bingung baca report Meta Ads? Cek 3 kolom ini dulu.\n\nResults: jumlah hasil sesuai tujuan campaign yang kamu pilih\nCost per result: total biaya dibagi jumlah hasil\nFrequency: rata-rata berapa kali tiap akun lihat ads-mu\n\nKalau cost per result naik, cek creative, audience, dan jadwal ads-nya. Kalau frequency terus naik, orang yang sama lihat creative yang sama berkali-kali.\n\nBandingkan dengan data campaign-mu sendiri, bukan patokan orang lain. Definisi mengikuti penjelasan resmi Meta.\n\nSimpan, biar nggak lupa urutannya.\n\nFoto ilustrasi: Vardan Papikyan / Unsplash, EFFYDESK / Unsplash\n\n#metaads #facebookads #digitalmarketing #tipsiklan #umkm",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261110-02/BW-261110-02.mp4",
-  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261110-02/BW-261110-02_cover.jpg"
+  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261110-02/BW-261110-02_cover.jpg",
+  "result": {
+    "id": "18079066835744613",
+    "url": "https://www.instagram.com/reel/Df14wAQBSae/"
+  },
+  "posted_at": "2026-11-17T12:04:02.437673+00:00"
 }
