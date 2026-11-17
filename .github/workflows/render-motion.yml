@@ -6,6 +6,7 @@ on:
 concurrency: render-motion
 permissions:
   contents: write
+  actions: write
 jobs:
   render:
     runs-on: ubuntu-latest
@@ -37,3 +38,8 @@ jobs:
           files=$(git diff --cached --name-only -- aset)
           git diff --cached --quiet || (git commit -m "render: reels motion" && git pull --rebase && git push)
           bash setup/purge_cdn.sh $files
+      - name: Picu Publish (jadwal GitHub sering molor 3-8 jam; 17 Nov 2026)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish.yml --ref main -R "$GITHUB_REPOSITORY" || echo "gagal memicu publish.yml"
