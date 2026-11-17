@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-17 04:15 WIB",
+"diperbarui": "2026-11-17 09:08 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209648,
+"followers": 209639,
 "posting_total": 400,
 "konten_tercatat": 82,
 "status": "OK",
@@ -22,9 +22,9 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9847,
+"followers": 9850,
 "posting_total": null,
-"konten_tercatat": 137,
+"konten_tercatat": 138,
 "status": "OK",
 "catatan": "views, likes, balasan, repost",
 "id_kanal": ""
@@ -80,7 +80,7 @@
 "plan": "Tab Portal",
 "followers": 0,
 "posting_total": null,
-"konten_tercatat": 28,
+"konten_tercatat": 29,
 "status": "SEBAGIAN",
 "catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 9 posting tidak tersedia",
 "id_kanal": ""
@@ -93,8 +93,8 @@
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
 "followers": 4250,
-"posting_total": 139,
-"konten_tercatat": 41,
+"posting_total": 140,
+"konten_tercatat": 42,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
