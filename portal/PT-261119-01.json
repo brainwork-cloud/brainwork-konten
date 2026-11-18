@@ -1,0 +1,32 @@
+{
+ "id": "PT-261119-01",
+ "format": "single",
+ "gaya": "v2",
+ "hook": "Google tag jadi **container**",
+ "kategori": "PLATFORM",
+ "judul": "Google satukan **Google tag** dan Tag Manager: tiap Google tag kini jadi container",
+ "ringkas": [
+  "Release note 17 Nov 2026: tiap Google tag kini menjadi Tag Manager container, dengan fitur tagging, debugging, dan version control.",
+  "Perilaku tag di halaman tidak berubah; tiap destination Google punya tag sendiri, setup dan trigger lama tetap.",
+  "Snippet baru tidak lagi memuat perintah gtag config. Instalasi yang tidak didukung baru di-upgrade Januari 2027."
+ ],
+ "sumber": "Google Tag Manager Help",
+ "tanggal": "17 Nov 2026",
+ "status": "Bertahap",
+ "foto": {
+  "url": "https://images.unsplash.com/photo-1701889297494-16eb5bc8dca6?fm=jpg&q=80&w=1800",
+  "kredit": "Daria Glakteeva / Unsplash",
+  "jenis": "stok"
+ },
+ "gambar": {
+  "jenis": "dokumen",
+  "teks": [
+   "Google tag",
+   "Tag Manager",
+   "Container",
+   "Bertahap",
+   "UPDATE"
+  ]
+ },
+ "caption": "Google menyatukan Google tag dan Google Tag Manager: tiap Google tag kini menjadi Tag Manager container.\n\n• Lewat release note 17 November 2026, Google menyebut semua kemampuan Tag Manager dibawa ke Google tag. Website yang hanya memakai Google tag bisa memakai fitur tagging berbasis antarmuka, debugging, dan version control.\n• Perilaku tag di halaman tidak berubah. Tiap destination Google punya tag sendiri, sehingga setup dan trigger yang ada tetap dipertahankan. Akses data Tag Assistant kini mengikuti permission container Tag Manager.\n• Snippet pemasangan baru akan seragam dan tidak lagi memuat perintah gtag config. Google menyarankan mengatur initialization lewat Initialization trigger, yang juga bisa dibuat menunggu perintah config untuk mempertahankan setup lama.\n\nArtinya buat advertiser: website yang hanya memakai Google tag kini punya opsi memakai fitur Google Tag Manager, tanpa perubahan perilaku tag di halaman.\n\nStatus: bertahap. Instalasi yang tergolong tidak didukung baru mendapat upgrade pada Januari 2027 dan disarankan menyesuaikan setup sebelum itu.\n\nSumber: Google Tag Manager Help: https://support.google.com/tagmanager/answer/4620708?hl=en\nFoto ilustrasi: Daria Glakteeva / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleTagManager #GoogleAds #DigitalMarketing"
+}

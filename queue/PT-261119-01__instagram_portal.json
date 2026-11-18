@@ -1,0 +1,8 @@
+{
+ "id": "PT-261119-01",
+ "platform": "instagram_portal",
+ "publish_at": "2026-11-19T08:00:00+07:00",
+ "status": "approved",
+ "message": "Google menyatukan Google tag dan Google Tag Manager: tiap Google tag kini menjadi Tag Manager container.\n\n• Lewat release note 17 November 2026, Google menyebut semua kemampuan Tag Manager dibawa ke Google tag. Website yang hanya memakai Google tag bisa memakai fitur tagging berbasis antarmuka, debugging, dan version control.\n• Perilaku tag di halaman tidak berubah. Tiap destination Google punya tag sendiri, sehingga setup dan trigger yang ada tetap dipertahankan. Akses data Tag Assistant kini mengikuti permission container Tag Manager.\n• Snippet pemasangan baru akan seragam dan tidak lagi memuat perintah gtag config. Google menyarankan mengatur initialization lewat Initialization trigger, yang juga bisa dibuat menunggu perintah config untuk mempertahankan setup lama.\n\nArtinya buat advertiser: website yang hanya memakai Google tag kini punya opsi memakai fitur Google Tag Manager, tanpa perubahan perilaku tag di halaman.\n\nStatus: bertahap. Instalasi yang tergolong tidak didukung baru mendapat upgrade pada Januari 2027 dan disarankan menyesuaikan setup sebelum itu.\n\nSumber: Google Tag Manager Help: https://support.google.com/tagmanager/answer/4620708?hl=en\nFoto ilustrasi: Daria Glakteeva / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#GoogleTagManager #GoogleAds #DigitalMarketing",
+ "image_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261119-01/PT-261119-01.jpg"
+}
