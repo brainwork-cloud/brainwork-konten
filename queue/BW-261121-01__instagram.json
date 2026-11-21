@@ -2,8 +2,13 @@
   "id": "BW-261121-01",
   "platform": "instagram",
   "publish_at": "2026-11-21T11:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "message": "Reels-mu diposting ulang akun lain tanpa izin? Instagram sekarang bisa bantu lacak.\n\nNamanya content protection. Instagram cari otomatis video yang mirip Reels aslimu di Instagram dan Facebook, lalu kasih notifikasi. Kalau ketemu, kamu bisa pilih: Track (pantau saja), Hide from everyone (sembunyikan), Add credit link (label \"original by\" ke videomu), atau Release the match.\n\nStatusnya: bertahap, untuk kreator yang memenuhi syarat orisinalitas dan integritas. Wilayahnya belum disebut. Deteksi video AI yang meniru ucapanmu baru akan dites ke sedikit kreator.\n\nCara cek: lihat notifikasi di Aktivitas, atau buka dashboard > Tools > Your professional tools. Belum dapat? Ajukan di instagram.com/apply-content-protect\n\nFollow, aku bahas update yang bisa langsung kamu cek.\n\nSumber: Instagram Creators blog, 17 Nov 2026: creators.instagram.com/blog/introducing-content-protection\nFoto ilustrasi: Anastase Maragos / Unsplash, Swello / Unsplash\n\n#instagramupdate #reels #kontenkreator #tipsinstagram #socialmedia",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261121-01/BW-261121-01.mp4",
-  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261121-01/BW-261121-01_cover.jpg"
+  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261121-01/BW-261121-01_cover.jpg",
+  "result": {
+    "id": "18508103857098127",
+    "url": "https://www.instagram.com/reel/Df_VH2_h57F/"
+  },
+  "posted_at": "2026-11-21T04:05:15.421560+00:00"
 }
