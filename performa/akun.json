@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-22 10:29 WIB",
+"diperbarui": "2026-11-23 01:39 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,7 +8,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209454,
+"followers": 209441,
 "posting_total": 414,
 "konten_tercatat": 90,
 "status": "OK",
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9906,
+"followers": 9910,
 "posting_total": null,
 "konten_tercatat": 140,
 "status": "OK",
@@ -38,7 +38,7 @@
 "plan": "Tab Antrian",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 22,
+"konten_tercatat": 23,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UCMsUpKhfHQypk3kWzGIPJYw"
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44043,
+"followers": 44040,
 "posting_total": null,
 "konten_tercatat": 51,
 "status": "SEBAGIAN",
@@ -92,7 +92,7 @@
 "akun": "@brainwork.id",
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
-"followers": 4234,
+"followers": 4232,
 "posting_total": 148,
 "konten_tercatat": 47,
 "status": "OK",
@@ -107,8 +107,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 5,
-"posting_total": 86,
-"konten_tercatat": 86,
+"posting_total": 88,
+"konten_tercatat": 88,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -136,7 +136,7 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 86,
+"konten_tercatat": 88,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UCPeNszPzJU28VAgkUSxd3hw"
@@ -163,8 +163,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 4,
-"posting_total": 77,
-"konten_tercatat": 77,
+"posting_total": 78,
+"konten_tercatat": 78,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
@@ -192,7 +192,7 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 76,
+"konten_tercatat": 77,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
