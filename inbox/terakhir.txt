@@ -1,2 +1,4 @@
-10 file di inbox
-selesai: 0 file diimpor, 0 gagal
+12 file di inbox
+masuk: queue__BW-261124-01__threads__202611231239.json -> queue/BW-261124-01__threads.json
+masuk: queue__BW-261126-01__threads__202611231239.json -> queue/BW-261126-01__threads.json
+selesai: 2 file diimpor, 0 gagal

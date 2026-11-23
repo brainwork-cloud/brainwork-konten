@@ -152,5 +152,7 @@
  "7776deae83b7588b009c58bd41f4767e": "queue__PT-261123-01__facebook_portal__202611230628.json",
  "f15e4ed7683d711b774d4102ac189ed4": "queue__PT-261123-01__instagram_portal__202611230628.json",
  "b43124386ba11303f3c5ffab572ec981": "queue__BW-261123-02__instagram__202611231057.json",
- "dcfa74b813debcef443234b1ae1480d8": "specs__BW-261130-02__202611231216.json"
+ "dcfa74b813debcef443234b1ae1480d8": "specs__BW-261130-02__202611231216.json",
+ "616cd4e489d0154eaa3b0dfd3168e264": "queue__BW-261124-01__threads__202611231239.json",
+ "97a58f9643421e63ffbec87a1b2e8d28": "queue__BW-261126-01__threads__202611231239.json"
 }
