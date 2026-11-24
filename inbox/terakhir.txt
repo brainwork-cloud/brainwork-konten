@@ -1,3 +1,2 @@
 13 file di inbox
-masuk: specs__BW-261127-01__202611241217.json -> specs/BW-261127-01.json
-selesai: 1 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
