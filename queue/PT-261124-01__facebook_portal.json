@@ -1,8 +1,13 @@
 {
- "id": "PT-261124-01",
- "platform": "facebook_portal",
- "publish_at": "2026-11-24T08:00:00+07:00",
- "status": "approved",
- "message": "TikTok merilis alat untuk mengecek apakah gambar atau video dibuat atau diedit dengan fitur AI TikTok, dan mulai merilis Likeness Detection secara global.\n\n• Alat cek tersedia di Transparency Centre TikTok dan bisa dipakai siapa pun, termasuk yang tidak punya akun TikTok: cukup upload gambar atau video.\n• Pengecekan membaca Content Credentials (C2PA) dan VeraDura, watermark tak terlihat milik TikTok. Menurut TikTok, lebih dari 5 miliar video buatan AI sudah diberi label di platformnya.\n• Likeness Detection adalah tool opt-in bagi creator dan public figure yang eligible untuk menemukan konten AI di TikTok yang mungkin memakai likeness mereka tanpa izin. Creator verifikasi ID lewat pihak ketiga, menerima notifikasi, lalu bisa report langsung ke tim safety TikTok.\n\nArtinya buat creator dan brand: konten yang dicurigai dibuat dengan fitur AI TikTok kini bisa dicek sendiri, dan creator yang eligible punya jalur untuk melaporkan konten AI yang memakai likeness-nya.\n\nStatus: alat cek sudah tersedia; Likeness Detection mulai dirilis global secara bertahap. Belum ada rincian khusus untuk Indonesia.\n\nSumber: TikTok Newsroom: https://newsroom.tiktok.com/TikTok-more-tools-to-provide-clarity-and-control-around-ai-generated-content?lang=en-150\nFoto ilustrasi: Anastase Maragos / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#TikTok #AIContent #SocialMedia",
- "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261124-01/PT-261124-01.mp4"
+  "id": "PT-261124-01",
+  "platform": "facebook_portal",
+  "publish_at": "2026-11-24T08:00:00+07:00",
+  "status": "posted",
+  "message": "TikTok merilis alat untuk mengecek apakah gambar atau video dibuat atau diedit dengan fitur AI TikTok, dan mulai merilis Likeness Detection secara global.\n\n• Alat cek tersedia di Transparency Centre TikTok dan bisa dipakai siapa pun, termasuk yang tidak punya akun TikTok: cukup upload gambar atau video.\n• Pengecekan membaca Content Credentials (C2PA) dan VeraDura, watermark tak terlihat milik TikTok. Menurut TikTok, lebih dari 5 miliar video buatan AI sudah diberi label di platformnya.\n• Likeness Detection adalah tool opt-in bagi creator dan public figure yang eligible untuk menemukan konten AI di TikTok yang mungkin memakai likeness mereka tanpa izin. Creator verifikasi ID lewat pihak ketiga, menerima notifikasi, lalu bisa report langsung ke tim safety TikTok.\n\nArtinya buat creator dan brand: konten yang dicurigai dibuat dengan fitur AI TikTok kini bisa dicek sendiri, dan creator yang eligible punya jalur untuk melaporkan konten AI yang memakai likeness-nya.\n\nStatus: alat cek sudah tersedia; Likeness Detection mulai dirilis global secara bertahap. Belum ada rincian khusus untuk Indonesia.\n\nSumber: TikTok Newsroom: https://newsroom.tiktok.com/TikTok-more-tools-to-provide-clarity-and-control-around-ai-generated-content?lang=en-150\nFoto ilustrasi: Anastase Maragos / Unsplash\n\nFollow Brainwork.id untuk update marketing dan AI tiap hari.\n#TikTok #AIContent #SocialMedia",
+  "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/PT-261124-01/PT-261124-01.mp4",
+  "result": {
+    "id": "4193278207635919",
+    "url": "https://www.facebook.com/reel/4193278207635919/"
+  },
+  "posted_at": "2026-11-24T01:05:34.296837+00:00"
 }
