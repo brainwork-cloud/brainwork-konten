@@ -161,5 +161,8 @@
  "e5f964cafb1495d2a0a1effa80b82dd0": "motion__BW-261124-02__202611241212.json",
  "dc5e6db74b7d2a63ddca04a111c6fa1e": "specs__BW-261127-01__202611241217.json",
  "e716417514ec4ea550b1d09a9afaa771": "queue__BW-261125-01__threads__202611241238.json",
- "9d55824e4bdf34c4d55d5e270c8c48d3": "queue__BW-261124-02__instagram__202611241856.json"
+ "9d55824e4bdf34c4d55d5e270c8c48d3": "queue__BW-261124-02__instagram__202611241856.json",
+ "5a6990eaa0eea03d0235b44894f8705b": "portal__PT-261125-01__202611250630.json",
+ "aa111f5edb0e66b95646abfab05ed7a6": "queue__PT-261125-01__facebook_portal__202611250630.json",
+ "a0f0bc7d1b0588ee09131846155bbfa1": "queue__PT-261125-01__instagram_portal__202611250630.json"
 }
