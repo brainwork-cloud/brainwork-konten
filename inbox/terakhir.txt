@@ -1,4 +1,2 @@
 20 file di inbox
-masuk: queue__BW-261124-02__youtube__202611251856.json -> queue/BW-261124-02__youtube.json
-masuk: queue__BW-261125-02__instagram__202611251856.json -> queue/BW-261125-02__instagram.json
-selesai: 2 file diimpor, 0 gagal
+selesai: 0 file diimpor, 0 gagal
