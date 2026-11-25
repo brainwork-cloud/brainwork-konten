@@ -1,1 +1,16 @@
-{"id": "BW-261125-01", "platform": "threads", "publish_at": "2026-11-25T08:00:00+07:00", "status": "approved", "posts": ["Story Instagram sekarang bisa diedit setelah diposting. Diumumkan Adam Mosseri, 18 Nov.\nYang bisa diubah: teks, stiker, coretan, musik. Cuma 15 menit setelah posting, view tetap aman.\nBuat kamu yang jualan: salah ketik harga di Story nggak perlu hapus dan upload ulang."]}
+{
+  "id": "BW-261125-01",
+  "platform": "threads",
+  "publish_at": "2026-11-25T08:00:00+07:00",
+  "status": "posted",
+  "posts": [
+    "Story Instagram sekarang bisa diedit setelah diposting. Diumumkan Adam Mosseri, 18 Nov.\nYang bisa diubah: teks, stiker, coretan, musik. Cuma 15 menit setelah posting, view tetap aman.\nBuat kamu yang jualan: salah ketik harga di Story nggak perlu hapus dan upload ulang."
+  ],
+  "result": {
+    "ids": [
+      "18111018782345669"
+    ],
+    "url": "https://www.threads.com/@nopal.brainwork/post/DgJTosDjiSe"
+  },
+  "posted_at": "2026-11-25T01:04:18.106316+00:00"
+}
