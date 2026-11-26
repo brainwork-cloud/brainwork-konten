@@ -1,1 +1,22 @@
-{"id": "BW-261126-01", "platform": "threads", "publish_at": "2026-11-26T08:00:00+07:00", "status": "approved", "posts": ["Report ads mingguan bisa panjang banget. Aku minta AI ringkas jadi 3 keputusan aja: lanjutkan, ubah, atau stop.\nAku kerja di korporat sambil bangun agency sampingan, waktu baca report terbatas. Ini urutan prompt yang aku pakai.", "Langkah 1: tempel tabel report-nya. Cukup kolom nama ads, budget, result, dan cost per result.\nContoh (data contoh): Ads A Rp9 rb per result, Ads B Rp21 rb, Ads C Rp12 rb.\nHapus dulu nama klien atau brand sebelum ditempel ke AI.", "Langkah 2: \"Cari 3 pola dari tabel ini. Kasih tiap ads label lanjutkan, ubah, atau stop, plus alasan 1 kalimat.\"\nLangkah 3: \"Sebutkan hal yang tetap harus aku cek manual sebelum memutuskan.\" Misalnya tracking yang belum lengkap, atau ads yang baru jalan 2 hari.", "AI cepat merangkum, tapi keputusan akhir tetap di aku. Angka di report bisa menipu kalau tracking-nya bermasalah.\nKalau kamu, bagian report ads mana yang paling makan waktu buat dibaca?"]}
+{
+  "id": "BW-261126-01",
+  "platform": "threads",
+  "publish_at": "2026-11-26T08:00:00+07:00",
+  "status": "posted",
+  "posts": [
+    "Report ads mingguan bisa panjang banget. Aku minta AI ringkas jadi 3 keputusan aja: lanjutkan, ubah, atau stop.\nAku kerja di korporat sambil bangun agency sampingan, waktu baca report terbatas. Ini urutan prompt yang aku pakai.",
+    "Langkah 1: tempel tabel report-nya. Cukup kolom nama ads, budget, result, dan cost per result.\nContoh (data contoh): Ads A Rp9 rb per result, Ads B Rp21 rb, Ads C Rp12 rb.\nHapus dulu nama klien atau brand sebelum ditempel ke AI.",
+    "Langkah 2: \"Cari 3 pola dari tabel ini. Kasih tiap ads label lanjutkan, ubah, atau stop, plus alasan 1 kalimat.\"\nLangkah 3: \"Sebutkan hal yang tetap harus aku cek manual sebelum memutuskan.\" Misalnya tracking yang belum lengkap, atau ads yang baru jalan 2 hari.",
+    "AI cepat merangkum, tapi keputusan akhir tetap di aku. Angka di report bisa menipu kalau tracking-nya bermasalah.\nKalau kamu, bagian report ads mana yang paling makan waktu buat dibaca?"
+  ],
+  "result": {
+    "ids": [
+      "18230978449330430",
+      "18142247533713421",
+      "17979179826161728",
+      "18454610599134749"
+    ],
+    "url": "https://www.threads.com/@nopal.brainwork/post/DgL4caRjBL4"
+  },
+  "posted_at": "2026-11-26T01:05:03.717032+00:00"
+}
