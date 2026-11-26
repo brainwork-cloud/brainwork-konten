@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-26 12:28 WIB",
+"diperbarui": "2026-11-27 03:33 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,9 +8,9 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209320,
-"posting_total": 422,
-"konten_tercatat": 94,
+"followers": 209278,
+"posting_total": 424,
+"konten_tercatat": 96,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -22,7 +22,7 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis",
 "plan": "Tab Antrian",
-"followers": 9952,
+"followers": 9961,
 "posting_total": null,
 "konten_tercatat": 144,
 "status": "OK",
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44025,
+"followers": 44024,
 "posting_total": null,
 "konten_tercatat": 50,
 "status": "SEBAGIAN",
@@ -92,7 +92,7 @@
 "akun": "@brainwork.id",
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
-"followers": 4230,
+"followers": 4231,
 "posting_total": 155,
 "konten_tercatat": 51,
 "status": "OK",
@@ -107,8 +107,8 @@
 "posting": "Otomatis (mesin konten)",
 "plan": "Mesin Skalarium",
 "followers": 6,
-"posting_total": 95,
-"konten_tercatat": 95,
+"posting_total": 96,
+"konten_tercatat": 96,
 "status": "SEBAGIAN",
 "catatan": "angka publik (followers, likes, komentar) 50 posting terbaru; views, reach, save butuh token Skalarium",
 "id_kanal": ""
