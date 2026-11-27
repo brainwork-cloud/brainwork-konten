@@ -1,0 +1,236 @@
+{
+ "id": "UJI-EDITORIAL-01",
+ "mode": "talking_head",
+ "camera": "rekaman/BW-261022-02/kamera.mp4",
+ "hook": "Intip iklan kompetitor, gratis",
+ "highlight_words": [
+  "gratis",
+  "kompetitor",
+  "Claude"
+ ],
+ "cut_silence": true,
+ "outro": "Follow @nopal.brainwork buat tips iklan & AI",
+ "sources": {
+  "rekaman/BW-261022-02/kamera.mp4": "1x9woZa7KfeZsbEFrTKbQIQA477sR-d9U"
+ },
+ "whisper_prompt": false,
+ "fix": {
+  "metaedge library": "Meta Ad Library",
+  "rempel": "Tempel",
+  "cloud": "Claude",
+  "kerusel": "carousel",
+  "prom": "prompt",
+  "reset": "riset",
+  "versi mu": "versimu"
+ },
+ "cut_ranges": [
+  [
+   17.55,
+   19.7
+  ],
+  [
+   44.5,
+   47.7
+  ],
+  [
+   57.8,
+   64.9
+  ]
+ ],
+ "close_from_word": "dari nol",
+ "cover": [
+  {
+   "from_word": "pakainya",
+   "scene": {
+    "type": "ed_judul",
+    "no": 1,
+    "total": 4,
+    "label": "Tools gratis",
+    "kicker": "namanya",
+    "judul": "Meta Ad Library",
+    "aksen": "gudang iklan semua brand",
+    "foto": null,
+    "tag": "Foto ilustrasi"
+   }
+  },
+  {
+   "from_word": "semua iklan",
+   "scene": {
+    "type": "ed_situs",
+    "no": 1,
+    "total": 4,
+    "label": "Caranya",
+    "judul": "Ketik nama **brand**",
+    "aksen": "pilih negara Indonesia",
+    "situs": "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ID&media_type=all",
+    "url_tampil": "facebook.com/ads/library",
+    "tag": "Situs resmi Meta"
+   }
+  },
+  {
+   "from_word": "brand kompetitor",
+   "scene": {
+    "type": "ed_banding",
+    "no": 2,
+    "total": 4,
+    "label": "Lihat ini",
+    "judul": "Cek **tanggal tayang**",
+    "kiri": {
+     "foto": null,
+     "ikon": "clock",
+     "tag": "Baru 2 hari",
+     "teks": "Masih dites"
+    },
+    "kanan": {
+     "foto": null,
+     "ikon": "chart",
+     "tag": "Jalan 60+ hari",
+     "teks": "Dipertahankan"
+    }
+   }
+  },
+  {
+   "from_word": "dipertahankan",
+   "scene": {
+    "type": "ed_judul",
+    "no": 2,
+    "total": 4,
+    "label": "Tapi ingat",
+    "kicker": "bukan berarti",
+    "judul": "Pasti **laku**",
+    "aksen": "cuma tanda masih dipertahankan",
+    "catatan": "Anggap petunjuk, bukan jaminan"
+   }
+  },
+  {
+   "from_word": "bagus",
+   "scene": {
+    "type": "ed_daftar",
+    "no": 3,
+    "total": 4,
+    "label": "Catat",
+    "judul": "Dari tiap **iklan**",
+    "items": [
+     "Kalimat pembuka",
+     "Penawarannya",
+     "Format: video, gambar, carousel"
+    ]
+   }
+  },
+  {
+   "from_word": "carousel",
+   "scene": {
+    "type": "ui",
+    "layout": "chat",
+    "file": "catatan-iklan.txt",
+    "user": "Ringkas pola iklan ini.",
+    "phase": "ask",
+    "kicker": "Tempel ke Claude",
+    "title": "Minta dia **ringkas polanya**"
+   }
+  },
+  {
+   "from_word": "ringkas pola",
+   "scene": {
+    "type": "ui",
+    "layout": "chat",
+    "file": "catatan-iklan.txt",
+    "user": "Ringkas pola iklan ini.",
+    "phase": "answer",
+    "kicker": "Minta Claude cari",
+    "title": "**Polanya**",
+    "bullets": [
+     "Hook yang paling sering",
+     "Jenis penawaran",
+     "Celah yang belum dipakai kompetitor"
+    ]
+   }
+  },
+  {
+   "from_word": "kompetitor#3",
+   "scene": {
+    "type": "ed_banding",
+    "no": 4,
+    "total": 4,
+    "label": "Aturannya",
+    "judul": "Ambil **polanya**",
+    "kiri": {
+     "foto": null,
+     "ikon": "cross",
+     "tag": "Jangan",
+     "teks": "Jiplak iklannya"
+    },
+    "kanan": {
+     "foto": null,
+     "ikon": "check",
+     "tag": "Lakukan",
+     "teks": "Ambil polanya"
+    }
+   }
+  },
+  {
+   "from_word": "iklannya",
+   "scene": {
+    "type": "ed_angka",
+    "no": 4,
+    "total": 4,
+    "label": "Bonus",
+    "kicker": "aku kumpulin",
+    "angka": "50",
+    "satuan": "prompt buat jualan",
+    "aksen": "Pack Prompt UMKM"
+   }
+  },
+  {
+   "from_word": "kumpulin",
+   "scene": {
+    "type": "ed_judul",
+    "no": 4,
+    "total": 4,
+    "label": "Info",
+    "kicker": "lengkapnya",
+    "judul": "Ada di **caption**",
+    "aksen": "Pack 50 Prompt UMKM",
+    "foto": null,
+    "tag": "Foto ilustrasi"
+   }
+  },
+  {
+   "from_word": "caption",
+   "scene": {
+    "type": "ed_judul",
+    "kicker": "intinya",
+    "judul": "Nggak mulai **dari nol**",
+    "aksen": "riset kecil, langkah besar",
+    "foto": null,
+    "tag": "Foto ilustrasi"
+   }
+  }
+ ],
+ "efek_wajah": {
+  "zoom": true,
+  "snap": [
+   "gratis",
+   "Simpan"
+  ],
+  "pil": [
+   {
+    "from_word": "kompetitor",
+    "teks": "kompetitor",
+    "sisi": "kanan"
+   },
+   {
+    "from_word": "gratis",
+    "teks": "gratis",
+    "sisi": "kiri"
+   },
+   {
+    "from_word": "Simpan",
+    "teks": "simpan dulu",
+    "sisi": "kanan",
+    "dur": 2.2
+   }
+  ]
+ },
+ "_catatan": "UJI gaya editorial (27 Nov 2026): salinan BW-261022-02 dengan scene ed_* + pil wajah. Bukan untuk diposting (tidak ada baris Sheet/antrean)."
+}
