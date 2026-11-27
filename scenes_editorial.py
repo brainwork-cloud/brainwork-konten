@@ -305,6 +305,13 @@ def register(rm):
             except Exception:
                 im = None
         if im is None and rm.foto_umum is not None:
+            fu = rm.foto_umum
+            tampil = [e for e in fu.LOG if e.get("tampil")]
+            kf = fu.kunci(f) if isinstance(f, dict) else ""
+            if len({e["kunci"] for e in tampil}) >= 3 and kf not in {e["kunci"] for e in tampil}:
+                # maks 3 foto berbeda per konten (standar foto): pakai ulang foto yang sudah tampil, bergiliran
+                e = tampil[len(_FOTO) % len(tampil)]
+                f = {"url": e["kunci"], "kredit": e["kredit"], "jenis": "stok" if e["stok"] else ""}
             try:
                 im, fe = rm.foto_umum.pilih(f if isinstance(f, dict) else None, w, h)
                 if im is not None:
