@@ -11,4 +11,6 @@ done
 [ -s fonts/Inter-Var.ttf ] || curl -sSL -o fonts/Inter-Var.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf" || rm -f fonts/Inter-Var.ttf
 # Anton (OFL) untuk judul pendek sampul v2 (uji 16 Nov 2026); gagal diunduh = renderer memakai Poppins Black
 [ -s fonts/Anton-Regular.ttf ] || curl -sSL -o fonts/Anton-Regular.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/anton/Anton-Regular.ttf" || rm -f fonts/Anton-Regular.ttf
+# Instrument Serif Italic (OFL) untuk aksen miring gaya editorial (27 Nov 2026); gagal diunduh = Poppins
+[ -s fonts/InstrumentSerif-Italic.ttf ] || curl -sSL -o fonts/InstrumentSerif-Italic.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/instrumentserif/InstrumentSerif-Italic.ttf" || rm -f fonts/InstrumentSerif-Italic.ttf
 ls fonts
