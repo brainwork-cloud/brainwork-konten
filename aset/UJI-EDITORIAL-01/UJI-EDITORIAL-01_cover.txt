@@ -1,0 +1,12 @@
+wajah tampil: 0-6.3 dtk dan 53.1-56.6 dtk
+   6.3 dtk |  5.2 dtk | ed_judul | 
+  11.5 dtk |  2.2 dtk | ed_situs | 
+  13.7 dtk |  4.2 dtk | ed_banding | 
+  17.9 dtk |  3.4 dtk | ed_judul | 
+  21.3 dtk |  7.2 dtk | ed_daftar | 
+  28.6 dtk |  3.9 dtk | ui | Minta dia **ringkas polanya**
+  32.4 dtk |  4.8 dtk | ui | **Polanya**
+  37.2 dtk |  2.4 dtk | ed_banding | 
+  39.6 dtk |  3.4 dtk | ed_angka | 
+  43.0 dtk |  3.9 dtk | ed_judul | 
+  46.9 dtk |  6.2 dtk | ed_judul | 

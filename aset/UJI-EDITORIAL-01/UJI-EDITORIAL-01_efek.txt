@@ -1,0 +1,7 @@
+zoom pelan: 0.0-6.3 dtk, 53.1-56.6 dtk
+snap zoom 'gratis' 4.0 dtk
+snap zoom 'Simpan' 53.3 dtk
+pil 3.4-5.2 dtk kanan: kompetitor
+pil 4.0-5.8 dtk kiri: gratis
+pil 53.3-55.5 dtk kanan: simpan dulu
+297 dari 1699 frame diubah
