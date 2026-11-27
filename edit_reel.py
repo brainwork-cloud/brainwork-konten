@@ -409,7 +409,7 @@ def main():
                 foto_umum.ADA_TEMPAT = True
             for c in spec["cover"]:
                 sc_ = c.get("scene") or {}
-                if sc_.get("foto") and sc_.get("type") in foto_umum._GAMBAR_OK:
+                if sc_.get("foto") and sc_.get("type") in getattr(foto_umum, "_FOTO_OK", foto_umum._GAMBAR_OK):
                     foto_umum.siapkan(sc_["foto"], 1080, 1920)
             foto_umum.pastikan(os.path.join(out_dir, ".foto.txt"))
     except SystemExit:

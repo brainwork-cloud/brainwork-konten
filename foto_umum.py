@@ -44,6 +44,8 @@ SEED = ""       # ID konten (urutan foto cadangan stabil per konten)
 TEKS = ""       # teks topik konten (untuk mencocokkan foto cadangan)
 _MATI = False   # True bila unduhan gagal terus (jaringan ke host foto tertutup): berhenti mencoba foto cadangan satu per satu
 _GAMBAR_OK = ("hook", "stat", "points", "statement", "icon", "flow", "steps", "vs")   # jenis scene video yang boleh berlatar foto
+_BINGKAI = ("ed_judul", "ed_foto", "ed_banding")   # gaya editorial (27 Nov 2026): foto berbingkai, bukan latar; tetap dihitung standar foto
+_FOTO_OK = _GAMBAR_OK + _BINGKAI
 CREDIT_Y = 1522  # baris kredit di video (di bawah subtitle talking head y 1170-1360, di atas zona UI Reels y > 1580)
 
 
@@ -227,12 +229,12 @@ def lengkapi_talking_head(spec, tw, th):
     """Talking Head: minimal dua item cover non-ui berfoto (icon/flow/steps/vs/points; `statement` hanya bila tak ada jenis lain)."""
     global ADA_TEMPAT
     sc = [c["scene"] for c in spec.get("cover", []) if isinstance(c.get("scene"), dict)]
-    inti = ("icon", "flow", "steps", "vs", "points")
+    inti = ("ed_foto", "ed_judul", "icon", "flow", "steps", "vs", "points")
     elig = [s for s in sc if s.get("type") in inti] or [s for s in sc if s.get("type") == "statement"]
     if not elig:
         ADA_TEMPAT = False
         return
-    ada = [s for s in sc if s.get("type") in _GAMBAR_OK and _punya(s.get("foto"))]
+    ada = [s for s in sc if s.get("type") in _FOTO_OK and _punya(s.get("foto"))]
     cad = _cad(2, _muat_awal([s["foto"] for s in ada], tw, th))
     for s in elig:
         if len(ada) >= 2 or not cad:

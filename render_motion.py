@@ -337,6 +337,8 @@ import scenes_extra
 scenes_extra.register(sys.modules[__name__])
 import scenes_ui
 scenes_ui.register(sys.modules[__name__])
+import scenes_editorial   # gaya editorial Talking Head (27 Nov 2026)
+scenes_editorial.register(sys.modules[__name__])
 
 
 def render_clip(scenes, path):

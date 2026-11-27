@@ -14,8 +14,9 @@ Spec edits/<ID>.json (opsional; tanpa "efek_wajah" video dirender seperti biasa)
     "snap": ["gratis", "Simpan"],          # kata pemicu snap zoom: "kata", "dua kata", atau "kata#2" (kemunculan ke-2).
                                            #   Default: kata highlight_words pertama yang diucapkan di pembuka. [] = tanpa snap.
     "chat": [{"from_word": "gratis", "teks": "Serius gratis?", "dari": "kamu", "dur": 2.4}],   # atau "at": detik (waktu video akhir)
-    "fokus": [0.5, 0.4]                    # titik tengah zoom (relatif lebar, tinggi layar); default wajah selfie
-  }
+    "fokus": [0.5, 0.4],                   # titik tengah zoom (relatif lebar, tinggi layar); default wajah selfie
+    "pil": [{"from_word": "gratis", "teks": "gratis", "sisi": "kanan", "dur": 1.8}]   # 4. chip pil melayang di samping wajah
+  }                                        #   (gaya editorial 27 Nov 2026; maks 4 chip, teks maks ±3 kata, sisi kiri/kanan bergantian)
 Aturan gelembung chat: pengirim hanya "kamu" (pertanyaan/reaksi penonton yang dibayangkan), "AI", atau "Nopal".
 Bukan nama atau akun orang sungguhan dan bukan testimoni. Teks maks ±8 kata, tanpa emoji (font tidak memuat emoji).
 """
@@ -170,6 +171,32 @@ def rencana(spec, words, main_len, cuts, cari_akhir):
         t1 = min(t0 + dur, j[1] - 0.05)
         plan["chat"].append((t0, t1, dari, teks))
         plan["catatan"].append(f"chat {t0:.1f}-{t1:.1f} dtk dari {dari}: {teks}")
+
+    # 4. chip pil melayang (gaya editorial)
+    plan["pil"] = []
+    for i, c in enumerate((ew.get("pil") or [])[:4]):
+        teks = tanpa_emoji(str(c.get("teks") or "")).strip()[:28]
+        if not teks:
+            continue
+        t0 = c.get("at")
+        if t0 is None and c.get("from_word"):
+            akhir = cari_akhir(words, c["from_word"])
+            if akhir is None:
+                warns.append(f"efek_wajah: kata pemicu pil '{c['from_word']}' tidak ketemu, dilewati")
+                continue
+            s0, _ = _rentang_kata(words, akhir)
+            t0 = s0
+        if t0 is None:
+            continue
+        t0 = float(t0)
+        j = _di_jendela(t0, jendela)
+        if not j or j[1] - t0 < 0.8:
+            warns.append(f"efek_wajah: pil '{teks}' ({t0:.1f} dtk) tidak muat di bagian wajah, dilewati")
+            continue
+        t1 = min(t0 + min(3.0, max(1.0, float(c.get("dur", 1.8)))), j[1] - 0.05)
+        sisi = str(c.get("sisi") or ("kanan" if i % 2 == 0 else "kiri")).lower()
+        plan["pil"].append((t0, t1, teks, "kiri" if sisi.startswith("ki") else "kanan", i))
+        plan["catatan"].append(f"pil {t0:.1f}-{t1:.1f} dtk {sisi}: {teks}")
     return plan, warns
 
 
@@ -274,10 +301,50 @@ def _tempel_gelembung(fr, g, t, t0, t1):
     fr.alpha_composite(g2, (int(tx - ax * skala), int(ty - ay * skala + melayang)))
 
 
+def gambar_pil(teks):
+    """Chip pil putih bertitik emas (gaya editorial), RGBA."""
+    S = 2
+    f = _font("Poppins-Bold.ttf", 40 * S)
+    tmp = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    tw = tmp.textlength(teks, font=f)
+    hh = 84 * S
+    w = int(tw + 2 * 34 * S + 30 * S)
+    m = 30 * S
+    im = Image.new("RGBA", (w + 2 * m, hh + 2 * m), (0, 0, 0, 0))
+    sh = Image.new("L", im.size, 0)
+    ImageDraw.Draw(sh).rounded_rectangle([m, m + 10 * S, m + w, m + hh + 10 * S], radius=hh // 2, fill=110)
+    im.paste((0, 0, 0, 255), (0, 0), sh.filter(ImageFilter.GaussianBlur(12 * S)))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([m, m, m + w, m + hh], radius=hh // 2, fill=(255, 255, 255, 250))
+    d.ellipse([m + 28 * S, m + hh / 2 - 10 * S, m + 48 * S, m + hh / 2 + 10 * S], fill=EMAS + (255,))
+    d.text((m + 62 * S, m + hh / 2), teks, font=f, fill=HITAM + (255,), anchor="lm")
+    return im.resize((im.width // S, im.height // S), Image.LANCZOS)
+
+
+def _tempel_pil(fr, g, t, t0, t1, sisi, i):
+    u, sisa = t - t0, t1 - t
+    skala = 0.4 + 0.6 * _pantul(min(1.0, u / 0.28))
+    alfa = min(1.0, u / 0.1)
+    if sisa < 0.2:
+        alfa *= max(0.0, sisa / 0.2)
+    if alfa <= 0.01:
+        return
+    sudut = (-4 if sisi == "kiri" else 4) * (1 if i % 2 == 0 else 0.6)
+    g2 = g.rotate(sudut, resample=Image.BICUBIC, expand=True)
+    w2, h2 = max(1, int(g2.width * skala)), max(1, int(g2.height * skala))
+    g2 = g2.resize((w2, h2), Image.BILINEAR)
+    if alfa < 0.999:
+        g2.putalpha(g2.getchannel("A").point(lambda v: int(v * alfa)))
+    y = 820 + (i % 2) * 120 + 6 * math.sin(2 * math.pi * 0.5 * u) - h2 / 2
+    x = 40 if sisi == "kiri" else W - 40 - w2
+    fr.alpha_composite(g2, (int(x), int(y)))
+
+
 def terapkan(plan, src, dst):
     """Baca src (main.mp4: wajah + audio), terapkan zoom dan gelembung frame demi frame, tulis dst (audio disalin)."""
     fx, fy = plan["fokus"]
     gel = [(t0, t1, gambar_gelembung(dari, teks)) for t0, t1, dari, teks in plan["chat"]]
+    pil = [(t0, t1, gambar_pil(teks), sisi, i) for t0, t1, teks, sisi, i in plan.get("pil", [])]
     dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", src, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
                            stdout=subprocess.PIPE)
     enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
@@ -293,16 +360,19 @@ def terapkan(plan, src, dst):
             t = n / FPS
             z = faktor_zoom(plan, t)
             aktif = [g for g in gel if g[0] <= t <= g[1]]
+            aktif_p = [g for g in pil if g[0] <= t <= g[1]]
             wajah = any(a - 0.3 <= t <= b + 0.3 for a, b in plan["jendela"])   # di bawah cover tidak perlu diubah
-            if (z > 1.0005 and wajah) or aktif:
+            if (z > 1.0005 and wajah) or aktif or aktif_p:
                 fr = Image.frombuffer("RGB", (W, H), buf, "raw", "RGB", 0, 1)
                 if z > 1.0005 and wajah:
                     x0, y0 = fx * W * (1 - 1 / z), fy * H * (1 - 1 / z)
                     fr = fr.transform((W, H), Image.AFFINE, (1 / z, 0, x0, 0, 1 / z, y0), resample=Image.BICUBIC)
-                if aktif:
+                if aktif or aktif_p:
                     fr = fr.convert("RGBA")
                     for t0, t1, g in aktif:
                         _tempel_gelembung(fr, g, t, t0, t1)
+                    for t0, t1, g, sisi, i in aktif_p:
+                        _tempel_pil(fr, g, t, t0, t1, sisi, i)
                     fr = fr.convert("RGB")
                 buf = fr.tobytes()
                 diubah += 1
