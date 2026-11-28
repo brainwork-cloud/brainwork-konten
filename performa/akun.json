@@ -1,5 +1,5 @@
 {
-"diperbarui": "2026-11-28 03:20 WIB",
+"diperbarui": "2026-11-28 11:58 WIB",
 "rows": [
 {
 "kode": "nopal-ig",
@@ -8,9 +8,9 @@
 "akun": "@nopal.brainwork",
 "posting": "Otomatis (Penerbit IG)",
 "plan": "Tab Antrian",
-"followers": 209240,
-"posting_total": 428,
-"konten_tercatat": 97,
+"followers": 209219,
+"posting_total": 430,
+"konten_tercatat": 99,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -24,7 +24,7 @@
 "plan": "Tab Antrian",
 "followers": 9973,
 "posting_total": null,
-"konten_tercatat": 144,
+"konten_tercatat": 145,
 "status": "OK",
 "catatan": "views, likes, balasan, repost",
 "id_kanal": ""
@@ -64,7 +64,7 @@
 "akun": "Page Nopal Brainwork",
 "posting": "Mirror dihentikan, menunggu keputusan",
 "plan": "Tab Antrian",
-"followers": 44018,
+"followers": 44015,
 "posting_total": null,
 "konten_tercatat": 49,
 "status": "SEBAGIAN",
@@ -80,7 +80,7 @@
 "plan": "Tab Portal",
 "followers": 0,
 "posting_total": null,
-"konten_tercatat": 39,
+"konten_tercatat": 40,
 "status": "SEBAGIAN",
 "catatan": "hanya posting yang diterbitkan mesin konten (daftar posting Page butuh izin pages_read_user_content); views 13 posting tidak tersedia",
 "id_kanal": ""
@@ -92,9 +92,9 @@
 "akun": "@brainwork.id",
 "posting": "Otomatis (mirror portal)",
 "plan": "Tab Portal",
-"followers": 4231,
-"posting_total": 156,
-"konten_tercatat": 52,
+"followers": 4232,
+"posting_total": 158,
+"konten_tercatat": 53,
 "status": "OK",
 "catatan": "lengkap: views, reach, likes, komentar, save, share",
 "id_kanal": ""
@@ -192,7 +192,7 @@
 "plan": "Mesin Skalarium",
 "followers": null,
 "posting_total": null,
-"konten_tercatat": 85,
+"konten_tercatat": 86,
 "status": "SEBAGIAN",
 "catatan": "views dan likes 15 video terbaru dari feed publik; subscriber dan reach butuh izin baca YouTube",
 "id_kanal": "UC_vdJ5nU1A2RXhmQ2_BeNVg"
