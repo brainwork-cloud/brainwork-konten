@@ -2,8 +2,13 @@
   "id": "BW-261128-01",
   "platform": "instagram",
   "publish_at": "2026-11-28T11:00:00+07:00",
-  "status": "approved",
+  "status": "posted",
   "message": "Threads sekarang punya aplikasi iPad. Bukan lagi versi HP yang diperbesar.\n\nAplikasinya sudah ada di App Store (versi 457.0), gratis. Catatan: versi pertama ini feed-nya masih satu kolom, bahkan di mode landscape. Tim Threads bilang tampilannya masih akan berubah.\n\nCara cek: buka App Store di iPad, update Threads ke versi 457.0. Butuh iPadOS 16.3 ke atas.\n\nFollow, aku bahas update yang bisa langsung kamu cek.\n\nSumber: App Store (Threads, Instagram Inc.) dan TechCrunch, 24 Nov 2026: techcrunch.com/2026/11/24/threads-comes-to-ipad-and-takes-a-page-from-xs-playbook-with-cashtags\nFoto ilustrasi: Lorin Both / Unsplash, Swello / Unsplash\n\n#threads #updatethreads #socialmedia #kontenkreator #ipad",
   "video_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261128-01/BW-261128-01.mp4",
-  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261128-01/BW-261128-01_cover.jpg"
+  "cover_url": "https://raw.githubusercontent.com/brainwork-cloud/brainwork-konten/main/aset/BW-261128-01/BW-261128-01_cover.jpg",
+  "result": {
+    "id": "17918680563507095",
+    "url": "https://www.instagram.com/reel/DgRWoJABGgg/"
+  },
+  "posted_at": "2026-11-28T04:04:45.066013+00:00"
 }
